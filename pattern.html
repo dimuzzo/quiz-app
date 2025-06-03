@@ -236,6 +236,7 @@
         .btn:disabled { opacity: 0.5; cursor: not-allowed; }
         .btn-primary { background: linear-gradient(135deg, #4f46e5, #06b6d4); color: white; }
         .btn-secondary { background: #e2e8f0; color: #475569; }
+        .btn-danger { background: linear-gradient(135deg, #ef4444, #b91c1c); color: white; }
 
         .current-stats {
             display: flex;
@@ -298,6 +299,7 @@
 
     <footer class="controls">
         <button class="btn btn-secondary" id="prevBtn">← Precedente</button>
+        <button class="btn btn-danger" id="stopBtn">Ferma Quiz</button>
         <div class="current-stats">
             <span class="correct-count">Corrette: <span id="currentCorrectCount">0</span></span>
             <span class="incorrect-count">Sbagliate: <span id="currentIncorrectCount">0</span></span>
@@ -315,7 +317,7 @@
                 <div class="score-label">Punteggio Totale</div>
             </div>
         </div>
-        <h2>Quiz Completato!</h2>
+        <h2>Quiz Terminato!</h2>
         <p>Ecco il riepilogo della tua sessione.</p>
         <div class="stats">
             <div class="stat" id="correctStat">
@@ -386,6 +388,7 @@
         prevBtn: document.getElementById('prevBtn'),
         nextBtn: document.getElementById('nextBtn'),
         showAnswerBtn: document.getElementById('showAnswerBtn'),
+        stopBtn: document.getElementById('stopBtn'),
         restartBtn: document.getElementById('restartBtn'),
         results: document.getElementById('results'),
         scorePercentage: document.getElementById('scorePercentage'),
@@ -498,14 +501,14 @@
     }
 
     function handleOptionClick(event) {
-        if (state.isShowingAnswer || !event.target.classList.contains('option')) return;
+        const target = event.target;
+        if (state.isShowingAnswer || !target.classList.contains('option')) return;
 
-        const optionsContainer = event.currentTarget;
+        const optionsContainer = target.closest('.options');
         optionsContainer.querySelectorAll('.option').forEach(opt => opt.classList.remove('selected'));
-        const selectedOption = event.target;
-        selectedOption.classList.add('selected');
+        target.classList.add('selected');
 
-        const answerIndex = parseInt(selectedOption.dataset.answer, 10);
+        const answerIndex = parseInt(target.dataset.answer, 10);
         state.userAnswers[state.currentQuestionIndex].userAnswer = answerIndex;
     }
 
@@ -521,7 +524,7 @@
         state.userAnswers[state.currentQuestionIndex].correct = isCorrect;
 
         state.isShowingAnswer = true;
-        loadQuestion(); // Ricarica la domanda per mostrare lo stato aggiornato (corretto/sbagliato)
+        loadQuestion(); // Ricarica la domanda per mostrare lo stato aggiornato
     }
 
     function navigate(direction) {
@@ -581,6 +584,7 @@
 
     dom.quizContent.addEventListener('click', handleOptionClick);
     dom.showAnswerBtn.addEventListener('click', showAnswer);
+    dom.stopBtn.addEventListener('click', showResults);
     dom.nextBtn.addEventListener('click', () => navigate(1));
     dom.prevBtn.addEventListener('click', () => navigate(-1));
     dom.restartBtn.addEventListener('click', initQuiz);

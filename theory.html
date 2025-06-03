@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Quiz SAS - Architettura Software e Sistemi (Versione Migliorata)</title>
+    <title>Quiz SAS - Architettura Software e Sistemi</title>
     <link rel="manifest" href="manifest.json" />
     <meta name="theme-color" content="#ffffff">
 
@@ -47,6 +47,7 @@
             color: white;
             padding: 40px;
             text-align: center;
+            position: relative;
         }
 
         .header h1 {
@@ -58,6 +59,20 @@
             font-size: 1.1rem;
             opacity: 0.9;
             margin-top: 5px;
+        }
+
+        .back-link {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            color: #cbd5e1;
+            text-decoration: none;
+            font-size: 0.95rem;
+            transition: color 0.2s ease;
+        }
+
+        .back-link:hover {
+            color: white;
         }
 
         /* Sezione della barra di progresso */
@@ -104,7 +119,6 @@
             padding: 35px;
             box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
             border: 1px solid #f1f5f9;
-            opacity: 0;
             animation: fadeIn 0.5s forwards;
         }
 
@@ -166,7 +180,6 @@
             border-color: #10b981;
             background: linear-gradient(135deg, #10b981, #059669);
             color: white;
-            transform: scale(1.02);
         }
 
         .option.incorrect {
@@ -187,19 +200,11 @@
             background: #f1f5f9;
             border-radius: 10px;
             border-left: 4px solid #4f46e5;
-            opacity: 0;
             animation: fadeIn 0.5s 0.2s forwards;
         }
 
-        .explanation h4 {
-            color: #4f46e5;
-            margin-bottom: 10px;
-        }
-
-        .explanation p {
-            color: #475569;
-            line-height: 1.6;
-        }
+        .explanation h4 { color: #4f46e5; margin-bottom: 10px; }
+        .explanation p { color: #475569; line-height: 1.6; }
 
         /* Controlli di navigazione */
         .controls {
@@ -209,9 +214,8 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
-            transition: opacity 0.3s ease-in-out;
-            flex-wrap: wrap; /* Permette il wrap su schermi piccoli */
-            gap: 15px; /* Spazio tra gli elementi */
+            flex-wrap: wrap;
+            gap: 15px;
         }
 
         .btn {
@@ -222,178 +226,52 @@
             cursor: pointer;
             transition: all 0.2s ease;
             font-size: 0.95rem;
-            display: flex;
-            align-items: center;
-            gap: 8px;
         }
 
-        .btn:active {
-            transform: translateY(1px) scale(0.98);
-        }
+        .btn:disabled { opacity: 0.5; cursor: not-allowed; }
+        .btn-primary { background: linear-gradient(135deg, #4f46e5, #06b6d4); color: white; }
+        .btn-secondary { background: #e2e8f0; color: #475569; }
+        .btn-danger { background: linear-gradient(135deg, #ef4444, #b91c1c); color: white; }
 
-        .btn:disabled {
-            opacity: 0.5;
-            cursor: not-allowed;
-        }
-
-        .btn-primary {
-            background: linear-gradient(135deg, #4f46e5, #06b6d4);
-            color: white;
-            box-shadow: 0 4px 15px rgba(79, 70, 229, 0.2);
-        }
-
-        .btn-primary:not(:disabled):hover {
-            transform: translateY(-2px);
-            box-shadow: 0 8px 25px rgba(79, 70, 229, 0.3);
-        }
-
-        .btn-secondary {
-            background: #e2e8f0;
-            color: #475569;
-        }
-
-        .btn-secondary:not(:disabled):hover {
-            background: #cbd5e1;
-        }
-
-        .back-link {
-            color: #cbd5e1;
-            text-decoration: none;
-            font-size: 0.95rem;
-            transition: color 0.2s ease;
-        }
-
-        .back-link:hover {
-            color: #4f46e5; /* Cambia colore all'hover */
-        }
-
-        /* Stili per la sezione dei conteggi attuali */
         .current-stats {
             display: flex;
             gap: 20px;
             font-weight: 600;
             color: #475569;
-            flex-grow: 1; /* Permette di occupare spazio */
-            justify-content: center; /* Centra orizzontalmente se c'è spazio */
+            flex-grow: 1;
+            justify-content: center;
         }
-
-        .current-stats span {
-            display: flex;
-            align-items: center;
-            gap: 5px;
-        }
-
-        .current-stats .correct-count {
-            color: #10b981; /* Verde per le corrette */
-        }
-
-        .current-stats .incorrect-count {
-            color: #ef4444; /* Rosso per le sbagliate */
-        }
+        .current-stats span { display: flex; align-items: center; gap: 5px; }
+        .current-stats .correct-count { color: #10b981; }
+        .current-stats .incorrect-count { color: #ef4444; }
 
         /* Sezione dei risultati */
-        .results {
-            text-align: center;
-            padding: 60px 40px;
-            opacity: 0;
-            animation: fadeIn 0.6s forwards;
-        }
-
-        .score-circle {
-            width: 150px;
-            height: 150px;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            margin: 0 auto 30px;
-            transition: background 1s ease-in-out;
-        }
-
-        .score-inner {
-            width: 120px;
-            height: 120px;
-            background: white;
-            border-radius: 50%;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            box-shadow: 0 0 20px rgba(0,0,0,0.05);
-        }
-
-        .score-percentage {
-            font-size: 2.2rem;
-            font-weight: 700;
-            color: #4f46e5;
-        }
-
-        .score-label {
-            font-size: 0.9rem;
-            color: #6b7280;
-            margin-top: 5px;
-        }
-
-        .results h2 {
-            font-size: 2rem;
-            color: #1e293b;
-            margin-bottom: 15px;
-        }
-
-        .results p {
-            font-size: 1.1rem;
-            color: #6b7280;
-            margin-bottom: 30px;
-        }
-
-        .stats {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
-            gap: 20px;
-            margin: 40px 0;
-        }
-
-        .stat {
-            background: white;
-            padding: 20px;
-            border-radius: 12px;
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
-        }
-
-        .stat-value {
-            font-size: 1.8rem;
-            font-weight: 700;
-        }
-
+        .results { text-align: center; padding: 60px 40px; }
+        .score-circle { width: 150px; height: 150px; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 30px; }
+        .score-inner { width: 120px; height: 120px; background: white; border-radius: 50%; display: flex; flex-direction: column; align-items: center; justify-content: center; }
+        .score-percentage { font-size: 2.2rem; font-weight: 700; color: #4f46e5; }
+        .score-label { font-size: 0.9rem; color: #6b7280; margin-top: 5px; }
+        .results h2 { font-size: 2rem; color: #1e293b; margin-bottom: 15px; }
+        .results p { font-size: 1.1rem; color: #6b7280; margin-bottom: 30px; }
+        .stats { display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 20px; margin: 40px 0; }
+        .stat { background: white; padding: 20px; border-radius: 12px; box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05); }
+        .stat-value { font-size: 1.8rem; font-weight: 700; }
         #correctStat .stat-value { color: #10b981; }
         #incorrectStat .stat-value { color: #ef4444; }
-        #percentageStat .stat-value { color: #4f46e5; }
+        .stat-label { font-size: 0.9rem; color: #6b7280; margin-top: 5px; }
 
-        .stat-label {
-            font-size: 0.9rem;
-            color: #6b7280;
-            margin-top: 5px;
-        }
+        .hidden { display: none !important; }
 
-        /* Classe di utilità */
-        .hidden {
-            display: none !important;
-        }
-
-        /* Media Queries per responsività */
         @media (max-width: 768px) {
             body { padding: 0; }
             .container { border-radius: 0; min-height: 100vh; }
             .header { padding: 30px 20px; }
             .header h1 { font-size: 2rem; }
-            .quiz-content, .controls { padding: 20px; }
+            .back-link { top: 15px; left: 15px; }
+            .quiz-content, .controls, .progress-section { padding: 20px; }
             .options { grid-template-columns: 1fr; }
             .controls { flex-direction: column; gap: 15px; }
-            .results { padding: 40px 20px; }
-            .current-stats {
-                width: 100%; /* Occupano tutta la larghezza */
-                justify-content: space-around; /* Distribuiscono lo spazio */
-            }
+            .current-stats { width: 100%; justify-content: space-around; }
         }
     </style>
 </head>
@@ -419,6 +297,7 @@
 
     <footer class="controls">
         <button class="btn btn-secondary" id="prevBtn">← Precedente</button>
+        <button class="btn btn-danger" id="stopBtn">Ferma Quiz</button>
         <div class="current-stats">
             <span class="correct-count">Corrette: <span id="currentCorrectCount">0</span></span>
             <span class="incorrect-count">Sbagliate: <span id="currentIncorrectCount">0</span></span>
@@ -436,7 +315,7 @@
                 <div class="score-label">Punteggio Totale</div>
             </div>
         </div>
-        <h2>Quiz Completato!</h2>
+        <h2>Quiz Terminato!</h2>
         <p>Ecco il riepilogo della tua sessione.</p>
 
         <div class="stats">
@@ -1449,9 +1328,8 @@
 
     let questions = [];
 
-    // Funzione per mescolare un array (algoritmo Fisher-Yates)
     function shuffleArray(array) {
-        const shuffled = [...array]; // Crea una copia dell'array
+        const shuffled = [...array];
         for (let i = shuffled.length - 1; i > 0; i--) {
             const j = Math.floor(Math.random() * (i + 1));
             [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
@@ -1459,12 +1337,8 @@
         return shuffled;
     }
 
-    // -------------------------
-    // LOGICA DEL QUIZ
-    // -------------------------
     document.addEventListener('DOMContentLoaded', () => {
 
-        // Oggetto per centralizzare l'accesso agli elementi del DOM
         const dom = {
             quizContent: document.getElementById('quizContent'),
             progressFill: document.getElementById('progressFill'),
@@ -1473,37 +1347,31 @@
             prevBtn: document.getElementById('prevBtn'),
             nextBtn: document.getElementById('nextBtn'),
             showAnswerBtn: document.getElementById('showAnswerBtn'),
+            stopBtn: document.getElementById('stopBtn'),
             restartBtn: document.getElementById('restartBtn'),
             results: document.getElementById('results'),
             scorePercentage: document.getElementById('scorePercentage'),
-            // Statistiche Globali
             correctStat: document.querySelector('#correctStat .stat-value'),
             incorrectStat: document.querySelector('#incorrectStat .stat-value'),
-            // Nuove Statistiche
             answeredCorrectStat: document.querySelector('#answeredCorrectStat .stat-value'),
             answeredIncorrectStat: document.querySelector('#answeredIncorrectStat .stat-value'),
-
             scoreCircle: document.getElementById('scoreCircle'),
             progressSection: document.querySelector('.progress-section'),
             controls: document.querySelector('.controls'),
-
-            // Nuovi elementi per il conteggio passo-passo
             currentCorrectCount: document.getElementById('currentCorrectCount'),
             currentIncorrectCount: document.getElementById('currentIncorrectCount'),
         };
 
-        // Stato del quiz per tenere traccia dei dati
         let state = {
             currentQuestionIndex: 0,
-            userAnswers: [], // Array di oggetti { answer: boolean, correct: boolean | null }
+            userAnswers: [],
             isShowingAnswer: false,
         };
 
-        // Funzione per inizializzare o resettare il quiz
         function initQuiz() {
-            questions = shuffleArray(originalQuestions); // Mescola le domande
+            questions = shuffleArray(originalQuestions);
             state.currentQuestionIndex = 0;
-            state.userAnswers = new Array(questions.length).fill(null).map(() => ({ answer: null, correct: null })); // Inizializza con struttura per le risposte
+            state.userAnswers = new Array(questions.length).fill(null).map(() => ({ answer: null, correct: null }));
             state.isShowingAnswer = false;
 
             dom.results.classList.add('hidden');
@@ -1514,10 +1382,9 @@
             loadQuestion();
             updateProgress();
             updateNavigation();
-            updateCurrentStats(); // Inizializza i contatori a 0
+            updateCurrentStats();
         }
 
-        // Funzione per caricare la domanda corrente
         function loadQuestion() {
             state.isShowingAnswer = false;
             const question = questions[state.currentQuestionIndex];
@@ -1528,8 +1395,8 @@
                     <div class="question-number">Domanda ${state.currentQuestionIndex + 1}</div>
                     <div class="question-text">${question.text}</div>
                     <div class="options">
-                        <div class="option" data-answer="false">✗ Falso</div>
                         <div class="option" data-answer="true">✓ Vero</div>
+                        <div class="option" data-answer="false">✗ Falso</div>
                     </div>
                     <div class="explanation hidden">
                         <h4>Spiegazione:</h4>
@@ -1538,90 +1405,58 @@
                 </div>
             `;
 
-            const options = dom.quizContent.querySelectorAll('.option');
+            const optionsContainer = dom.quizContent.querySelector('.options');
+            optionsContainer.addEventListener('click', handleOptionClick);
 
-            if (userAnswer.answer !== null) { // Se l'utente ha già risposto
+            if (userAnswer.answer !== null) {
                 const selectedOption = dom.quizContent.querySelector(`.option[data-answer="${userAnswer.answer}"]`);
-                if (selectedOption) {
-                    selectedOption.classList.add('selected');
-                }
-                // Se la risposta era già stata mostrata, applica le classi correct/incorrect e l'spiegazione
+                if (selectedOption) selectedOption.classList.add('selected');
+
                 if (userAnswer.correct !== null) {
-                    options.forEach(option => option.classList.add('disabled'));
+                    state.isShowingAnswer = true;
+                    optionsContainer.querySelectorAll('.option').forEach(opt => opt.classList.add('disabled'));
                     const correctOption = dom.quizContent.querySelector(`.option[data-answer="${question.correct}"]`);
-                    correctOption.classList.add('correct');
-                    if (userAnswer.answer !== question.correct) {
-                        const incorrectOption = dom.quizContent.querySelector(`.option[data-answer="${userAnswer.answer}"]`);
-                        incorrectOption.classList.add('incorrect');
+                    if(correctOption) correctOption.classList.add('correct');
+                    if (!userAnswer.correct && selectedOption) {
+                        selectedOption.classList.add('incorrect');
                     }
                     dom.quizContent.querySelector('.explanation').classList.remove('hidden');
-                    state.isShowingAnswer = true;
                 }
             }
 
-            dom.showAnswerBtn.classList.remove('hidden');
-            dom.nextBtn.classList.add('hidden');
+            dom.showAnswerBtn.classList.toggle('hidden', state.isShowingAnswer);
+            dom.nextBtn.classList.toggle('hidden', !state.isShowingAnswer);
 
-            // Se la domanda è già stata valutata, disabilita il pulsante "Mostra Risposta"
-            if (userAnswer.correct !== null) {
-                dom.showAnswerBtn.classList.add('hidden');
-                dom.nextBtn.classList.remove('hidden');
-            }
             updateCurrentStats();
         }
 
-
-        // Gestisce il click su un'opzione (Vero/Falso)
         function handleOptionClick(event) {
-            if (state.isShowingAnswer || !event.target.classList.contains('option')) return;
+            const target = event.target;
+            if (state.isShowingAnswer || !target.classList.contains('option')) return;
 
-            const optionsContainer = event.currentTarget;
+            const optionsContainer = target.closest('.options');
             optionsContainer.querySelectorAll('.option').forEach(opt => opt.classList.remove('selected'));
+            target.classList.add('selected');
 
-            const selectedOption = event.target;
-            selectedOption.classList.add('selected');
-
-            const answer = selectedOption.dataset.answer === 'true';
-            state.userAnswers[state.currentQuestionIndex].answer = answer; // Salva solo la risposta data dall'utente
+            const answer = target.dataset.answer === 'true';
+            state.userAnswers[state.currentQuestionIndex].answer = answer;
         }
 
-        // Mostra la risposta corretta e la spiegazione
         function showAnswer() {
-            if (state.isShowingAnswer) return;
             if (state.userAnswers[state.currentQuestionIndex].answer === null) {
                 alert("Per favore, seleziona una risposta prima.");
                 return;
             }
 
-            state.isShowingAnswer = true;
             const question = questions[state.currentQuestionIndex];
-            const options = dom.quizContent.querySelectorAll('.option');
             const userAnswer = state.userAnswers[state.currentQuestionIndex].answer;
-
-            // Determina se la risposta data dall'utente è corretta e salvala nello stato
             const isCorrect = userAnswer === question.correct;
             state.userAnswers[state.currentQuestionIndex].correct = isCorrect;
 
-
-            options.forEach(option => {
-                option.classList.add('disabled'); // Disabilita tutte le opzioni
-                const optionValue = option.dataset.answer === 'true';
-
-                if (optionValue === question.correct) {
-                    option.classList.add('correct'); // Segna la risposta corretta
-                } else if (optionValue === userAnswer) {
-                    option.classList.add('incorrect'); // Segna la risposta selezionata dall'utente come errata
-                }
-            });
-
-            dom.quizContent.querySelector('.explanation').classList.remove('hidden');
-            dom.showAnswerBtn.classList.add('hidden');
-            dom.nextBtn.classList.remove('hidden');
-
-            updateCurrentStats(); // Aggiorna i contatori dopo aver mostrato la risposta
+            state.isShowingAnswer = true;
+            loadQuestion();
         }
 
-        // Funzione per navigare tra le domande o mostrare i risultati
         function navigate(direction) {
             const newIndex = state.currentQuestionIndex + direction;
             if (newIndex >= 0 && newIndex < questions.length) {
@@ -1634,7 +1469,6 @@
             }
         }
 
-        // Aggiorna la barra di progresso
         function updateProgress() {
             const progress = ((state.currentQuestionIndex + 1) / questions.length) * 100;
             dom.progressFill.style.width = `${progress}%`;
@@ -1642,73 +1476,49 @@
             dom.totalQuestions.textContent = questions.length;
         }
 
-        // Aggiorna lo stato dei pulsanti di navigazione
         function updateNavigation() {
             dom.prevBtn.disabled = state.currentQuestionIndex === 0;
             dom.nextBtn.textContent = state.currentQuestionIndex === questions.length - 1 ? '🏁 Termina Quiz' : 'Successiva →';
         }
 
-        // NUOVA FUNZIONE: Aggiorna i contatori di corrette/sbagliate in tempo reale
         function updateCurrentStats() {
-            let correctCount = 0;
-            let incorrectCount = 0;
-
-            // Conta solo le risposte già valutate (dove `correct` non è `null`)
-            state.userAnswers.forEach(answerObj => {
-                if (answerObj.correct !== null) {
-                    if (answerObj.correct === true) {
-                        correctCount++;
-                    } else {
-                        incorrectCount++;
-                    }
-                }
-            });
+            const correctCount = state.userAnswers.filter(a => a.correct === true).length;
+            const incorrectCount = state.userAnswers.filter(a => a.correct === false).length;
             dom.currentCorrectCount.textContent = correctCount;
             dom.currentIncorrectCount.textContent = incorrectCount;
         }
 
-
-        // Mostra la schermata finale con i risultati
         function showResults() {
-            // Calcoli globali
-            const totalQuestions = questions.length;
-            const correctTotal = state.userAnswers.filter((answerObj) => answerObj.correct === true).length;
-            const incorrectTotal = state.userAnswers.filter((answerObj) => answerObj.correct === false).length;
-            const percentageTotal = totalQuestions > 0 ? Math.round((correctTotal / totalQuestions) * 100) : 0;
-
-
-            // Calcoli basati sulle risposte date (quelle per cui `answer` non è `null`)
-            const answeredQuestions = state.userAnswers.filter(answerObj => answerObj.answer !== null);
-            const answeredCount = answeredQuestions.length;
-            const correctOfAnswered = answeredQuestions.filter(answerObj => answerObj.correct === true).length;
-            const incorrectOfAnswered = answeredQuestions.filter(answerObj => answerObj.correct === false).length;
-
-
-            // Aggiorna il DOM con i valori calcolati
-            dom.scorePercentage.textContent = `${percentageTotal}%`;
-            dom.correctStat.textContent = correctTotal;
-            dom.incorrectStat.textContent = incorrectTotal;
-
-            dom.answeredCorrectStat.textContent = `${correctOfAnswered} / ${answeredCount}`;
-            dom.answeredIncorrectStat.textContent = `${incorrectOfAnswered} / ${answeredCount}`;
-
-            const gradientDegrees = (percentageTotal / 100) * 360;
-            dom.scoreCircle.style.background = `conic-gradient(#4f46e5 ${gradientDegrees}deg, #e2e8f0 ${gradientDegrees}deg)`;
-
             dom.quizContent.classList.add('hidden');
             dom.controls.classList.add('hidden');
             dom.progressSection.classList.add('hidden');
             dom.results.classList.remove('hidden');
+
+            const totalQuestions = questions.length;
+            const answeredQuestions = state.userAnswers.filter(a => a.answer !== null);
+            const answeredCount = answeredQuestions.length;
+            const correctTotal = state.userAnswers.filter(a => a.correct === true).length;
+            const incorrectTotal = state.userAnswers.filter(a => a.correct === false).length;
+
+            const percentageTotal = totalQuestions > 0 ? Math.round((correctTotal / totalQuestions) * 100) : 0;
+
+            dom.scorePercentage.textContent = `${percentageTotal}%`;
+            dom.correctStat.textContent = correctTotal;
+            dom.incorrectStat.textContent = incorrectTotal;
+            dom.answeredCorrectStat.textContent = `${correctTotal} / ${answeredCount}`;
+            dom.answeredIncorrectStat.textContent = `${incorrectTotal} / ${answeredCount}`;
+
+            const gradientDegrees = (percentageTotal / 100) * 360;
+            dom.scoreCircle.style.background = `conic-gradient(#4f46e5 ${gradientDegrees}deg, #e2e8f0 ${gradientDegrees}deg)`;
         }
 
         // EVENT LISTENERS
-        dom.quizContent.addEventListener('click', handleOptionClick);
         dom.showAnswerBtn.addEventListener('click', showAnswer);
+        dom.stopBtn.addEventListener('click', showResults);
         dom.nextBtn.addEventListener('click', () => navigate(1));
         dom.prevBtn.addEventListener('click', () => navigate(-1));
         dom.restartBtn.addEventListener('click', initQuiz);
 
-        // Avvio del quiz al caricamento della pagina
         initQuiz();
     });
 </script>
