@@ -1,0 +1,1717 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quiz SAS - Architettura Software e Sistemi (Versione Migliorata)</title>
+    <link rel="manifest" href="manifest.json" />
+    <meta name="theme-color" content="#ffffff">
+
+    <style>
+        /* Reset e Stili di Base */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        /* Stili del corpo con gradiente e font moderno */
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #333;
+        }
+
+        /* Contenitore principale */
+        .container {
+            max-width: 900px;
+            width: 100%;
+            margin: 0 auto;
+            background: rgba(255, 255, 255, 0.98);
+            backdrop-filter: blur(12px);
+            border-radius: 24px;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* Header del quiz */
+        .header {
+            background: linear-gradient(135deg, #4f46e5, #06b6d4);
+            color: white;
+            padding: 40px;
+            text-align: center;
+        }
+
+        .header h1 {
+            font-size: 2.5rem;
+            font-weight: 700;
+        }
+
+        .header p {
+            font-size: 1.1rem;
+            opacity: 0.9;
+            margin-top: 5px;
+        }
+
+        /* Sezione della barra di progresso */
+        .progress-section {
+            padding: 30px 40px;
+            background: #f8fafc;
+            border-bottom: 1px solid #e2e8f0;
+            transition: opacity 0.3s ease-in-out;
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 8px;
+            background: #e2e8f0;
+            border-radius: 4px;
+            overflow: hidden;
+            margin-bottom: 15px;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #4f46e5, #06b6d4);
+            width: 0%;
+            transition: width 0.4s cubic-bezier(0.25, 1, 0.5, 1);
+            border-radius: 4px;
+        }
+
+        .progress-text {
+            font-weight: 600;
+            color: #475569;
+        }
+
+        /* Contenuto del quiz (domande) */
+        .quiz-content {
+            padding: 40px;
+            flex-grow: 1;
+            transition: opacity 0.3s ease-in-out;
+        }
+
+        /* Card della singola domanda */
+        .question-card {
+            background: white;
+            border-radius: 16px;
+            padding: 35px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+            border: 1px solid #f1f5f9;
+            opacity: 0;
+            animation: fadeIn 0.5s forwards;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(15px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .question-number {
+            display: inline-block;
+            background: linear-gradient(135deg, #4f46e5, #06b6d4);
+            color: white;
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-weight: 600;
+            font-size: 0.9rem;
+            margin-bottom: 20px;
+        }
+
+        .question-text {
+            font-size: 1.15rem;
+            line-height: 1.6;
+            color: #1e293b;
+            margin-bottom: 25px;
+        }
+
+        /* Opzioni di risposta */
+        .options {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+        }
+
+        .option {
+            padding: 15px 25px;
+            border: 2px solid #e2e8f0;
+            border-radius: 12px;
+            background: white;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            font-weight: 500;
+            text-align: center;
+        }
+
+        .option:not(.selected):not(.correct):not(.incorrect):hover {
+            border-color: #4f46e5;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 15px rgba(79, 70, 229, 0.1);
+        }
+
+        .option.selected {
+            border-color: #4f46e5;
+            background: linear-gradient(135deg, #4f46e5, #06b6d4);
+            color: white;
+            box-shadow: 0 6px 20px rgba(79, 70, 229, 0.2);
+        }
+
+        .option.correct {
+            border-color: #10b981;
+            background: linear-gradient(135deg, #10b981, #059669);
+            color: white;
+            transform: scale(1.02);
+        }
+
+        .option.incorrect {
+            border-color: #ef4444;
+            background: linear-gradient(135deg, #ef4444, #dc2626);
+            color: white;
+        }
+
+        .option.disabled {
+            cursor: not-allowed;
+            opacity: 0.7;
+        }
+
+        /* Spiegazione della risposta */
+        .explanation {
+            margin-top: 25px;
+            padding: 20px;
+            background: #f1f5f9;
+            border-radius: 10px;
+            border-left: 4px solid #4f46e5;
+            opacity: 0;
+            animation: fadeIn 0.5s 0.2s forwards;
+        }
+
+        .explanation h4 {
+            color: #4f46e5;
+            margin-bottom: 10px;
+        }
+
+        .explanation p {
+            color: #475569;
+            line-height: 1.6;
+        }
+
+        /* Controlli di navigazione */
+        .controls {
+            padding: 30px 40px;
+            background: #f8fafc;
+            border-top: 1px solid #e2e8f0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            transition: opacity 0.3s ease-in-out;
+            flex-wrap: wrap; /* Permette il wrap su schermi piccoli */
+            gap: 15px; /* Spazio tra gli elementi */
+        }
+
+        .btn {
+            padding: 12px 28px;
+            border: none;
+            border-radius: 10px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            font-size: 0.95rem;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .btn:active {
+            transform: translateY(1px) scale(0.98);
+        }
+
+        .btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #4f46e5, #06b6d4);
+            color: white;
+            box-shadow: 0 4px 15px rgba(79, 70, 229, 0.2);
+        }
+
+        .btn-primary:not(:disabled):hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(79, 70, 229, 0.3);
+        }
+
+        .btn-secondary {
+            background: #e2e8f0;
+            color: #475569;
+        }
+
+        .btn-secondary:not(:disabled):hover {
+            background: #cbd5e1;
+        }
+
+        .back-link {
+            color: #cbd5e1;
+            text-decoration: none;
+            font-size: 0.95rem;
+            transition: color 0.2s ease;
+        }
+
+        .back-link:hover {
+            color: #4f46e5; /* Cambia colore all'hover */
+        }
+
+        /* Stili per la sezione dei conteggi attuali */
+        .current-stats {
+            display: flex;
+            gap: 20px;
+            font-weight: 600;
+            color: #475569;
+            flex-grow: 1; /* Permette di occupare spazio */
+            justify-content: center; /* Centra orizzontalmente se c'è spazio */
+        }
+
+        .current-stats span {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .current-stats .correct-count {
+            color: #10b981; /* Verde per le corrette */
+        }
+
+        .current-stats .incorrect-count {
+            color: #ef4444; /* Rosso per le sbagliate */
+        }
+
+        /* Sezione dei risultati */
+        .results {
+            text-align: center;
+            padding: 60px 40px;
+            opacity: 0;
+            animation: fadeIn 0.6s forwards;
+        }
+
+        .score-circle {
+            width: 150px;
+            height: 150px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 30px;
+            transition: background 1s ease-in-out;
+        }
+
+        .score-inner {
+            width: 120px;
+            height: 120px;
+            background: white;
+            border-radius: 50%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 0 20px rgba(0,0,0,0.05);
+        }
+
+        .score-percentage {
+            font-size: 2.2rem;
+            font-weight: 700;
+            color: #4f46e5;
+        }
+
+        .score-label {
+            font-size: 0.9rem;
+            color: #6b7280;
+            margin-top: 5px;
+        }
+
+        .results h2 {
+            font-size: 2rem;
+            color: #1e293b;
+            margin-bottom: 15px;
+        }
+
+        .results p {
+            font-size: 1.1rem;
+            color: #6b7280;
+            margin-bottom: 30px;
+        }
+
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+            gap: 20px;
+            margin: 40px 0;
+        }
+
+        .stat {
+            background: white;
+            padding: 20px;
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+        }
+
+        .stat-value {
+            font-size: 1.8rem;
+            font-weight: 700;
+        }
+
+        #correctStat .stat-value { color: #10b981; }
+        #incorrectStat .stat-value { color: #ef4444; }
+        #percentageStat .stat-value { color: #4f46e5; }
+
+        .stat-label {
+            font-size: 0.9rem;
+            color: #6b7280;
+            margin-top: 5px;
+        }
+
+        /* Classe di utilità */
+        .hidden {
+            display: none !important;
+        }
+
+        /* Media Queries per responsività */
+        @media (max-width: 768px) {
+            body { padding: 0; }
+            .container { border-radius: 0; min-height: 100vh; }
+            .header { padding: 30px 20px; }
+            .header h1 { font-size: 2rem; }
+            .quiz-content, .controls { padding: 20px; }
+            .options { grid-template-columns: 1fr; }
+            .controls { flex-direction: column; gap: 15px; }
+            .results { padding: 40px 20px; }
+            .current-stats {
+                width: 100%; /* Occupano tutta la larghezza */
+                justify-content: space-around; /* Distribuiscono lo spazio */
+            }
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <header class="header">
+        <h1>Quiz SAS</h1>
+        <p>Unified Process & Design Patterns</p>
+        <a href="index.html" class="back-link">← Torna alla homepage</a>
+    </header>
+
+    <section class="progress-section" aria-live="polite">
+        <div class="progress-bar">
+            <div class="progress-fill" id="progressFill"></div>
+        </div>
+        <div class="progress-text">
+            Domanda <span id="currentQuestion">1</span> di <span id="totalQuestions">0</span>
+        </div>
+    </section>
+
+    <main class="quiz-content" id="quizContent">
+    </main>
+
+    <footer class="controls">
+        <button class="btn btn-secondary" id="prevBtn">← Precedente</button>
+        <div class="current-stats">
+            <span class="correct-count">Corrette: <span id="currentCorrectCount">0</span></span>
+            <span class="incorrect-count">Sbagliate: <span id="currentIncorrectCount">0</span></span>
+        </div>
+        <div>
+            <button class="btn btn-primary" id="showAnswerBtn">Mostra Risposta</button>
+            <button class="btn btn-primary hidden" id="nextBtn">Successiva →</button>
+        </div>
+    </footer>
+
+    <section class="results hidden" id="results" aria-live="assertive">
+        <div class="score-circle" id="scoreCircle">
+            <div class="score-inner">
+                <div class="score-percentage" id="scorePercentage">0%</div>
+                <div class="score-label">Punteggio Totale</div>
+            </div>
+        </div>
+        <h2>Quiz Completato!</h2>
+        <p>Ecco il riepilogo della tua sessione.</p>
+
+        <div class="stats">
+            <div class="stat" id="correctStat">
+                <div class="stat-value">0</div>
+                <div class="stat-label">Corrette (su Totali)</div>
+            </div>
+            <div class="stat" id="incorrectStat">
+                <div class="stat-value">0</div>
+                <div class="stat-label">Sbagliate (su Totali)</div>
+            </div>
+            <div class="stat" id="answeredCorrectStat">
+                <div class="stat-value">0 / 0</div>
+                <div class="stat-label">Corrette / Date</div>
+            </div>
+            <div class="stat" id="answeredIncorrectStat">
+                <div class="stat-value">0 / 0</div>
+                <div class="stat-label">Sbagliate / Date</div>
+            </div>
+        </div>
+
+        <button class="btn btn-primary" id="restartBtn">
+            🔄 Ricomincia Quiz
+        </button>
+    </section>
+</div>
+
+<script>
+    // Quiz questions with correct answers and explanations
+    const originalQuestions = [
+        {
+            id: 1,
+            text: "In UP, la disciplina dei requisiti ha l'obiettivo di produrre una lista dei requisiti, capire il contesto del sistema, catturare i requisiti funzionali e i requisiti non-funzionali",
+            correct: true,
+            explanation: "La disciplina dei requisiti in UP ha effettivamente come obiettivi principali: produrre una lista dei requisiti, comprendere il contesto del sistema, e catturare sia i requisiti funzionali che non-funzionali."
+        },
+        {
+            id: 2,
+            text: "Il modello di dominio include la definizione di oggetti, associazioni e attributi di classi software",
+            correct: false,
+            explanation: "Il modello di dominio rappresenta classi CONCETTUALI del dominio del problema, non classi software. Include oggetti concettuali, associazioni e attributi del mondo reale."
+        },
+        {
+            id: 3,
+            text: "Il modello di dominio è un dizionario visuale delle classi concettuali",
+            correct: true,
+            explanation: "Corretto. Il modello di dominio è una rappresentazione visuale (dizionario visuale) delle classi concettuali rilevanti nel dominio del problema."
+        },
+        {
+            id: 4,
+            text: "Il modello di dominio è una rappresentazione testuale delle classi concettuali, oggetti reali del dominio",
+            correct: false,
+            explanation: "Il modello di dominio è una rappresentazione VISUALE (non testuale) delle classi concettuali. Utilizza diagrammi UML per rappresentare graficamente i concetti."
+        },
+        {
+            id: 5,
+            text: "Il modello di dominio non è parte della disciplina dei requisiti",
+            correct: true,
+            explanation: "Il modello di dominio è parte della disciplina di Modellazione del Business in UP. Aiuta a comprendere e documentare i concetti del dominio del problema."
+        },
+        {
+            id: 6,
+            text: "Nelle associazioni nel modello di dominio la direzione di lettura va sempre specificata",
+            correct: false,
+            explanation: "La direzione di lettura nelle associazioni del modello di dominio NON va sempre specificata. È opzionale e si usa solo quando serve chiarire il significato dell'associazione."
+        },
+        {
+            id: 7,
+            text: "L'associazione nel modello di dominio è per sua natura unidirezionale",
+            correct: false,
+            explanation: "Le associazioni nel modello di dominio sono per natura BIDIREZIONALI. Rappresentano relazioni concettuali che possono essere navigate in entrambe le direzioni."
+        },
+        {
+            id: 8,
+            text: "L'associazione nel modello di dominio rappresenta una relazione significativa tra classi",
+            correct: true,
+            explanation: "Corretto. Le associazioni nel modello di dominio rappresentano relazioni significative e rilevanti tra le classi concettuali del dominio."
+        },
+        {
+            id: 9,
+            text: "L'associazione nel modello di dominio rappresenta un valore logico degli oggetti di una classe",
+            correct: false,
+            explanation: "Le associazioni rappresentano RELAZIONI tra classi, non valori logici degli oggetti. I valori logici sono rappresentati dagli attributi."
+        },
+        {
+            id: 10,
+            text: "L'associazione nel modello di dominio rappresenta un'insieme di n-tuple di oggetti delle classi",
+            correct: true,
+            explanation: "Matematicamente, un'associazione può essere vista come un insieme di n-tuple (coppie, triple, ecc.) di oggetti delle classi coinvolte nella relazione."
+        },
+        {
+            id: 11,
+            text: "Il modello di dominio è una rappresentazione testuale delle classi concettuali, oggetti reali del dominio",
+            correct: false,
+            explanation: "Il modello di dominio è una rappresentazione VISUALE (non testuale) delle classi concettuali, utilizzando diagrammi UML."
+        },
+        {
+            id: 12,
+            text: "Il modello di dominio è un dizionario visuale delle classi concettuali",
+            correct: true,
+            explanation: "Corretto. Il modello di dominio funge da dizionario visuale che definisce e illustra le classi concettuali rilevanti nel dominio."
+        },
+        {
+            id: 13,
+            text: "Il MODELLO DI DOMINIO: Insieme di diagrammi di classi UML che includono associazioni tra classi software",
+            correct: false,
+            explanation: "Il modello di dominio include associazioni tra classi CONCETTUALI, non classi software. Le classi software appartengono al modello di progetto."
+        },
+        {
+            id: 14,
+            text: "Il MODELLO DI DOMINIO: Rappresentazione grafica degli oggetti software",
+            correct: false,
+            explanation: "Il modello di dominio rappresenta oggetti CONCETTUALI del dominio del problema, non oggetti software che appartengono all'implementazione."
+        },
+        {
+            id: 15,
+            text: "Il MODELLO DI DOMINIO: Rappresentazione visuale delle classi concettuali",
+            correct: true,
+            explanation: "Corretto. Il modello di dominio è una rappresentazione visuale delle classi concettuali rilevanti nel dominio del problema."
+        },
+        {
+            id: 16,
+            text: "Il MODELLO DI DOMINIO: Insieme di diagrammi di classi UML che includono associazioni tra classi concettuali",
+            correct: true,
+            explanation: "Corretto. Il modello di dominio utilizza diagrammi di classi UML per rappresentare classi concettuali e le loro associazioni."
+        },
+        {
+            id: 17,
+            text: "Il MODELLO DI DOMINIO: Rappresentazione visuale delle classi JAVA",
+            correct: false,
+            explanation: "Il modello di dominio rappresenta classi CONCETTUALI del dominio, non classi Java che sono parte dell'implementazione software."
+        },
+        {
+            id: 18,
+            text: "Il MODELLO DI DOMINIO: Insieme di diagrammi di classi UML che includono le responsabilità di fare",
+            correct: false,
+            explanation: "Il modello di dominio NON include responsabilità 'di fare' (metodi). Le responsabilità sono assegnate durante la fase di progetto, non nell'analisi del dominio."
+        },
+        {
+            id: 19,
+            text: "Un caso d'uso rappresenta una maniera di utilizzare il sistema da parte di un utente per raggiungere un suo obbiettivo",
+            correct: true,
+            explanation: "Corretto. Un caso d'uso descrive come un attore (utente) interagisce con il sistema per raggiungere un obiettivo specifico."
+        },
+        {
+            id: 20,
+            text: "La narrativa di un caso d'uso viene espressa a livello delle intenzioni dell'utente e della responsabilità del sistema",
+            correct: true,
+            explanation: "Corretto. I casi d'uso sono scritti dal punto di vista delle intenzioni dell'utente e delle responsabilità che il sistema deve assumere per soddisfarle."
+        },
+        {
+            id: 21,
+            text: "La narrativa di un caso d'uso viene espressa a livello delle azioni concrete dell'utente e delle responsabilità del sistema",
+            correct: false,
+            explanation: "I casi d'uso sono scritti a livello di INTENZIONI dell'utente, non di azioni concrete. Le azioni concrete appartengono a un livello di dettaglio troppo basso."
+        },
+        {
+            id: 22,
+            text: "Un caso d'uso è sempre completato (implementato) in una solo iterazione",
+            correct: false,
+            explanation: "Un caso d'uso può essere implementato in più iterazioni. Spesso si implementano prima gli scenari base e successivamente quelli alternativi."
+        },
+        {
+            id: 23,
+            text: "Un caso d'uso rappresenta l'insieme di funzionalità di un sistema",
+            correct: false,
+            explanation: "Un caso d'uso rappresenta UN MODO SPECIFICO di utilizzare il sistema per raggiungere un obiettivo, non l'insieme di tutte le funzionalità."
+        },
+        {
+            id: 24,
+            text: "I requisiti funzionali non catturati dai casi d'uso vengono descritti nelle specifiche supplementari",
+            correct: true,
+            explanation: "Corretto. Le specifiche supplementari documentano i requisiti funzionali che non sono catturati dai casi d'uso (es. report, formati di file, ecc.)."
+        },
+        {
+            id: 25,
+            text: "L'analisi linguistica dei casi d'uso nel formato dettagliato è una fonte di ispirazione per la costruzione del modello di dominio",
+            correct: true,
+            explanation: "Corretto. L'analisi dei sostantivi e dei concetti nei casi d'uso dettagliati aiuta a identificare le classi concettuali per il modello di dominio."
+        },
+        {
+            id: 26,
+            text: "Il modello di dominio riporta i concetti significativi relativi ai casi d'uso",
+            correct: true,
+            explanation: "Corretto. Il modello di dominio include i concetti del dominio che sono rilevanti per i casi d'uso del sistema."
+        },
+        {
+            id: 27,
+            text: "L'analisi linguistica dei casi d'uso nel formato dettagliato è una fonte di ispirazione per la costruzione del modello di dominio",
+            correct: true,
+            explanation: "Corretto. L'analisi linguistica dei casi d'uso (identificazione di sostantivi, concetti) è una tecnica fondamentale per costruire il modello di dominio."
+        },
+        {
+            id: 28,
+            text: "I requisiti non funzionali sono descritti completamente dai casi d'uso",
+            correct: false,
+            explanation: "I casi d'uso catturano principalmente requisiti FUNZIONALI. I requisiti non-funzionali (performance, sicurezza, usabilità) sono documentati nelle specifiche supplementari."
+        },
+        {
+            id: 29,
+            text: "I contratti sono considerati parte del modello dei casi d'uso poiché forniscono maggiori dettagli dell'analisi, sull'effetto delle operazioni di sistema implicate dai casi d'uso",
+            correct: true,
+            explanation: "Corretto. I contratti delle operazioni di sistema forniscono dettagli aggiuntivi sugli effetti delle operazioni identificate nei casi d'uso."
+        },
+        {
+            id: 30,
+            text: "I CASI D'USO Sono una collezione di soli scenari di successo che descrivono un attore che usa il sistema per raggiungere un obbiettivo specifico",
+            correct: false,
+            explanation: "I casi d'uso includono sia scenari di SUCCESSO che scenari ALTERNATIVI (inclusi quelli di fallimento). Non sono limitati ai soli scenari di successo."
+        },
+        {
+            id: 31,
+            text: "I casi d'uso sono descrizioni testuali di scenari di uso interessanti del sistema software che si deve realizzare",
+            correct: true,
+            explanation: "Corretto. I casi d'uso sono descrizioni testuali che documentano scenari di utilizzo significativi del sistema da sviluppare."
+        },
+        {
+            id: 32,
+            text: "I casi d'uso servono a catturare i requisiti funzionali",
+            correct: true,
+            explanation: "Corretto. Il principale scopo dei casi d'uso è catturare e documentare i requisiti funzionali del sistema."
+        },
+        {
+            id: 33,
+            text: "In UP i casi d'uso vengono utilizzati per catturare i requisiti funzionali nella disciplina dei requisiti",
+            correct: true,
+            explanation: "Corretto. Nel Unified Process, i casi d'uso sono lo strumento principale per catturare i requisiti funzionali durante la disciplina dei requisiti."
+        },
+        {
+            id: 34,
+            text: "I casi d'uso sono caratteristiche del sistema",
+            correct: false,
+            explanation: "I casi d'uso NON sono caratteristiche del sistema, ma descrivono COME il sistema viene utilizzato dagli attori per raggiungere obiettivi specifici."
+        },
+        {
+            id: 35,
+            text: "I casi d'uso sono utilizzati per pianificare le iterazioni",
+            correct: true,
+            explanation: "Corretto. I casi d'uso sono utilizzati per organizzare e pianificare le iterazioni di sviluppo, implementando i casi d'uso più critici nelle prime iterazioni."
+        },
+        {
+            id: 36,
+            text: "In UP i casi d'uso sono descritti mediante il linguaggio UML",
+            correct: false,
+            explanation: "I casi d'uso in UP sono descritti principalmente in linguaggio NATURALE (testo), non in UML. UML fornisce solo i diagrammi dei casi d'uso per mostrare le relazioni."
+        },
+        {
+            id: 37,
+            text: "DURANTE LA FASE DI ELABORAZIONE Si scrivono circa il 10% dei casi d'uso tra i più critici in formato dettagliato utilizzando template appositi",
+            correct: false,
+            explanation: "Durante l'ideazione si scrive in dettaglio circa il 10% dei casi d'uso più critici e rischiosi per guidare l'architettura."
+        },
+        {
+            id: 38,
+            text: "In percentuale sul totale di casi d'uso complessivi di un progetto, sono pari al 5% quelli che dovrebbero essere realizzati entro la conclusione della fase di ideazione?",
+            correct: true,
+            explanation: "Corretto. Durante la fase di ideazione si implementa circa il 5% dei casi d'uso tra tutti quelli identificati."
+        },
+        {
+            id: 39,
+            text: "I casi d'uso mettono in risalto gli obiettivi degli utenti",
+            correct: true,
+            explanation: "Corretto. I casi d'uso sono organizzati attorno agli obiettivi che gli utenti (attori) vogliono raggiungere utilizzando il sistema."
+        },
+        {
+            id: 40,
+            text: "I casi d'uso sono utilizzati per la scoperta e la definizione dei requisiti non funzionali",
+            correct: false,
+            explanation: "I casi d'uso sono utilizzati principalmente per i requisiti FUNZIONALI. I requisiti non-funzionali sono documentati nelle specifiche supplementari."
+        },
+        {
+            id: 41,
+            text: "I casi d'uso sono utilizzati per la scoperta e la definizione dei requisiti funzionali",
+            correct: true,
+            explanation: "Corretto. I casi d'uso sono lo strumento principale per scoprire, definire e documentare i requisiti funzionali del sistema."
+        },
+        {
+            id: 42,
+            text: "I casi d'uso mettono in risalto gli obiettivi del sistema",
+            correct: false,
+            explanation: "I casi d'uso mettono in risalto gli obiettivi degli UTENTI (attori), non del sistema. Il sistema risponde agli obiettivi degli utenti."
+        },
+        {
+            id: 43,
+            text: "I casi d'uso sono utilizzati solo nelle prime iterazioni di sviluppo",
+            correct: false,
+            explanation: "I casi d'uso sono utilizzati durante TUTTO il processo di sviluppo, non solo nelle prime iterazioni. Guidano implementazione, test e validazione."
+        },
+        {
+            id: 44,
+            text: "Il principale input per la redazione dei contratti sono le operazioni di sistema e il modello di dominio",
+            correct: true,
+            explanation: "Corretto. I contratti sono scritti per le operazioni di sistema identificate negli SSD, utilizzando il modello di dominio per descrivere gli effetti."
+        },
+        {
+            id: 45,
+            text: "Le post-condizioni descrivono i cambiamenti di stato degli oggetti nel modello di dominio dopo il completamento dell'operazione",
+            correct: true,
+            explanation: "Corretto. Le post-condizioni nei contratti descrivono come cambiano gli stati degli oggetti del modello di dominio dopo l'esecuzione dell'operazione."
+        },
+        {
+            id: 46,
+            text: "I contratti servono come input per il modello di dominio",
+            correct: false,
+            explanation: "I contratti NON servono come input per il modello di dominio. È il contrario: il modello di dominio serve come input per scrivere i contratti."
+        },
+        {
+            id: 47,
+            text: "La responsabilità sono assegnate ai concetti definiti nel modello di dominio",
+            correct: false,
+            explanation: "Le responsabilità sono assegnate alle CLASSI SOFTWARE durante la progettazione, non ai concetti del modello di dominio che rappresenta solo l'analisi."
+        },
+        {
+            id: 48,
+            text: "I contratti delle operazioni di sistema usano pre e post- condizioni per descrivere nel dettaglio i cambiamenti agli oggetti (concettuali) in un modello di dominio",
+            correct: true,
+            explanation: "Corretto. I contratti utilizzano pre-condizioni e post-condizioni per descrivere dettagliatamente come le operazioni di sistema modificano gli oggetti concettuali."
+        },
+        {
+            id: 49,
+            text: "I contratti servono come input per il modello di dominio",
+            correct: false,
+            explanation: "I contratti NON servono come input per il modello di dominio. Il modello di dominio è creato prima e serve come base per scrivere i contratti."
+        },
+        {
+            id: 50,
+            text: "Le pre-condizioni descrivono i cambiamenti di stato degli oggetti nel modello di dominio dopo il completamento dell'operazione",
+            correct: false,
+            explanation: "Le pre-condizioni descrivono lo stato che deve esistere PRIMA dell'operazione. Sono le POST-condizioni che descrivono i cambiamenti dopo l'operazione."
+        },
+        {
+            id: 51,
+            text: "La composizione di oggetti è definita staticamente attraverso la specifica delle classi e delle associazioni",
+            correct: true,
+            explanation: "Corretto. La composizione viene definita staticamente nel codice attraverso la definizione delle classi e delle loro relazioni di composizione."
+        },
+        {
+            id: 52,
+            text: "Il meccanismo di specializzazione per il riuso del codice è detto white-box",
+            correct: true,
+            explanation: "Corretto. L'ereditarietà (specializzazione) è chiamata riuso 'white-box' perché la sottoclasse ha visibilità sui dettagli interni della superclasse."
+        },
+        {
+            id: 53,
+            text: "La modifica dell'interfaccia di una classe ha in generale un basso impatto nelle sottoclassi",
+            correct: false,
+            explanation: "La modifica dell'interfaccia di una classe ha generalmente un ALTO impatto sulle sottoclassi, che dipendono dall'interfaccia della superclasse."
+        },
+        {
+            id: 54,
+            text: "I pattern GRASP sono espressi in termini di responsabilità, ruoli e collaborazioni",
+            correct: true,
+            explanation: "Corretto. I pattern GRASP (General Responsibility Assignment Software Patterns) si concentrano sull'assegnazione di responsabilità, ruoli e collaborazioni tra oggetti."
+        },
+        {
+            id: 55,
+            text: "La decisione sull'assegnazione delle responsabilità precede sempre la codifica",
+            correct: false,
+            explanation: "L'assegnazione delle responsabilità è parte della progettazione (OOD) che precede logicamente la fase di implementazione/codifica, ma le decisioni sull’assegnazione delle responsabilità agli oggetti possono anche essere prese mentre si esegue la codifica oppure durante la modellazione."
+        },
+        {
+            id: 56,
+            text: "L'utilizzo dei pattern GRASP è svolto all'interno della disciplina dei requisiti di UP",
+            correct: false,
+            explanation: "I pattern GRASP sono utilizzati nella disciplina di PROGETTAZIONE (Design), non nella disciplina dei requisiti. Riguardano l'assegnazione di responsabilità alle classi software."
+        },
+        {
+            id: 57,
+            text: "Le responsabilità sono assegnate alle classi durante la OOD",
+            correct: true,
+            explanation: "Corretto. L'Object-Oriented Design (OOD) è la fase in cui si assegnano le responsabilità alle classi software utilizzando principi come i pattern GRASP."
+        },
+        {
+            id: 58,
+            text: "Il meccanismo di delega è preferibile al meccanismo di specializzazione per il riuso del codice",
+            correct: true,
+            explanation: "Corretto. La composizione/delega (riuso black-box) è generalmente preferibile all'ereditarietà perché è più flessibile e mantiene un minor accoppiamento."
+        },
+        {
+            id: 59,
+            text: "L'ereditarietà rispetta l'incapsulamento",
+            correct: false,
+            explanation: "L'ereditarietà NON rispetta completamente l'incapsulamento perché la sottoclasse ha accesso ai membri protetti della superclasse, rompendo l'incapsulamento."
+        },
+        {
+            id: 60,
+            text: "La composizione di oggetti è un meccanismo di riuso del codice detto black-box",
+            correct: true,
+            explanation: "Corretto. La composizione è chiamata riuso 'black-box' perché gli oggetti componenti sono utilizzati solo attraverso le loro interfacce pubbliche."
+        },
+        {
+            id: 61,
+            text: "Un metodo di una classe software rappresenta una responsabilità 'a fare' per le istanze di tale classe",
+            correct: true,
+            explanation: "Corretto. I metodi rappresentano le responsabilità 'doing' (a fare) di una classe, cioè quello che gli oggetti di quella classe sanno fare."
+        },
+        {
+            id: 62,
+            text: "DURANTE LA FASE DI ELABORAZIONE Non vengono effettuati test al codice di sviluppo",
+            correct: false,
+            explanation: "Durante la fase di elaborazione SI effettuano test al codice. È una fase in cui si programma il nucleo architetturale e lo si testa."
+        },
+        {
+            id: 63,
+            text: "DURANTE LA FASE DI ELABORAZIONE Non si sviluppa codice",
+            correct: false,
+            explanation: "Durante la fase di elaborazione SI sviluppa codice. Si programma il nucleo architetturale del sistema per validare l'architettura proposta."
+        },
+        {
+            id: 64,
+            text: "DURANTE LA FASE DI ELABORAZIONE Viene scoperta e stabilizzata la maggior parte dei requisiti",
+            correct: true,
+            explanation: "Corretto. L'elaborazione è la fase in cui si scoprono e stabilizzano la maggior parte dei requisiti, completando l'analisi iniziata nell'ideazione."
+        },
+        {
+            id: 65,
+            text: "DURANTE LA FASE DI ELABORAZIONE Si realizza uno studio economico per stabilire l'ordine di grandezza del progetto e dei costi",
+            correct: false,
+            explanation: "Lo studio economico preliminare viene fatto durante la fase di IDEAZIONE, non di elaborazione. L'elaborazione raffina le stime."
+        },
+        {
+            id: 66,
+            text: "DURANTE LA FASE DI ELABORAZIONE Viene programmato il nucleo, rischioso, dell'architettura",
+            correct: true,
+            explanation: "Corretto. Durante l'elaborazione si programma e testa il nucleo architetturale del sistema, concentrandosi sulle parti più rischiose."
+        },
+        {
+            id: 67,
+            text: "In UML per responsabilità si intende la specifica di un metodo associato ad una classe Java",
+            correct: false,
+            explanation: "In UML, responsabilità è un concetto più generale che include sia 'knowing' che 'doing'. Non è limitato ai soli metodi Java."
+        },
+        {
+            id: 68,
+            text: "In UML per responsabilità si intende la specifica di una variabile di istanza di una classe Java",
+            correct: false,
+            explanation: "Le variabili di istanza sono parte delle responsabilità 'knowing', ma la responsabilità in UML è un concetto più ampio che include anche le azioni."
+        },
+        {
+            id: 69,
+            text: "In UML per responsabilità si intende un contratto o un obbligo di un classificatore",
+            correct: true,
+            explanation: "Corretto. In UML, una responsabilità è definita come un contratto o obbligo di un classificatore (classe), che include sia knowing che doing."
+        },
+        {
+            id: 70,
+            text: "In UML per responsabilità si intende la specifica di una variabile di istanza o di un metodo associato ad una classe Java",
+            correct: false,
+            explanation: "La responsabilità in UML è un concetto più astratto di contratto/obbligo, non semplicemente l'implementazione in variabili o metodi Java."
+        },
+        {
+            id: 71,
+            text: "Gli SSD Sono espressi attraverso i diagrammi di comunicazione di UML",
+            correct: false,
+            explanation: "Gli SSD (System Sequence Diagrams) sono espressi attraverso i diagrammi di SEQUENZA di UML, non i diagrammi di comunicazione."
+        },
+        {
+            id: 72,
+            text: "Gli SSD Mostrano l'ordine degli eventi generati dagli attori esterni al sistema",
+            correct: true,
+            explanation: "Corretto. Gli SSD mostrano la sequenza temporale degli eventi di sistema generati dagli attori esterni per uno specifico scenario di caso d'uso."
+        },
+        {
+            id: 73,
+            text: "I contratti costituiscono un input per gli SSD delle operazioni e per la progettazione degli oggetti",
+            correct: false,
+            explanation: "È il contrario: gli SSD sono input per i contratti. Gli SSD identificano le operazioni di sistema, per le quali poi si scrivono i contratti."
+        },
+        {
+            id: 74,
+            text: "Un evento di sistema è un evento interno al sistema",
+            correct: false,
+            explanation: "Un evento di sistema è un evento che arriva al sistema dall'ESTERNO, generato da un attore esterno. Gli eventi interni non sono eventi di sistema."
+        },
+        {
+            id: 75,
+            text: "Gli SSD mostrano gli eventi generati dagli attori esterni al sistema",
+            correct: true,
+            explanation: "Corretto. Gli SSD (System Sequence Diagrams) mostrano gli eventi di sistema generati dagli attori esterni durante l'esecuzione di un caso d'uso."
+        },
+        {
+            id: 76,
+            text: "In percentuale sul totale dei requisiti funzionali di un progetto, quelli che dovrebbero essere identificati entro la conclusione della fase di IDEAZIONE sono pari al 50%? ",
+            correct: false,
+            explanation: "Alla fine dell'ideazione si dovrebbe aver identificato circa il 70% dei requisiti funzionali, non il 50%. Il 50% è troppo poco per completare l'ideazione."
+        },
+        {
+            id: 77,
+            text: "In percentuale sul totale dei requisiti funzionali di un progetto, quelli che dovrebbero essere identificati entro la conclusione della fase di ELABORAZIONE sono pari al 100%?",
+            correct: true,
+            explanation: "Corretto. Alla fine dell'elaborazione dovrebbero essere identificati praticamente tutti i requisiti funzionali, per poter pianificare accuratamente la costruzione."
+        },
+        {
+            id: 78,
+            text: "Il riuso white-box è preferibile al riuso black-box",
+            correct: false,
+            explanation: "Il riuso black-box (composizione) è generalmente preferibile al riuso white-box (ereditarietà) perché offre maggiore flessibilità e minor accoppiamento."
+        },
+        {
+            id: 79,
+            text: "Il meccanismo di ereditarietà non è preferibile al meccanismo di delega per ottenere il riuso del software",
+            correct: true,
+            explanation: "Corretto. La delega (composizione) è spesso preferibile all'ereditarietà per il riuso perché è più flessibile e mantiene un accoppiamento più basso."
+        },
+        {
+            id: 80,
+            text: "L'ereditarietà si avvale del meccanismo di delega",
+            correct: false,
+            explanation: "L'ereditarietà e la delega sono meccanismi ALTERNATIVI per il riuso del codice. L'ereditarietà non si avvale della delega."
+        },
+        {
+            id: 81,
+            text: "Il meccanismo di composizione non rispetta l'incapsulamento",
+            correct: false,
+            explanation: "Il meccanismo di composizione RISPETTA l'incapsulamento perché accede agli oggetti componenti solo attraverso le loro interfacce pubbliche."
+        },
+        {
+            id: 82,
+            text: "Le operazioni di sistema possono essere identificate mentre si abbozzano gli SSD",
+            correct: true,
+            explanation: "Corretto. Le operazioni di sistema vengono identificate durante la creazione degli SSD, che mostrano gli eventi che il sistema deve gestire."
+        },
+        {
+            id: 83,
+            text: "I contratti descrivono in modo dettagliato i cambiamenti richiesti dall'esecuzione di una operazione di sistema, descrivono come devono essere ottenuti questi risultati",
+            correct: false,
+            explanation: "I contratti descrivono COSA deve succedere (post-condizioni), ma NON descrivono COME ottenere questi risultati. Il 'come' è parte della progettazione."
+        },
+        {
+            id: 84,
+            text: "I pattern GoF incentivano l'uso dell'ereditarietà come meccanismo di riuso del codice, in particolare attraverso il pattern composite",
+            correct: false,
+            explanation: "I pattern GoF generalmente SCORAGGIANO l'uso eccessivo dell'ereditarietà per il riuso. Il pattern Composite usa l'ereditarietà per il polimorfismo, non per il riuso."
+        },
+        {
+            id: 85,
+            text: "I pattern GoF prediligono l'utilizzo del meccanismo di ereditarietà per ottenere la specializzazione",
+            correct: false,
+            explanation: "I pattern GoF enfatizzano il principio 'favor composition over inheritance' - preferire la composizione all'ereditarietà anche per la specializzazione."
+        },
+        {
+            id: 86,
+            text: "I pattern GoF incentivano i meccanismi di riuso del software attraverso la definizione di gerarchie di classi",
+            correct: false,
+            explanation: "I pattern GoF promuovono il riuso attraverso la COMPOSIZIONE e la delega, non attraverso gerarchie di classi estese."
+        },
+        {
+            id: 87,
+            text: "I pattern GoF prediligono l'utilizzo del meccanismo di ereditarietà per ottenere il polimorfismo",
+            correct: true,
+            explanation: "Corretto. I pattern GoF utilizzano l'ereditarietà principalmente per ottenere il POLIMORFISMO (comportamenti diversi con interfaccia comune), non per il riuso del codice."
+        },
+        {
+            id: 88,
+            text: "I pattern GoF Composite fornisce caratteristiche addizionali ad elementi atomici (foglie), mantenendo una interfaccia comune",
+            correct: false,
+            explanation: "Il pattern Composite NON fornisce caratteristiche addizionali alle foglie. Permette di trattare oggetti semplici e composti uniformemente."
+        },
+        {
+            id: 89,
+            text: "Il pattern GoF Composite permette di costruire tassonomie di classi",
+            correct: false,
+            explanation: "Il pattern Composite permette di costruire strutture ad ALBERO di oggetti, non tassonomie di classi. Le tassonomie sono gerarchie di ereditarietà."
+        },
+        {
+            id: 90,
+            text: "Il pattern GoF Composite utilizza il meccanismo di specializzazione per rendere l'interfaccia delle entità atomiche esattamente come l'interfaccia delle entità composte",
+            correct: false,
+            explanation: "Il Composite usa la generalizzazione per far sì che foglie e nodi composti implementino la stessa interfaccia, permettendo un trattamento uniforme."
+        },
+        {
+            id: 91,
+            text: "Il pattern GoF Composite permette di evitare l'esplosione delle sottoclassi per supportare un ampio numero di estensioni e combinazioni di esse",
+            correct: false,
+            explanation: "Questo è il pattern DECORATOR, non Composite. Il Composite organizza oggetti in strutture ad albero, non evita l'esplosione di sottoclassi."
+        },
+        {
+            id: 92,
+            text: "Il pattern GoF Composite permette di costruire strutture ricorsive in modo che ad un cliente l'intera struttura sia vista come una singola entità",
+            correct: true,
+            explanation: "Corretto. Il pattern Composite permette di costruire strutture ad albero dove i client possono trattare oggetti semplici e composti uniformemente."
+        },
+        {
+            id: 93,
+            text: "L'extreme programming promuove lo sviluppo seguito dai test",
+            correct: false,
+            explanation: "XP promuove il TDD (Test-Driven Development): prima si scrivono i test, POI si scrive il codice per farli passare. I test precedono lo sviluppo."
+        },
+        {
+            id: 94,
+            text: "I test unitari hanno lo scopo di verificare la comunicazione tra specifiche parti del sistema",
+            correct: false,
+            explanation: "I test unitari verificano il comportamento di singole UNITÀ (metodi, classi) in isolamento. I test di integrazione verificano la comunicazione tra parti."
+        },
+        {
+            id: 95,
+            text: "Preparazione, esecuzione, verifica e rilascio sono le parti del test unitario",
+            correct: true,
+            explanation: "Corretto. Le fasi tipiche di un test unitario sono: Setup (preparazione), Exercise (esecuzione), Verify (verifica) e Release (rilascio)."
+        },
+        {
+            id: 96,
+            text: "Il refactoring prevede di applicare piccole trasformazioni che preservano il comportamento",
+            correct: true,
+            explanation: "Corretto. Il refactoring consiste nell'applicare piccole trasformazioni al codice che migliorano la struttura senza modificare il comportamento esterno."
+        },
+        {
+            id: 97,
+            text: "I test unitari sono utilizzati per dimostrare che il refactoring non abbia causato una regressione",
+            correct: true,
+            explanation: "Corretto. I test unitari servono come rete di sicurezza durante il refactoring, assicurando che il comportamento rimanga invariato."
+        },
+        {
+            id: 98,
+            text: "La progettazione object-oriented in UP ha il fine di identificare le responsabilità e assegnarle ad un opportuno oggetto o classe",
+            correct: true,
+            explanation: "Corretto. L'OOD in UP si concentra sull'identificazione delle responsabilità software e sulla loro assegnazione alle classi appropriate."
+        },
+        {
+            id: 99,
+            text: "La coesione è la misura di quanto fortemente un elemento è connesso ad altri elementi, ha conoscenza di altri elementi e dipende da altri elementi",
+            correct: false,
+            explanation: "Questa è la definizione di ACCOPPIAMENTO. La coesione misura quanto le responsabilità di un singolo elemento sono correlate tra loro."
+        },
+        {
+            id: 100,
+            text: "Il pattern GRASP Information Expert e High Cohesion sono pattern valutativi",
+            correct: false,
+            explanation: "Low Coupling e High Cohesion sono pattern GRASP valutativi che forniscono criteri per valutare la qualità delle soluzioni di design."
+        },
+        {
+            id: 101,
+            text: "La creazione di un oggetto è di responsabilità di un oggetto che aggrega, contiene un'istanza dell'oggetto da creare",
+            correct: true,
+            explanation: "Corretto. Secondo il pattern GRASP Creator, la responsabilità di creare un oggetto spetta spesso a chi lo aggrega, contiene o usa intensivamente."
+        },
+        {
+            id: 102,
+            text: "Una classe con accoppiamento alto fa molte cose non correlate tra loro e svolge troppo lavoro",
+            correct: false,
+            explanation: "Questa è la definizione di bassa COESIONE. L'alto accoppiamento indica molte dipendenze verso altre classi, non necessariamente molte responsabilità."
+        },
+        {
+            id: 103,
+            text: "Il refactoring è una pratica promossa dal metodo iterativo e agile xp",
+            correct: true,
+            explanation: "Corretto. Il refactoring è una delle pratiche fondamentali di XP (Extreme Programming) e dei metodi agili in generale."
+        },
+        {
+            id: 104,
+            text: "Il refactoring prevede lo sviluppo guidato dai test, ovvero uno sviluppo preceduto dai test",
+            correct: false,
+            explanation: "Il refactoring e il TDD sono pratiche SEPARATE. Il refactoring migliora il codice esistente, il TDD è una tecnica di sviluppo guidata dai test."
+        },
+        {
+            id: 105,
+            text: "Il refactoring è un metodo strutturato e disciplinato per scrivere o ristrutturare del codice esistente",
+            correct: true,
+            explanation: "Corretto. Il refactoring è un processo disciplinato per ristrutturare codice esistente migliorandone la struttura senza cambiarne il comportamento."
+        },
+        {
+            id: 106,
+            text: "DURANTE LA FASE DI ELABORAZIONE: I requisiti e le iterazioni sono organizzati in base alla richiesta dell'utente finale",
+            correct: false,
+            explanation: "Durante l'elaborazione i requisiti sono organizzati in base a RISCHIO e CRITICITÀ ARCHITETTURALE, non alle richieste dell'utente finale."
+        },
+        {
+            id: 107,
+            text: "DURANTE LA FASE DI ELABORAZIONE: I requisiti e le iterazioni sono organizzati in base al rischio, copertura (devono coprire tutto il sistema) e criticità",
+            correct: true,
+            explanation: "Corretto. L'elaborazione organizza le iterazioni in base a rischio, criticità architetturale e necessità di coprire tutti gli aspetti del sistema."
+        },
+        {
+            id: 108,
+            text: "DURANTE LA FASE DI ELABORAZIONE: Si effettua attività di programmazione di qualità-produzione e test",
+            correct: true,
+            explanation: "Corretto. Durante l'elaborazione si sviluppa codice di qualità produzione per il nucleo architetturale e si effettuano test appropriati."
+        },
+        {
+            id: 109,
+            text: "DURANTE LA FASE DI ELABORAZIONE: Vengono realizzati prototipi 'usa e getta' per ottenere i rischi maggiori",
+            correct: false,
+            explanation: "Durante l'elaborazione si sviluppa il nucleo architetturale EVOLUTIVO, non prototipi 'usa e getta'. I prototipi usa e getta sono tipici dell'ideazione."
+        },
+        {
+            id: 110,
+            text: "La responsabilità è un'astrazione di ciò che fa o rappresenta un oggetto o un componente software",
+            correct: true,
+            explanation: "Corretto. La responsabilità è un'astrazione di ciò che un oggetto SA (knowing) o FA (doing)."
+        },
+        {
+            id: 111,
+            text: "Nel Responsibility-Driven Development gli oggetti software sono considerati come dotati di responsabilità",
+            correct: true,
+            explanation: "Corretto. Il RDD (Responsibility-Driven Development) vede gli oggetti come entità che hanno responsabilità specifiche nel sistema."
+        },
+        {
+            id: 112,
+            text: "La disciplina dei requisiti è il processo per scoprire cosa deve essere costruito",
+            correct: true,
+            explanation: "Corretto. La disciplina dei requisiti in UP ha l'obiettivo di scoprire, documentare e validare cosa il sistema deve fare."
+        },
+        {
+            id: 113,
+            text: "La disciplina dei requisiti deve orientare lo sviluppo verso il sistema corretto",
+            correct: true,
+            explanation: "Corretto. La disciplina dei requisiti assicura che si sviluppi il sistema GIUSTO (quello che soddisfa realmente i bisogni degli utenti)."
+        },
+        {
+            id: 114,
+            text: "I contratti usano pre-condizioni e post-condizioni per descrivere nel dettaglio i cambiamenti agli oggetti in un modello di progetto (software)",
+            correct: false,
+            explanation: "I contratti descrivono cambiamenti agli oggetti del MODELLO DI DOMINIO (concettuali), non del modello di progetto (software)."
+        },
+        {
+            id: 115,
+            text: "Le operazioni di sistema possono essere identificate mentre si abbozzano gli DSD",
+            correct: false,
+            explanation: "Le operazioni di sistema vengono identificate prima, durante l'abbozzo degli SSD, e non dei DSD. I DSD mostrano come tali operazioni vengono realizzate internamente."
+        },
+        {
+            id: 116,
+            text: "Nella fase di Analisi dei Requisiti, la prima attività consiste nel tradurre le informazioni raccolte in un documento che definisce un insieme di requisiti.",
+            correct: false,
+            explanation: "La prima fase principale dell'Analisi dei Requisiti è la Deduzione e analisi dei requisiti; la Specifica dei requisiti, che consiste nel tradurre le informazioni in un documento, viene successivamente."
+        },
+        {
+            id: 117,
+            text: "Nelle metodologie agili, la progettazione e l'implementazione del software sono solitamente separate e producono documenti formali dettagliati prima della codifica.",
+            correct: false,
+            explanation: "Nelle metodologie agili, la progettazione e l'implementazione sono intrecciate e non producono documenti formali; il progetto è spesso registrato informalmente."
+        },
+        {
+            id: 118,
+            text: "L'Unified Process (UP) è una metodologia di sviluppo software che segue un approccio strettamente sequenziale e a cascata.",
+            correct: false,
+            explanation: "UP incoraggia uno sviluppo iterativo e guidato dal rischio. La programmazione e il test iniziano prima che l'analisi di tutti i requisiti sia completata."
+        },
+        {
+            id: 119,
+            text: "Lo scopo principale della fase di Ideazione in UP è quello di definire tutti i requisiti dettagliati del progetto e generare una stima affidabile dei costi.",
+            correct: false,
+            explanation: "Lo scopo della fase di ideazione non è quello di definire tutti i requisiti, né di generare una stima o un piano di progetto affidabili. Si tratta piuttosto di decidere se il progetto merita un'indagine più seria."
+        },
+        {
+            id: 120,
+            text: "Il documento Visione in UP riassume i requisiti di alto livello ed è utile per stabilire una visione comune del progetto tra i partecipanti.",
+            correct: true,
+            explanation: "Il documento Visione riassume alcune informazioni contenute nel modello dei casi d'uso e nelle specifiche supplementari, descrivendo brevemente il progetto come contesto per i partecipanti e stabilendo una visione comune."
+        },
+        {
+            id: 121,
+            text: "In UP, il Glossario ha anche la funzione di dizionario dei dati, includendo informazioni relative ad altri dati (metadati), come le regole di validazione.",
+            correct: true,
+            explanation: "In UP, il Glossario svolge anche il ruolo di un dizionario di dati, un documento dati relativi ad altri dati, ovvero metadati, inclusi esempi di regole di validazione."
+        },
+        {
+            id: 122,
+            text: "La Disciplina dei Requisiti in UP si concentra principalmente sul 'come' il sistema deve essere costruito, definendo le soluzioni tecniche e architetturali.",
+            correct: false,
+            explanation: "La Disciplina dei Requisiti è il processo per scoprire 'cosa' deve essere costruito e orientare lo sviluppo verso il sistema corretto, definendo le capacità e condizioni a cui il sistema deve essere conforme."
+        },
+        {
+            id: 123,
+            text: "Secondo le fonti, i casi d'uso in UP sono principalmente rappresentati da diagrammi UML per visualizzare le interazioni tra attori e sistema.",
+            correct: false,
+            explanation: "I casi d'uso in UP sono descrizioni testuali di scenari di uso interessanti del sistema software. Le fonti specificano chiaramente che i casi d'uso sono documenti testuali, non diagrammi."
+        },
+        {
+            id: 124,
+            text: "Un Attore Primario in un caso d'uso è colui che offre un servizio al sistema.",
+            correct: false,
+            explanation: "L'Attore Primario è colui che raggiunge gli obiettivi utente utilizzando i servizi del sistema. L'attore di supporto è colui che offre un servizio al sistema."
+        },
+        {
+            id: 125,
+            text: "Nel formato dettagliato di un caso d'uso, la sezione 'Estensioni' è utilizzata per descrivere scenari alternativi, sia di successo che di fallimento, rispetto allo scenario principale.",
+            correct: true,
+            explanation: "Le Estensioni descrivono scenari alternativi, di successo o di fallimento, e la loro gestione."
+        },
+        {
+            id: 126,
+            text: "Quando si scrive un caso d'uso in stile essenziale, è fondamentale includere dettagli precisi sull'interfaccia utente (GUI) con cui l'attore interagisce.",
+            correct: false,
+            explanation: "Lo stile essenziale implica ignorare l'interfaccia utente e concentrarsi sull'obiettivo utente e le responsabilità del sistema a un livello astratto, indipendente dai dettagli tecnologici e di UI."
+        },
+        {
+            id: 127,
+            text: "L'approccio Black-box nella scrittura dei casi d'uso significa descrivere esattamente 'come' il sistema esegue una determinata azione, inclusi dettagli implementativi come l'uso di database o istruzioni SQL.",
+            correct: false,
+            explanation: "L'approccio Black-box significa descrivere 'che cosa' il sistema deve fare (comportamento o requisiti funzionali) senza decidere come."
+        },
+        {
+            id: 128,
+            text: "Per verificare l'utilità di un caso d'uso, il Test del capo chiede se l'attività descritta rappresenta un'azione significativa per l'utente che giustifichi lo sforzo di implementazione.",
+            correct: true,
+            explanation: "Il Test del capo implica chiedersi se un capo sarebbe contento se il lavoro di un giorno fosse solo l'attività descritta nel caso d'uso; se la risposta è no, il caso d'uso non è utile."
+        },
+        {
+            id: 129,
+            text: "Il Modello di Dominio rappresenta i concetti chiave del sistema come oggetti software con nomi e informazioni simili al dominio del mondo reale.",
+            correct: true,
+            explanation: "Lo strato del dominio (che si ispira al Modello di Dominio) consiste nel creare oggetti software con nomi e informazioni simili al dominio del mondo reale, assegnando loro responsabilità della logica applicativa."
+        },
+        {
+            id: 130,
+            text: "I Diagrammi di Sequenza di Sistema (SSD) mostrano le interazioni tra gli oggetti interni del sistema per realizzare un'operazione.",
+            correct: false,
+            explanation: "Il Diagramma di Sequenza di Sistema serve a rappresentare gli eventi di input e output che coinvolgono il sistema durante un'interazione con gli attori esterni, vedendo il sistema come una scatola nera."
+        },
+        {
+            id: 131,
+            text: "I Contratti delle operazioni di sistema descrivono in dettaglio 'come' vengono realizzati i cambiamenti nello stato del sistema dopo l'esecuzione di un'operazione.",
+            correct: false,
+            explanation: "Un contratto descrive in modo molto dettagliato i cambiamenti richiesti dall'esecuzione di una operazione di sistema senza però descrivere come devono essere ottenuti."
+        },
+        {
+            id: 132,
+            text: "Un'operazione di sistema di Interrogazione modifica lo stato del sistema e per questo motivo deve avere delle post-condizioni nel suo contratto.",
+            correct: false,
+            explanation: "Un'operazione di sistema di Interrogazione non modifica lo stato del sistema, si limita a calcolare e restituire un valore, e per questo non ha post-condizioni. Le post-condizioni descrivono i cambiamenti nello stato degli oggetti."
+        },
+        {
+            id: 133,
+            text: "La progettazione orientata agli oggetti (OOD) pone l'enfasi sulla definizione degli oggetti software e sul modo in cui questi collaborano per soddisfare i requisiti.",
+            correct: true,
+            explanation: "La progettazione orientata agli oggetti pone l'enfasi sulla definizione di oggetti software e del modo in cui questi collaborano per soddisfare i requisiti."
+        },
+        {
+            id: 134,
+            text: "I pattern GRASP sono un repertorio di soluzioni progettuali specifiche per problemi ricorrenti nell'implementazione di software, simili ai pattern GoF.",
+            correct: false,
+            explanation: "I pattern GRASP sono principi per l'assegnazione di responsabilità. I pattern GoF sono descrizioni con nome di problemi di progettazione ricorrenti e di una soluzione."
+        },
+        {
+            id: 135,
+            text: "Secondo il pattern GRASP Information Expert, una responsabilità dovrebbe essere assegnata alla classe che possiede le informazioni necessarie per soddisfarla.",
+            correct: true,
+            explanation: "Il pattern Information Expert suggerisce di assegnare una responsabilità alla classe che possiede le informazioni necessarie per soddisfarla, all'esperto delle informazioni."
+        },
+        {
+            id: 136,
+            text: "Il pattern GoF Facade fornisce un'interfaccia complessa e disorganizzata per un insieme di interfacce di un sottosistema, rendendolo più difficile da usare.",
+            correct: false,
+            explanation: "Il pattern Facade fornisce una interfaccia unificata per un insieme di interfacce di un sottosistema, rendendo più facile l'uso di quest'ultimo."
+        },
+        {
+            id: 137,
+            text: "I test unitari sono un tipo di test progettato per verificare il sistema software completo, considerando le interazioni tra tutti i componenti principali.",
+            correct: false,
+            explanation: "I test unitari testano singole unità di codice. I test di integrazione testano la comunicazione tra specifiche parti, mentre i test end-to-end testano l'intero sistema."
+        },
+        {
+            id: 138,
+            text: "Nella metodologia eXtreme Programming, i test vengono scritti prima di scrivere il codice corrispondente (sviluppo guidato dai test).",
+            correct: true,
+            explanation: "In alcune metodologie agili come l'eXtreme Programming, si scrivono i test prima di scrivere il codice."
+        },
+        {
+            id: 139,
+            text: "Nel modello a cascata, si presume che i requisiti siano prevedibili e stabili fin dall'inizio con un basso tasso di cambiamenti.",
+            correct: true,
+            explanation: "Il modello a cascata parte dal presupposto che le specifiche sono prevedibili e stabili e possono essere definite correttamente sin dall'inizio, a fronte di un basso tasso di cambiamenti."
+        },
+        {
+            id: 140,
+            text: "Secondo le fonti, i metodi di sviluppo iterativi sono statisticamente associati a percentuali di successo più basse rispetto al modello a cascata.",
+            correct: false,
+            explanation: "In base a dati statistici, i metodi iterativi sono associati a percentuali di successo e di produttività più elevate, nonché a livelli minori di difetti. Al contrario, l'approccio a cascata è caratterizzato da una minore produttività e da maggiori percentuali di difetti."
+        },
+        {
+            id: 141,
+            text: "Uno dei motivi principali per cui i requisiti cambiano è l'impossibilità per i clienti di prevedere appieno come un sistema influenzerà le pratiche operative prima che sia consegnato e utilizzato.",
+            correct: true,
+            explanation: "I requisiti cambiano perché per i clienti è impossibile prevedere come un sistema influenzerà le pratiche operative, come interagirà con gli altri sistemi e quali operazioni degli utenti dovranno essere automatizzate; i requisiti reali diventano chiari solo dopo che il sistema è stato consegnato e utilizzato."
+        },
+        {
+            id: 142,
+            text: "In Unified Process (UP), la Disciplina dei Requisiti è un insieme di attività che si svolgono esclusivamente all'inizio del progetto, prima di qualsiasi altra disciplina.",
+            correct: false,
+            explanation: "In UP, le discipline (tipologie di attività) non sono sequenziali e si eseguono nel progetto in ogni iterazione. La Disciplina dei Requisiti è il processo per scoprire \"cosa\" deve essere costruito e orientare lo sviluppo verso il sistema corretto."
+        },
+        {
+            id: 143,
+            text: "Secondo UP, è necessario definire il 100% dei requisiti dettagliati prima di iniziare qualsiasi attività di programmazione o test.",
+            correct: false,
+            explanation: "In UP si iniziano programmazione e test quando è stato specificato solo il 10% o il 20% dei requisiti più significativi. Inoltre, non si cerca di definire tutti i requisiti prima di iniziare la progettazione o l'implementazione."
+        },
+        {
+            id: 144,
+            text: "Il documento Specifiche Supplementari in UP è destinato a contenere tutti i requisiti funzionali del sistema, inclusi quelli descritti nei casi d'uso.",
+            correct: false,
+            explanation: "Le Specifiche Supplementari contengono ciò che non rientra nei casi d'uso, come requisiti non funzionali o funzionali non esprimibili attraverso casi d'uso. I requisiti funzionali principali sono descritti nel Modello dei Casi d'Uso."
+        },
+        {
+            id: 145,
+            text: "Durante la fase di Ideazione in UP, l'obiettivo è analizzare in dettaglio la maggior parte dei casi d'uso per ottenere una comprensione completa dei requisiti funzionali.",
+            correct: false,
+            explanation: "Durante l'ideazione si analizzano circa il 10% dei casi d'uso in dettaglio. Lo scopo dell'Ideazione non è raccogliere tutti i requisiti, ma capire se il progetto merita un'indagine più seria (fattibilità)."
+        },
+        {
+            id: 146,
+            text: "Nel contesto di UP, l'Agile Modeling suggerisce che il valore della modellazione risiede principalmente nella creazione di documenti di specifiche affidabili e completi.",
+            correct: false,
+            explanation: "L'Agile Modeling suggerisce che il valore della modellazione è quello di migliorare la comprensione, anziché quello di documentare delle specifiche affidabili."
+        },
+        {
+            id: 147,
+            text: "Un Attore di Supporto in un caso d'uso è colui che utilizza il sistema per raggiungere i propri obiettivi utente.",
+            correct: false,
+            explanation: "L'Attore di Supporto è colui che offre un servizio al sistema. L'Attore Primario è colui che raggiunge gli obiettivi utente utilizzando i servizi del sistema."
+        },
+        {
+            id: 148,
+            text: "Quando si scrive un caso d'uso in stile essenziale, la descrizione si concentra sulle azioni concrete dell'utente e i dettagli specifici dell'interfaccia utente.",
+            correct: false,
+            explanation: "Lo stile essenziale implica che la narrativa è espressa a livello di intenzioni e responsabilità, ignorando l'interfaccia utente e rimanendo indipendente dai dettagli tecnologici."
+        },
+        {
+            id: 149,
+            text: "Il \"Test EBP\" (Elementary Business Process) per verificare l'utilità di un caso d'uso chiede se l'attività descritta dal caso d'uso aggiunge un valore di business misurabile.",
+            correct: true,
+            explanation: "Un processo di business elementare è un'attività che aggiunge un valore di business misurabile. Il Test EBP valuta se il caso d'uso rappresenta una interazione di valore."
+        },
+        {
+            id: 150,
+            text: "Un caso d'uso dettagliato, per superare il Test della Dimensione, dovrebbe idealmente essere descritto in una singola pagina.",
+            correct: false,
+            explanation: "Per superare il Test della Dimensione, un caso d'uso dettagliato normalmente comprende diversi passi e richiede da 3 a 10 pagine di testo. Una singola azione o passo raramente costituisce un caso d'uso utile."
+        },
+        {
+            id: 151,
+            text: "Il Modello di Dominio ha lo scopo di descrivere i concetti chiave del dominio del problema e le loro relazioni, servendo anche come ispirazione per le classi del software.",
+            correct: true,
+            explanation: "Il Modello di Dominio descrive i concetti significativi del sistema come oggetti del dominio e relaziona i concetti. Serve a comprendere il dominio e il suo vocabolario, definire un linguaggio comune, ed è una fonte di ispirazione per l'OOD, riducendo il \"gap di rappresentazione\"."
+        },
+        {
+            id: 152,
+            text: "In un diagramma delle classi UML che rappresenta un Modello di Dominio, le associazioni dovrebbero indicare la direzione di navigabilità tra le classi software.",
+            correct: false,
+            explanation: "Le associazioni in un modello di dominio sono per natura bidirezionali. La direzione di lettura (indicata opzionalmente) non è una specifica di visibilità o navigabilità tra entità software."
+        },
+        {
+            id: 153,
+            text: "I Diagrammi di Sequenza di Sistema (SSD) mostrano l'ordine e la logica delle interazioni tra gli oggetti interni del sistema software.",
+            correct: false,
+            explanation: "I Diagrammi di Sequenza di Sistema servono a rappresentare gli eventi di input e output che coinvolgono il sistema durante un'interazione con gli attori esterni, vedendo il sistema come una scatola nera. I diagrammi di sequenza (non di sistema) mostrano le interazioni tra gli oggetti interni."
+        },
+        {
+            id: 154,
+            text: "Le post-condizioni in un contratto descrivono le azioni che il sistema deve eseguire per soddisfare l'operazione, come istruzioni di database o chiamate a metodi specifici.",
+            correct: false,
+            explanation: "Un contratto descrive i cambiamenti richiesti dall'esecuzione di una operazione di sistema in termini di oggetti del Modello di Dominio, senza però descrivere come devono essere ottenuti. Le post-condizioni descrivono lo stato degli oggetti dopo l'operazione, non le azioni per arrivarci."
+        },
+        {
+            id: 155,
+            text: "Un'operazione di sistema di \"Trasformazione\" non modifica lo stato del sistema e per questo non richiede post-condizioni nel suo contratto.",
+            correct: false,
+            explanation: "Un'operazione di sistema di Trasformazione modifica lo stato del sistema e per questo motivo dovrebbe avere delle post-condizioni che descrivono tali modifiche. Le operazioni di Interrogazione non modificano lo stato e non hanno post-condizioni."
+        },
+        {
+            id: 156,
+            text: "La Progettazione Orientata agli Oggetti (OOD) si concentra principalmente sulla definizione di oggetti software e su come questi dovrebbero collaborare per soddisfare i requisiti.",
+            correct: true,
+            explanation: "La progettazione orientata agli oggetti pone l'enfasi sulla definizione di oggetti software e del modo in cui questi collaborano per soddisfare i requisiti."
+        },
+        {
+            id: 157,
+            text: "Secondo il principio GRASP \"Information Expert\", la responsabilità di salvare un oggetto nel database dovrebbe essere assegnata alla classe che rappresenta quell'oggetto (ad es. la classe Sale dovrebbe salvare se stessa).",
+            correct: false,
+            explanation: "In generale, l'Expert non si applica alla persistenza (salvataggio in DB) perché assegnare questa responsabilità alla classe stessa causerebbe problemi di bassa coesione (si occupa anche di persistenza), alto accoppiamento (legata a classi di sistema come i driver DB) e duplicazione logica. Questo principio architetturale di base suggerisce di separare diverse logiche in sottosistemi."
+        },
+        {
+            id: 158,
+            text: "Il pattern GoF Strategy consente di definire una famiglia di algoritmi e di renderli intercambiabili, permettendo ai clienti di utilizzare diversi algoritmi in modo indipendente.",
+            correct: true,
+            explanation: "Il pattern Strategy consente la definizione di una famiglia d'algoritmi, incapsula ognuno e gli fa intercambiabili fra di loro. Permette di modificare gli algoritmi in modo indipendente dai clienti e disaccoppia gli algoritmi dai clienti."
+        },
+        {
+            id: 159,
+            text: "Il pattern GoF Iterator espone la struttura interna di una collezione per permettere al chiamante di accedere e percorrere i suoi elementi.",
+            correct: false,
+            explanation: "Il pattern Iterator suggerisce l'implementazione di un oggetto che consenta l'accesso e percorso della collezione, fornendo una interfaccia standard che nasconde la struttura interna."
+        },
+        {
+            id: 160,
+            text: "Nel pattern GoF Visitor, il ConcreteVisitor è l'oggetto che viene visitato dalla struttura dati.",
+            correct: false,
+            explanation: "Nel pattern Visitor, il ConcreteVisitor è l'oggetto che percorre la collezione e applica un metodo specifico su ogni oggetto (Element) visitato. Gli oggetti della collezione (Element) sono quelli che vengono visitati."
+        },
+        {
+            id: 161,
+            text: "Il Modello-Vista (Model-View) Separation Principle suggerisce di separare gli oggetti che gestiscono la logica applicativa (Modello/Dominio) da quelli che gestiscono l'interfaccia utente (Vista/UI).",
+            correct: true,
+            explanation: "Il principio di separazione Modello-Vista stabilisce che il Modello (strato di dominio, oggetti con logica applicativa) e la Vista (strato UI, oggetti interfaccia utente) devono essere separati. Gli oggetti UI delegano le richieste di logica applicativa agli oggetti non UI (oggetti di dominio)."
+        },
+        {
+            id: 162,
+            text: "I test unitari hanno lo scopo di verificare il funzionamento complessivo del sistema software dal punto di vista dell'utente, considerando il sistema come una scatola nera.",
+            correct: false,
+            explanation: "I test unitari testano singole unità di codice, non il sistema nel suo complesso. I test di accettazione sono quelli che verificano il funzionamento complessivo del sistema a scatola nera dal punto di vista dell'utente, con riferimento ai casi d'uso."
+        },
+        {
+            id: 163,
+            text: "La fase di Verifica in un test unitario consiste nel preparare gli oggetti e le risorse necessarie per l'esecuzione del test.",
+            correct: false,
+            explanation: "La fase di Preparazione (Setup) crea l'oggetto o il gruppo di oggetti da verificare e prepara risorse. La fase di Verifica valuta se i risultati ottenuti corrispondono a quelli attesi."
+        }
+    ];
+
+    let questions = [];
+
+    // Funzione per mescolare un array (algoritmo Fisher-Yates)
+    function shuffleArray(array) {
+        const shuffled = [...array]; // Crea una copia dell'array
+        for (let i = shuffled.length - 1; i > 0; i--) {
+            const j = Math.floor(Math.random() * (i + 1));
+            [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
+        }
+        return shuffled;
+    }
+
+    // -------------------------
+    // LOGICA DEL QUIZ
+    // -------------------------
+    document.addEventListener('DOMContentLoaded', () => {
+
+        // Oggetto per centralizzare l'accesso agli elementi del DOM
+        const dom = {
+            quizContent: document.getElementById('quizContent'),
+            progressFill: document.getElementById('progressFill'),
+            currentQuestion: document.getElementById('currentQuestion'),
+            totalQuestions: document.getElementById('totalQuestions'),
+            prevBtn: document.getElementById('prevBtn'),
+            nextBtn: document.getElementById('nextBtn'),
+            showAnswerBtn: document.getElementById('showAnswerBtn'),
+            restartBtn: document.getElementById('restartBtn'),
+            results: document.getElementById('results'),
+            scorePercentage: document.getElementById('scorePercentage'),
+            // Statistiche Globali
+            correctStat: document.querySelector('#correctStat .stat-value'),
+            incorrectStat: document.querySelector('#incorrectStat .stat-value'),
+            // Nuove Statistiche
+            answeredCorrectStat: document.querySelector('#answeredCorrectStat .stat-value'),
+            answeredIncorrectStat: document.querySelector('#answeredIncorrectStat .stat-value'),
+
+            scoreCircle: document.getElementById('scoreCircle'),
+            progressSection: document.querySelector('.progress-section'),
+            controls: document.querySelector('.controls'),
+
+            // Nuovi elementi per il conteggio passo-passo
+            currentCorrectCount: document.getElementById('currentCorrectCount'),
+            currentIncorrectCount: document.getElementById('currentIncorrectCount'),
+        };
+
+        // Stato del quiz per tenere traccia dei dati
+        let state = {
+            currentQuestionIndex: 0,
+            userAnswers: [], // Array di oggetti { answer: boolean, correct: boolean | null }
+            isShowingAnswer: false,
+        };
+
+        // Funzione per inizializzare o resettare il quiz
+        function initQuiz() {
+            questions = shuffleArray(originalQuestions); // Mescola le domande
+            state.currentQuestionIndex = 0;
+            state.userAnswers = new Array(questions.length).fill(null).map(() => ({ answer: null, correct: null })); // Inizializza con struttura per le risposte
+            state.isShowingAnswer = false;
+
+            dom.results.classList.add('hidden');
+            dom.quizContent.classList.remove('hidden');
+            dom.controls.classList.remove('hidden');
+            dom.progressSection.classList.remove('hidden');
+
+            loadQuestion();
+            updateProgress();
+            updateNavigation();
+            updateCurrentStats(); // Inizializza i contatori a 0
+        }
+
+        // Funzione per caricare la domanda corrente
+        function loadQuestion() {
+            state.isShowingAnswer = false;
+            const question = questions[state.currentQuestionIndex];
+            const userAnswer = state.userAnswers[state.currentQuestionIndex];
+
+            dom.quizContent.innerHTML = `
+                <div class="question-card" data-question-id="${question.id}">
+                    <div class="question-number">Domanda ${state.currentQuestionIndex + 1}</div>
+                    <div class="question-text">${question.text}</div>
+                    <div class="options">
+                        <div class="option" data-answer="true">✓ Vero</div>
+                        <div class="option" data-answer="false">✗ Falso</div>
+                    </div>
+                    <div class="explanation hidden">
+                        <h4>Spiegazione:</h4>
+                        <p>${question.explanation}</p>
+                    </div>
+                </div>
+            `;
+
+            const options = dom.quizContent.querySelectorAll('.option');
+
+            if (userAnswer.answer !== null) { // Se l'utente ha già risposto
+                const selectedOption = dom.quizContent.querySelector(`.option[data-answer="${userAnswer.answer}"]`);
+                if (selectedOption) {
+                    selectedOption.classList.add('selected');
+                }
+                // Se la risposta era già stata mostrata, applica le classi correct/incorrect e l'spiegazione
+                if (userAnswer.correct !== null) {
+                    options.forEach(option => option.classList.add('disabled'));
+                    const correctOption = dom.quizContent.querySelector(`.option[data-answer="${question.correct}"]`);
+                    correctOption.classList.add('correct');
+                    if (userAnswer.answer !== question.correct) {
+                        const incorrectOption = dom.quizContent.querySelector(`.option[data-answer="${userAnswer.answer}"]`);
+                        incorrectOption.classList.add('incorrect');
+                    }
+                    dom.quizContent.querySelector('.explanation').classList.remove('hidden');
+                    state.isShowingAnswer = true;
+                }
+            }
+
+            dom.showAnswerBtn.classList.remove('hidden');
+            dom.nextBtn.classList.add('hidden');
+
+            // Se la domanda è già stata valutata, disabilita il pulsante "Mostra Risposta"
+            if (userAnswer.correct !== null) {
+                dom.showAnswerBtn.classList.add('hidden');
+                dom.nextBtn.classList.remove('hidden');
+            }
+            updateCurrentStats();
+        }
+
+
+        // Gestisce il click su un'opzione (Vero/Falso)
+        function handleOptionClick(event) {
+            if (state.isShowingAnswer || !event.target.classList.contains('option')) return;
+
+            const optionsContainer = event.currentTarget;
+            optionsContainer.querySelectorAll('.option').forEach(opt => opt.classList.remove('selected'));
+
+            const selectedOption = event.target;
+            selectedOption.classList.add('selected');
+
+            const answer = selectedOption.dataset.answer === 'true';
+            state.userAnswers[state.currentQuestionIndex].answer = answer; // Salva solo la risposta data dall'utente
+        }
+
+        // Mostra la risposta corretta e la spiegazione
+        function showAnswer() {
+            if (state.isShowingAnswer) return;
+            if (state.userAnswers[state.currentQuestionIndex].answer === null) {
+                alert("Per favore, seleziona una risposta prima.");
+                return;
+            }
+
+            state.isShowingAnswer = true;
+            const question = questions[state.currentQuestionIndex];
+            const options = dom.quizContent.querySelectorAll('.option');
+            const userAnswer = state.userAnswers[state.currentQuestionIndex].answer;
+
+            // Determina se la risposta data dall'utente è corretta e salvala nello stato
+            const isCorrect = userAnswer === question.correct;
+            state.userAnswers[state.currentQuestionIndex].correct = isCorrect;
+
+
+            options.forEach(option => {
+                option.classList.add('disabled'); // Disabilita tutte le opzioni
+                const optionValue = option.dataset.answer === 'true';
+
+                if (optionValue === question.correct) {
+                    option.classList.add('correct'); // Segna la risposta corretta
+                } else if (optionValue === userAnswer) {
+                    option.classList.add('incorrect'); // Segna la risposta selezionata dall'utente come errata
+                }
+            });
+
+            dom.quizContent.querySelector('.explanation').classList.remove('hidden');
+            dom.showAnswerBtn.classList.add('hidden');
+            dom.nextBtn.classList.remove('hidden');
+
+            updateCurrentStats(); // Aggiorna i contatori dopo aver mostrato la risposta
+        }
+
+        // Funzione per navigare tra le domande o mostrare i risultati
+        function navigate(direction) {
+            const newIndex = state.currentQuestionIndex + direction;
+            if (newIndex >= 0 && newIndex < questions.length) {
+                state.currentQuestionIndex = newIndex;
+                loadQuestion();
+                updateProgress();
+                updateNavigation();
+            } else if (newIndex === questions.length) {
+                showResults();
+            }
+        }
+
+        // Aggiorna la barra di progresso
+        function updateProgress() {
+            const progress = ((state.currentQuestionIndex + 1) / questions.length) * 100;
+            dom.progressFill.style.width = `${progress}%`;
+            dom.currentQuestion.textContent = state.currentQuestionIndex + 1;
+            dom.totalQuestions.textContent = questions.length;
+        }
+
+        // Aggiorna lo stato dei pulsanti di navigazione
+        function updateNavigation() {
+            dom.prevBtn.disabled = state.currentQuestionIndex === 0;
+            dom.nextBtn.textContent = state.currentQuestionIndex === questions.length - 1 ? '🏁 Termina Quiz' : 'Successiva →';
+        }
+
+        // NUOVA FUNZIONE: Aggiorna i contatori di corrette/sbagliate in tempo reale
+        function updateCurrentStats() {
+            let correctCount = 0;
+            let incorrectCount = 0;
+
+            // Conta solo le risposte già valutate (dove `correct` non è `null`)
+            state.userAnswers.forEach(answerObj => {
+                if (answerObj.correct !== null) {
+                    if (answerObj.correct === true) {
+                        correctCount++;
+                    } else {
+                        incorrectCount++;
+                    }
+                }
+            });
+            dom.currentCorrectCount.textContent = correctCount;
+            dom.currentIncorrectCount.textContent = incorrectCount;
+        }
+
+
+        // Mostra la schermata finale con i risultati
+        function showResults() {
+            // Calcoli globali
+            const totalQuestions = questions.length;
+            const correctTotal = state.userAnswers.filter((answerObj) => answerObj.correct === true).length;
+            const incorrectTotal = state.userAnswers.filter((answerObj) => answerObj.correct === false).length;
+            const percentageTotal = totalQuestions > 0 ? Math.round((correctTotal / totalQuestions) * 100) : 0;
+
+
+            // Calcoli basati sulle risposte date (quelle per cui `answer` non è `null`)
+            const answeredQuestions = state.userAnswers.filter(answerObj => answerObj.answer !== null);
+            const answeredCount = answeredQuestions.length;
+            const correctOfAnswered = answeredQuestions.filter(answerObj => answerObj.correct === true).length;
+            const incorrectOfAnswered = answeredQuestions.filter(answerObj => answerObj.correct === false).length;
+
+
+            // Aggiorna il DOM con i valori calcolati
+            dom.scorePercentage.textContent = `${percentageTotal}%`;
+            dom.correctStat.textContent = correctTotal;
+            dom.incorrectStat.textContent = incorrectTotal;
+
+            dom.answeredCorrectStat.textContent = `${correctOfAnswered} / ${answeredCount}`;
+            dom.answeredIncorrectStat.textContent = `${incorrectOfAnswered} / ${answeredCount}`;
+
+            const gradientDegrees = (percentageTotal / 100) * 360;
+            dom.scoreCircle.style.background = `conic-gradient(#4f46e5 ${gradientDegrees}deg, #e2e8f0 ${gradientDegrees}deg)`;
+
+            dom.quizContent.classList.add('hidden');
+            dom.controls.classList.add('hidden');
+            dom.progressSection.classList.add('hidden');
+            dom.results.classList.remove('hidden');
+        }
+
+        // EVENT LISTENERS
+        dom.quizContent.addEventListener('click', handleOptionClick);
+        dom.showAnswerBtn.addEventListener('click', showAnswer);
+        dom.nextBtn.addEventListener('click', () => navigate(1));
+        dom.prevBtn.addEventListener('click', () => navigate(-1));
+        dom.restartBtn.addEventListener('click', initQuiz);
+
+        // Avvio del quiz al caricamento della pagina
+        initQuiz();
+    });
+</script>
+
+</body>
+</html>
