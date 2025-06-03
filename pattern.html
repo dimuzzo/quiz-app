@@ -55,6 +55,9 @@
         }
 
         .back-link {
+            position: absolute;
+            top: 20px;
+            left: 20px;
             color: #cbd5e1;
             text-decoration: none;
             font-size: 0.95rem;
@@ -62,7 +65,7 @@
         }
 
         .back-link:hover {
-            color: #4f46e5; /* Cambia colore all'hover */
+            color: white;
         }
 
         /* Sezione della barra di progresso */
@@ -90,10 +93,7 @@
             border-radius: 4px;
         }
 
-        .score-panel {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
+        .progress-text {
             font-weight: 600;
             color: #475569;
         }
@@ -112,7 +112,6 @@
             padding: 35px;
             box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
             border: 1px solid #f1f5f9;
-            opacity: 0;
             animation: fadeIn 0.5s forwards;
         }
 
@@ -139,18 +138,10 @@
         }
 
         /* Colori per le categorie */
-        .grasp {
-            background: linear-gradient(135deg, #10b981, #059669); /* Verde */
-        }
-        .gof-creational {
-            background: linear-gradient(135deg, #f59e0b, #d97706); /* Arancione */
-        }
-        .gof-structural {
-            background: linear-gradient(135deg, #3b82f6, #2563eb); /* Blu */
-        }
-        .gof-behavioral {
-            background: linear-gradient(135deg, #8b5cf6, #7c3aed); /* Viola */
-        }
+        .grasp { background: linear-gradient(135deg, #10b981, #059669); }
+        .gof-creational { background: linear-gradient(135deg, #f59e0b, #d97706); }
+        .gof-structural { background: linear-gradient(135deg, #3b82f6, #2563eb); }
+        .gof-behavioral { background: linear-gradient(135deg, #8b5cf6, #7c3aed); }
 
         .question-text {
             font-size: 1.15rem;
@@ -196,7 +187,6 @@
             border-color: #10b981;
             background: linear-gradient(135deg, #10b981, #059669);
             color: white;
-            transform: scale(1.02);
         }
 
         .option.incorrect {
@@ -217,25 +207,10 @@
             background: #f1f5f9;
             border-radius: 10px;
             border-left: 4px solid #4f46e5;
-            opacity: 0;
             animation: fadeIn 0.5s 0.2s forwards;
-            display: none; /* Nascosto di default */
         }
-        .explanation.show {
-            display: block;
-        }
-        .explanation h4 {
-            color: #4f46e5;
-            margin-bottom: 10px;
-        }
-        .explanation p {
-            color: #475569;
-            line-height: 1.6;
-        }
-        .explanation strong {
-            color: #4f46e5;
-            font-weight: 700;
-        }
+        .explanation h4 { color: #4f46e5; margin-bottom: 10px; }
+        .explanation p { color: #475569; line-height: 1.6; }
 
         /* Controlli di navigazione */
         .controls {
@@ -245,7 +220,6 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
-            transition: opacity 0.3s ease-in-out;
             flex-wrap: wrap;
             gap: 15px;
         }
@@ -258,263 +232,81 @@
             cursor: pointer;
             transition: all 0.2s ease;
             font-size: 0.95rem;
+        }
+        .btn:disabled { opacity: 0.5; cursor: not-allowed; }
+        .btn-primary { background: linear-gradient(135deg, #4f46e5, #06b6d4); color: white; }
+        .btn-secondary { background: #e2e8f0; color: #475569; }
+
+        .current-stats {
             display: flex;
-            align-items: center;
-            gap: 8px;
-        }
-
-        .btn:active {
-            transform: translateY(1px) scale(0.98);
-        }
-
-        .btn:disabled {
-            opacity: 0.5;
-            cursor: not-allowed;
-        }
-
-        .btn-primary {
-            background: linear-gradient(135deg, #4f46e5, #06b6d4);
-            color: white;
-            box-shadow: 0 4px 15px rgba(79, 70, 229, 0.2);
-        }
-
-        .btn-primary:not(:disabled):hover {
-            transform: translateY(-2px);
-            box-shadow: 0 8px 25px rgba(79, 70, 229, 0.3);
-        }
-
-        .btn-secondary {
-            background: #e2e8f0;
+            gap: 20px;
+            font-weight: 600;
             color: #475569;
+            flex-grow: 1;
+            justify-content: center;
         }
-
-        .btn-secondary:not(:disabled):hover {
-            background: #cbd5e1;
-        }
+        .current-stats .correct-count { color: #10b981; }
+        .current-stats .incorrect-count { color: #ef4444; }
 
         /* Sezione dei risultati */
-        .results {
-            text-align: center;
-            padding: 60px 40px;
-            opacity: 0;
-            animation: fadeIn 0.6s forwards;
-            display: none; /* Hidden by default */
-        }
-
-        .score-circle {
-            width: 150px;
-            height: 150px;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            margin: 0 auto 30px;
-            transition: background 1s ease-in-out;
-        }
-
-        .score-inner {
-            width: 120px;
-            height: 120px;
-            background: white;
-            border-radius: 50%;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            box-shadow: 0 0 20px rgba(0,0,0,0.05);
-        }
-
-        .score-percentage {
-            font-size: 2.2rem;
-            font-weight: 700;
-            color: #4f46e5;
-        }
-
-        .score-label {
-            font-size: 0.9rem;
-            color: #6b7280;
-            margin-top: 5px;
-        }
-
-        .results h2 {
-            font-size: 2rem;
-            color: #1e293b;
-            margin-bottom: 15px;
-        }
-
-        .results p {
-            font-size: 1.1rem;
-            color: #6b7280;
-            margin-bottom: 30px;
-        }
-
-        .stats {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
-            gap: 20px;
-            margin: 40px 0;
-        }
-
-        .stat {
-            background: white;
-            padding: 20px;
-            border-radius: 12px;
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
-        }
-
-        .stat-value {
-            font-size: 1.8rem;
-            font-weight: 700;
-        }
-
+        .results { text-align: center; padding: 60px 40px; }
+        .score-circle { width: 150px; height: 150px; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 30px; }
+        .score-inner { width: 120px; height: 120px; background: white; border-radius: 50%; display: flex; flex-direction: column; align-items: center; justify-content: center; }
+        .score-percentage { font-size: 2.2rem; font-weight: 700; color: #4f46e5; }
+        .score-label { font-size: 0.9rem; color: #6b7280; margin-top: 5px; }
+        .results h2 { font-size: 2rem; color: #1e293b; margin-bottom: 15px; }
+        .results p { font-size: 1.1rem; color: #6b7280; margin-bottom: 30px; }
+        .stats { display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 20px; margin: 40px 0; }
+        .stat { background: white; padding: 20px; border-radius: 12px; box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05); }
+        .stat-value { font-size: 1.8rem; font-weight: 700; }
         #correctStat .stat-value { color: #10b981; }
         #incorrectStat .stat-value { color: #ef4444; }
-        #percentageStat .stat-value { color: #4f46e5; }
+        .stat-label { font-size: 0.9rem; color: #6b7280; margin-top: 5px; }
 
-        .stat-label {
-            font-size: 0.9rem;
-            color: #6b7280;
-            margin-top: 5px;
-        }
+        .hidden { display: none !important; }
 
-        /* Classe di utilità */
-        .hidden {
-            display: none !important;
-        }
-
-        /* Modal Styles (for messages only, not AI explanation) */
-        .modal {
-            position: fixed;
-            z-index: 1000;
-            left: 0;
-            top: 0;
-            width: 100%;
-            height: 100%;
-            overflow: auto;
-            background-color: rgba(0,0,0,0.7);
-            display: flex;
-            justify-content: center;
-            align-items: center;
-        }
-
-        .modal-content {
-            background-color: #fefefe;
-            margin: auto;
-            padding: 30px;
-            border-radius: 16px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
-            width: 90%;
-            max-width: 500px; /* Smaller for messages */
-            position: relative;
-            animation: slideIn 0.3s forwards;
-            display: flex;
-            flex-direction: column;
-            gap: 20px;
-            text-align: center;
-        }
-
-        @keyframes slideIn {
-            from { transform: translateY(-50px); opacity: 0; }
-            to { transform: translateY(0); opacity: 1; }
-        }
-
-        .close-button {
-            color: #aaa;
-            position: absolute;
-            top: 15px;
-            right: 25px;
-            font-size: 28px;
-            font-weight: bold;
-            cursor: pointer;
-            transition: color 0.2s ease;
-        }
-
-        .close-button:hover,
-        .close-button:focus {
-            color: #333;
-        }
-
-        .modal-content h2 {
-            color: #4f46e5;
-            font-size: 1.8rem;
-            margin-bottom: 15px;
-        }
-
-        .modal-message-output {
-            line-height: 1.6;
-            color: #374151;
-        }
-
-        /* Media Queries para responsività */
         @media (max-width: 768px) {
             body { padding: 0; }
             .container { border-radius: 0; min-height: 100vh; }
             .header { padding: 30px 20px; }
             .header h1 { font-size: 2rem; }
-            .quiz-content, .controls { padding: 20px; }
-            .question-header { flex-direction: column; align-items: flex-start; }
+            .back-link { top: 15px; left: 15px; }
+            .quiz-content, .controls, .progress-section { padding: 20px; }
             .controls { flex-direction: column; gap: 15px; }
-            .controls .btn { width: 100%; justify-content: center; }
-            .progress-section { padding: 20px; }
-            .score-panel {
-                flex-direction: column;
-                gap: 10px;
-                text-align: center;
-            }
-            .results { padding: 40px 20px; }
-            .modal-content {
-                padding: 20px;
-                width: 95%;
-            }
-            .close-button {
-                top: 10px;
-                right: 15px;
-                font-size: 24px;
-            }
+            .current-stats { width: 100%; justify-content: space-around; }
         }
     </style>
 </head>
 <body>
 <div class="container">
-    <div class="header">
+    <header class="header">
         <h1>🏗️ Design Patterns Quiz</h1>
         <a href="index.html" class="back-link">← Torna alla homepage</a>
-    </div>
+    </header>
 
-    <div class="progress-section">
+    <section class="progress-section" aria-live="polite">
         <div class="progress-bar">
-            <div class="progress-fill" id="progress-fill"></div>
+            <div class="progress-fill" id="progressFill"></div>
         </div>
-        <div class="score-panel">
-            <div>
-                <strong>Punteggio: <span id="score">0</span>/<span id="total-answered">0</span></strong>
-            </div>
-            <div>
-                <strong>Domanda <span id="current-question">1</span> di <span id="total-questions">0</span></strong>
-            </div>
+        <div class="progress-text">
+            Domanda <span id="currentQuestion">1</span> di <span id="totalQuestions">0</span>
         </div>
-    </div>
+    </section>
 
-    <div class="quiz-content" id="quiz-content">
-        <div class="question-card">
-            <div class="question-header">
-                <span id="pattern-category" class="pattern-category"></span>
-                <span id="question-type" class="question-type"></span>
-            </div>
-            <div id="question-text" class="question-text"></div>
-            <div id="options" class="options"></div>
-            <div id="feedback" class="explanation">
-                <h4>Spiegazione:</h4>
-                <p id="explanation-text"></p>
-            </div>
-        </div>
-    </div>
+    <main class="quiz-content" id="quizContent">
+    </main>
 
-    <div class="controls">
-        <button id="prev-btn" class="btn btn-secondary" disabled>← Precedente</button>
-        <button id="check-btn" class="btn btn-primary" disabled>Verifica Risposta</button>
-        <button id="next-btn" class="btn btn-primary" disabled>Successiva →</button>
-    </div>
+    <footer class="controls">
+        <button class="btn btn-secondary" id="prevBtn">← Precedente</button>
+        <div class="current-stats">
+            <span class="correct-count">Corrette: <span id="currentCorrectCount">0</span></span>
+            <span class="incorrect-count">Sbagliate: <span id="currentIncorrectCount">0</span></span>
+        </div>
+        <div>
+            <button class="btn btn-primary" id="showAnswerBtn">Mostra Risposta</button>
+            <button class="btn btn-primary hidden" id="nextBtn">Successiva →</button>
+        </div>
+    </footer>
 
     <section class="results hidden" id="results" aria-live="assertive">
         <div class="score-circle" id="scoreCircle">
@@ -525,7 +317,6 @@
         </div>
         <h2>Quiz Completato!</h2>
         <p>Ecco il riepilogo della tua sessione.</p>
-
         <div class="stats">
             <div class="stat" id="correctStat">
                 <div class="stat-value">0</div>
@@ -544,412 +335,79 @@
                 <div class="stat-label">Sbagliate / Date</div>
             </div>
         </div>
-
-        <button class="btn btn-primary" id="restart-btn">
-            🔄 Ricomincia Quiz
-        </button>
+        <button class="btn btn-primary" id="restartBtn">🔄 Ricomincia Quiz</button>
     </section>
-</div>
-
-<div id="messageModal" class="modal hidden">
-    <div class="modal-content">
-        <span class="close-button" id="closeMessageModalBtn">&times;</span>
-        <h2 id="message-modal-title"></h2>
-        <div id="message-modal-output" class="modal-message-output"></div>
-    </div>
 </div>
 
 <script>
     const allowedPatterns = [
-        'Creator', 'Information Expert', 'Low Coupling', 'High Cohesion', 'Controller', // GRASP
-        'Abstract Factory', 'Singleton', // GoF Creational
-        'Adapter', 'Composite', 'Decorator', // GoF Structural
-        'Observer', 'State', 'Strategy', 'Visitor' // GoF Behavioral
+        'Creator', 'Information Expert', 'Low Coupling', 'High Cohesion', 'Controller',
+        'Abstract Factory', 'Singleton', 'Builder',
+        'Adapter', 'Composite', 'Decorator', 'Facade',
+        'Observer', 'State', 'Strategy', 'Visitor', 'Command', 'Iterator'
     ];
-
     const allowedTypes = ['Problema-Soluzione', 'UML'];
 
     const originalQuestions = [
-        {
-            pattern: 'Creator',
-            category: 'GRASP',
-            type: 'Problema-Soluzione',
-            question: 'Quale problema risolve il pattern Creator?',
-            options: [
-                'Chi deve essere responsabile per la creazione di istanze di una classe?',
-                'Come mantenere basso l\'accoppiamento tra classi?',
-                'Come assegnare responsabilità agli oggetti?',
-                'Come gestire la comunicazione tra oggetti?'
-            ],
-            correct: 0, // This index will be updated after shuffling options
-            explanation: 'Il pattern Creator affronta il problema di determinare quale classe dovrebbe essere responsabile della creazione di istanze di altre classi.'
-        },
-        {
-            pattern: 'Information Expert',
-            category: 'GRASP',
-            type: 'Problema-Soluzione',
-            question: 'Quale soluzione propone il pattern Information Expert?',
-            options: [
-                'Centralizzare tutte le informazioni in una classe',
-                'Assegnare la responsabilità alla classe che ha le informazioni necessarie',
-                'Creare una classe dedicata per ogni tipo di informazione',
-                'Utilizzare variabili globali per condividere informazioni'
-            ],
-            correct: 1, // This index will be updated after shuffling options
-            explanation: 'Information Expert suggerisce di assegnare la responsabilità alla classe che possiede le informazioni necessarie per svolgere quel compito.'
-        },
-        {
-            pattern: 'Low Coupling',
-            category: 'GRASP',
-            type: 'Problema-Soluzione',
-            question: 'Quale problema affronta il pattern Low Coupling?',
-            options: [
-                'Come aumentare la dipendenza tra classi?',
-                'Come ridurre l\'impatto dei cambiamenti e aumentare il riuso?',
-                'Come centralizzare le responsabilità?',
-                'Come aumentare le prestazioni del sistema?'
-            ],
-            correct: 1, // This index will be updated after shuffling options
-            explanation: 'Low Coupling mira a ridurre le dipendenze tra classi per minimizzare l\'impatto dei cambiamenti e favorire il riuso.'
-        },
-        {
-            pattern: 'High Cohesion',
-            category: 'GRASP',
-            type: 'Problema-Soluzione',
-            question: 'Cosa promuove il pattern High Cohesion?',
-            options: [
-                'Classi con responsabilità molto diverse tra loro',
-                'Classi con responsabilità strettamente correlate e focalizzate',
-                'Classi con molte dipendenze esterne',
-                'Classi con metodi molto lunghi e complessi'
-            ],
-            correct: 1, // This index will be updated after shuffling options
-            explanation: 'High Cohesion promuove classi con responsabilità strettamente correlate e ben focalizzate, rendendo il codice più comprensibile e mantenibile.'
-        },
-        {
-            pattern: 'Controller',
-            category: 'GRASP',
-            type: 'Problema-Soluzione',
-            question: 'Quale problema risolve il pattern Controller?',
-            options: [
-                'Come gestire l\'interfaccia utente?',
-                'Chi dovrebbe gestire gli eventi di input del sistema?',
-                'Come implementare la persistenza dei dati?',
-                'Come ottimizzare le prestazioni del database?'
-            ],
-            correct: 1, // This index will be updated after shuffling options
-            explanation: 'Il pattern Controller determina quale oggetto dovrebbe ricevere e coordinare (controllare) gli eventi di input del sistema.'
-        },
-        {
-            pattern: 'Singleton',
-            category: 'GoF Creational',
-            type: 'Problema-Soluzione',
-            question: 'Quale problema risolve il pattern Singleton?',
-            options: [
-                'Come creare famiglie di oggetti correlati?',
-                'Come garantire che una classe abbia una sola istanza?',
-                'Come separare la costruzione di oggetti complessi?',
-                'Come clonare oggetti prototipo?'
-            ],
-            correct: 1, // This index will be updated after shuffling options
-            explanation: 'Singleton garantisce che una classe abbia una sola istanza e fornisce un punto di accesso globale ad essa.'
-        },
-        {
-            pattern: 'Abstract Factory',
-            category: 'GoF Creational',
-            type: 'Problema-Soluzione',
-            question: 'Quale soluzione fornisce il pattern Abstract Factory?',
-            options: [
-                'Crea una singola istanza globale',
-                'Fornisce un\'interfaccia per creare famiglie di oggetti correlati',
-                'Separa l\'algoritmo dalla struttura dati',
-                'Permette di aggiungere nuove operazioni senza modificare le classi'
-            ],
-            correct: 1, // This index will be updated after shuffling options
-            explanation: 'Abstract Factory fornisce un\'interfaccia per creare famiglie di oggetti correlati o dipendenti senza specificare le loro classi concrete.'
-        },
-        {
-            pattern: 'Adapter',
-            category: 'GoF Structural',
-            type: 'Problema-Soluzione',
-            question: 'Quale problema risolve il pattern Adapter?',
-            options: [
-                'Come comporre oggetti in strutture ad albero?',
-                'Come permettere a classi con interfacce incompatibili di lavorare insieme?',
-                'Come aggiungere responsabilità a oggetti dinamicamente?',
-                'Come condividere efficientemente oggetti simili?'
-            ],
-            correct: 1, // This index will be updated after shuffling options
-            explanation: 'Adapter permette a classi con interfacce incompatibili di lavorare insieme, agendo come un ponte tra di esse.'
-        },
-        {
-            pattern: 'Composite',
-            category: 'GoF Structural',
-            type: 'Problema-Soluzione',
-            question: 'Quale struttura crea il pattern Composite?',
-            options: [
-                'Una catena di oggetti collegati',
-                'Una struttura ad albero di oggetti',
-                'Una pila di oggetti',
-                'Una mappa di oggetti chiave-valore'
-            ],
-            correct: 1, // This index will be updated after shuffling options
-            explanation: 'Composite permette di comporre oggetti in strutture ad albero per rappresentare gerarchie parte-tutto.'
-        },
-        {
-            pattern: 'Decorator',
-            category: 'GoF Structural',
-            type: 'Problema-Soluzione',
-            question: 'Come funziona il pattern Decorator?',
-            options: [
-                'Modifica direttamente la classe originale',
-                'Avvolge l\'oggetto originale in uno o più wrapper',
-                'Sostituisce completamente l\'oggetto originale',
-                'Crea una copia modificata dell\'oggetto'
-            ],
-            correct: 1, // This index will be updated after shuffling options
-            explanation: 'Decorator permette di aggiungere nuove funzionalità agli oggetti avvolgendoli in wrapper che contengono i nuovi comportamenti.'
-        },
-        {
-            pattern: 'Observer',
-            category: 'GoF Behavioral',
-            type: 'Problema-Soluzione',
-            question: 'Quale problema risolve il pattern Observer?',
-            options: [
-                'Come iterare attraverso una collezione?',
-                'Come notificare automaticamente più oggetti quando cambia lo stato?',
-                'Come incapsulare algoritmi intercambiabili?',
-                'Come gestire richieste in una catena di handler?'
-            ],
-            correct: 1, // This index will be updated after shuffling options
-            explanation: 'Observer definisce una dipendenza uno-a-molti tra oggetti, così quando uno cambia stato, tutti i dipendenti vengono notificati automaticamente.'
-        },
-        {
-            pattern: 'State',
-            category: 'GoF Behavioral',
-            type: 'Problema-Soluzione',
-            question: 'Quale soluzione propone il pattern State?',
-            options: [
-                'Usa un grande switch/if per gestire gli stati',
-                'Incapsula ogni stato in una classe separata',
-                'Memorizza tutti gli stati in un array',
-                'Ignora completamente il concetto di stato'
-            ],
-            correct: 1, // This index will be updated after shuffling options
-            explanation: 'State permette a un oggetto di cambiare il suo comportamento quando il suo stato interno cambia, incapsulando ogni stato in una classe separata.'
-        },
-        {
-            pattern: 'Strategy',
-            category: 'GoF Behavioral',
-            type: 'Problema-Soluzione',
-            question: 'Quale problema affronta il pattern Strategy?',
-            options: [
-                'Come gestire le notifiche tra oggetti?',
-                'Come rendere algoritmi intercambiabili in runtime?',
-                'Come visitare elementi di una struttura complessa?',
-                'Come gestire stati complessi di un oggetto?'
-            ],
-            correct: 1, // This index will be updated after shuffling options
-            explanation: 'Strategy definisce una famiglia di algoritmi, li incapsula e li rende intercambiabili durante l\'esecuzione.'
-        },
-        {
-            pattern: 'Visitor',
-            category: 'GoF Behavioral',
-            type: 'Problema-Soluzione',
-            question: 'Quale vantaggio offre il pattern Visitor?',
-            options: [
-                'Semplifica la struttura degli oggetti visitati',
-                'Permette di aggiungere nuove operazioni senza modificare le classi esistenti',
-                'Riduce il numero di classi nel sistema',
-                'Migliora le prestazioni dell\'accesso ai dati'
-            ],
-            correct: 1, // This index will be updated after shuffling options
-            explanation: 'Visitor permette di definire nuove operazioni senza cambiare le classi degli elementi su cui opera, separando algoritmi dalla struttura.'
-        },
-        {
-            pattern: 'Creator',
-            category: 'GRASP',
-            type: 'UML',
-            question: 'Nel diagramma UML del pattern Creator, quale relazione è tipicamente mostrata?',
-            options: [
-                'Ereditarietà tra creator e prodotto',
-                'Composizione o aggregazione tra creator e prodotto',
-                'Associazione bidirezionale',
-                'Dipendenza circolare'
-            ],
-            correct: 1, // This index will be updated after shuffling options
-            explanation: 'Il Creator tipicamente ha una relazione di composizione o aggregazione con gli oggetti che crea, mostrata con diamante pieno o vuoto.'
-        },
-        {
-            pattern: 'Singleton',
-            category: 'GoF Creational',
-            type: 'UML',
-            question: 'Come è rappresentato il costruttore nel diagramma UML di Singleton?',
-            options: [
-                'Pubblico (+)',
-                'Privato (-)',
-                'Protetto (#)',
-                'Statico (sottolineato)'
-            ],
-            correct: 1, // This index will be updated after shuffling options
-            explanation: 'Nel Singleton, il costruttore è privato (-) per impedire l\'istanziazione diretta dall\'esterno della classe.'
-        },
-        {
-            pattern: 'Observer',
-            category: 'GoF Behavioral',
-            type: 'UML',
-            question: 'Nel pattern Observer, quale interfaccia implementano tipicamente gli observer?',
-            options: [
-                'Subject',
-                'Observer o Listener',
-                'ConcreteSubject',
-                'Publisher'
-            ],
-            correct: 1, // This index will be updated after shuffling options
-            explanation: 'Gli observer implementano un\'interfaccia Observer (o Listener) che definisce il metodo update() per ricevere notifiche.'
-        },
-        {
-            pattern: 'Strategy',
-            category: 'GoF Behavioral',
-            type: 'UML',
-            question: 'Nel diagramma UML di Strategy, il Context ha quale tipo di relazione con Strategy?',
-            options: [
-                'Ereditarietà',
-                'Composizione',
-                'Realizzazione',
-                'Dipendenza semplice'
-            ],
-            correct: 1, // This index will be updated after shuffling options
-            explanation: 'Il Context ha una relazione di composizione con l\'interfaccia Strategy, contenendo un riferimento ad essa.'
-        },
-        {
-            pattern: 'Composite',
-            category: 'GoF Structural',
-            type: 'UML',
-            question: 'Nel pattern Composite, come è mostrata la relazione tra Composite e Component?',
-            options: [
-                'Aggregazione semplice',
-                'Composizione ricorsiva (Composite contiene Component)',
-                'Ereditarietà multipla',
-                'Associazione bidirezionale'
-            ],
-            correct: 1, // This index will be updated after shuffling options
-            explanation: 'Composite eredita da Component e contiene anche una collezione di Component, creando una struttura ricorsiva.'
-        },
-        {
-            pattern: 'Decorator',
-            category: 'GoF Structural',
-            type: 'UML',
-            question: 'Nel pattern Decorator, quale caratteristica ha la classe Decorator?',
-            options: [
-                'È finale e non può essere estesa',
-                'Implementa la stessa interfaccia del componente decorato',
-                'È statica e contiene solo metodi di utilità',
-                'È astratta e non può essere istanziata'
-            ],
-            correct: 1, // This index will be updated after shuffling options
-            explanation: 'Decorator implementa la stessa interfaccia del componente che decora, permettendo di sostituirlo trasparentemente.'
-        },
-        {
-            pattern: 'Facade',
-            category: 'GoF Structural',
-            type: 'Problema-Soluzione',
-            question: 'Quale problema risolve il pattern Facade?',
-            options: [
-                'Come nascondere la complessità di un sottosistema fornendo un\'interfaccia unificata?',
-                'Come creare oggetti senza specificare la classe esatta dell\'oggetto che sarà creato?',
-                'Come aggiungere nuove operazioni senza modificare le classi esistenti?',
-                'Come notificare automaticamente più oggetti quando cambia lo stato?'
-            ],
-            correct: 0, // This index will be updated after shuffling options
-            explanation: 'Il pattern Facade fornisce un\'interfaccia unificata per un insieme di interfacce in un sottosistema, rendendolo più facile da usare.'
-        },
-        {
-            pattern: 'Builder',
-            category: 'GoF Creational',
-            type: 'Problema-Soluzione',
-            question: 'Quale problema risolve il pattern Builder?',
-            options: [
-                'Come garantire che una classe abbia una sola istanza?',
-                'Come separare la costruzione di un oggetto complesso dalla sua rappresentazione?',
-                'Come creare famiglie di oggetti correlati?',
-                'Come clonare oggetti prototipo?'
-            ],
-            correct: 1, // This index will be updated after shuffling options
-            explanation: 'Il pattern Builder serve a separare la costruzione di un oggetto complesso dalla sua rappresentazione, in modo che lo stesso processo di costruzione possa creare diverse rappresentazioni.'
-        },
-        {
-            pattern: 'Command',
-            category: 'GoF Behavioral',
-            type: 'Problema-Soluzione',
-            question: 'Quale problema risolve il pattern Command?',
-            options: [
-                'Come incapsulare una richiesta come un oggetto?',
-                'Come definire una famiglia di algoritmi?',
-                'Come notificare automaticamente più oggetti?',
-                'Come gestire stati complessi di un oggetto?'
-            ],
-            correct: 0, // This index will be updated after shuffling options
-            explanation: 'Il pattern Command incapsula una richiesta come un oggetto, consentendo così di parametrizzare i client con diverse richieste, accodare o registrare richieste e supportare operazioni annullabili.'
-        },
-        {
-            pattern: 'Iterator',
-            category: 'GoF Behavioral',
-            type: 'Problema-Soluzione',
-            question: 'Quale problema risolve il pattern Iterator?',
-            options: [
-                'Come accedere sequenzialmente agli elementi di una collezione senza esporre la sua rappresentazione sottostante?',
-                'Come definire una famiglia di algoritmi?',
-                'Come notificare automaticamente più oggetti?',
-                'Come gestire stati complessi di un oggetto?'
-            ],
-            correct: 0, // This index will be updated after shuffling options
-            explanation: 'Il pattern Iterator fornisce un modo per accedere sequenzialmente agli elementi di una collezione senza esporre la sua rappresentazione sottostante, promuovendo il disaccoppiamento.'
-        }
+        // GRASP
+        { pattern: 'Creator', category: 'GRASP', type: 'Problema-Soluzione', question: 'Quale problema risolve il pattern Creator?', options: ['Chi deve essere responsabile per la creazione di istanze di una classe?', 'Come mantenere basso l\'accoppiamento tra classi?', 'Come assegnare responsabilità agli oggetti?', 'Come gestire la comunicazione tra oggetti?'], correct: 0, explanation: 'Il pattern Creator affronta il problema di determinare quale classe dovrebbe essere responsabile della creazione di istanze di altre classi.' },
+        { pattern: 'Information Expert', category: 'GRASP', type: 'Problema-Soluzione', question: 'Quale soluzione propone il pattern Information Expert?', options: ['Centralizzare tutte le informazioni in una classe', 'Assegnare la responsabilità alla classe che ha le informazioni necessarie', 'Creare una classe dedicata per ogni tipo di informazione', 'Utilizzare variabili globali per condividere informazioni'], correct: 1, explanation: 'Information Expert suggerisce di assegnare la responsabilità alla classe che possiede le informazioni necessarie per svolgere quel compito.' },
+        { pattern: 'Low Coupling', category: 'GRASP', type: 'Problema-Soluzione', question: 'Quale problema affronta il pattern Low Coupling?', options: ['Come aumentare la dipendenza tra classi?', 'Come ridurre l\'impatto dei cambiamenti e aumentare il riuso?', 'Come centralizzare le responsabilità?', 'Come aumentare le prestazioni del sistema?'], correct: 1, explanation: 'Low Coupling mira a ridurre le dipendenze tra classi per minimizzare l\'impatto dei cambiamenti e favorire il riuso.' },
+        { pattern: 'High Cohesion', category: 'GRASP', type: 'Problema-Soluzione', question: 'Cosa promuove il pattern High Cohesion?', options: ['Classi con responsabilità molto diverse tra loro', 'Classi con responsabilità strettamente correlate e focalizzate', 'Classi con molte dipendenze esterne', 'Classi con metodi molto lunghi e complessi'], correct: 1, explanation: 'High Cohesion promuove classi con responsabilità strettamente correlate e ben focalizzate, rendendo il codice più comprensibile e mantenibile.' },
+        { pattern: 'Controller', category: 'GRASP', type: 'Problema-Soluzione', question: 'Quale problema risolve il pattern Controller?', options: ['Come gestire l\'interfaccia utente?', 'Chi dovrebbe gestire gli eventi di input del sistema?', 'Come implementare la persistenza dei dati?', 'Come ottimizzare le prestazioni del database?'], correct: 1, explanation: 'Il pattern Controller determina quale oggetto dovrebbe ricevere e coordinare (controllare) gli eventi di input del sistema.' },
+        // GoF Creational
+        { pattern: 'Singleton', category: 'GoF Creational', type: 'Problema-Soluzione', question: 'Quale problema risolve il pattern Singleton?', options: ['Come creare famiglie di oggetti correlati?', 'Come garantire che una classe abbia una sola istanza?', 'Come separare la costruzione di oggetti complessi?', 'Come clonare oggetti prototipo?'], correct: 1, explanation: 'Singleton garantisce che una classe abbia una sola istanza e fornisce un punto di accesso globale ad essa.' },
+        { pattern: 'Abstract Factory', category: 'GoF Creational', type: 'Problema-Soluzione', question: 'Quale soluzione fornisce il pattern Abstract Factory?', options: ['Crea una singola istanza globale', 'Fornisce un\'interfaccia per creare famiglie di oggetti correlati', 'Separa l\'algoritmo dalla struttura dati', 'Permette di aggiungere nuove operazioni senza modificare le classi'], correct: 1, explanation: 'Abstract Factory fornisce un\'interfaccia per creare famiglie di oggetti correlati o dipendenti senza specificare le loro classi concrete.' },
+        // GoF Structural
+        { pattern: 'Adapter', category: 'GoF Structural', type: 'Problema-Soluzione', question: 'Quale problema risolve il pattern Adapter?', options: ['Come comporre oggetti in strutture ad albero?', 'Come permettere a classi con interfacce incompatibili di lavorare insieme?', 'Come aggiungere responsabilità a oggetti dinamicamente?', 'Come condividere efficientemente oggetti simili?'], correct: 1, explanation: 'Adapter permette a classi con interfacce incompatibili di lavorare insieme, agendo come un ponte tra di esse.' },
+        { pattern: 'Composite', category: 'GoF Structural', type: 'Problema-Soluzione', question: 'Quale struttura crea il pattern Composite?', options: ['Una catena di oggetti collegati', 'Una struttura ad albero di oggetti', 'Una pila di oggetti', 'Una mappa di oggetti chiave-valore'], correct: 1, explanation: 'Composite permette di comporre oggetti in strutture ad albero per rappresentare gerarchie parte-tutto.' },
+        { pattern: 'Decorator', category: 'GoF Structural', type: 'Problema-Soluzione', question: 'Come funziona il pattern Decorator?', options: ['Modifica direttamente la classe originale', 'Avvolge l\'oggetto originale in uno o più wrapper', 'Sostituisce completamente l\'oggetto originale', 'Crea una copia modificata dell\'oggetto'], correct: 1, explanation: 'Decorator permette di aggiungere nuove funzionalità agli oggetti avvolgendoli in wrapper che contengono i nuovi comportamenti.' },
+        // GoF Behavioral
+        { pattern: 'Observer', category: 'GoF Behavioral', type: 'Problema-Soluzione', question: 'Quale problema risolve il pattern Observer?', options: ['Come iterare attraverso una collezione?', 'Come notificare automaticamente più oggetti quando cambia lo stato?', 'Come incapsulare algoritmi intercambiabili?', 'Come gestire richieste in una catena di handler?'], correct: 1, explanation: 'Observer definisce una dipendenza uno-a-molti tra oggetti, così quando uno cambia stato, tutti i dipendenti vengono notificati automaticamente.' },
+        { pattern: 'State', category: 'GoF Behavioral', type: 'Problema-Soluzione', question: 'Quale soluzione propone il pattern State?', options: ['Usa un grande switch/if per gestire gli stati', 'Incapsula ogni stato in una classe separata', 'Memorizza tutti gli stati in un array', 'Ignora completamente il concetto di stato'], correct: 1, explanation: 'State permette a un oggetto di cambiare il suo comportamento quando il suo stato interno cambia, incapsulando ogni stato in una classe separata.' },
+        { pattern: 'Strategy', category: 'GoF Behavioral', type: 'Problema-Soluzione', question: 'Quale problema affronta il pattern Strategy?', options: ['Come gestire le notifiche tra oggetti?', 'Come rendere algoritmi intercambiabili in runtime?', 'Come visitare elementi di una struttura complessa?', 'Come gestire stati complessi di un oggetto?'], correct: 1, explanation: 'Strategy definisce una famiglia di algoritmi, li incapsula e li rende intercambiabili durante l\'esecuzione.' },
+        { pattern: 'Visitor', category: 'GoF Behavioral', type: 'Problema-Soluzione', question: 'Quale vantaggio offre il pattern Visitor?', options: ['Semplifica la struttura degli oggetti visitati', 'Permette di aggiungere nuove operazioni senza modificare le classi esistenti', 'Riduce il numero di classi nel sistema', 'Migliora le prestazioni dell\'accesso ai dati'], correct: 1, explanation: 'Visitor permette di definire nuove operazioni senza cambiare le classi degli elementi su cui opera, separando algoritmi dalla struttura.' },
+        // UML
+        { pattern: 'Creator', category: 'GRASP', type: 'UML', question: 'Nel diagramma UML del pattern Creator, quale relazione è tipicamente mostrata?', options: ['Ereditarietà tra creator e prodotto', 'Composizione o aggregazione tra creator e prodotto', 'Associazione bidirezionale', 'Dipendenza circolare'], correct: 1, explanation: 'Il Creator tipicamente ha una relazione di composizione o aggregazione con gli oggetti che crea, mostrata con diamante pieno o vuoto.' },
+        { pattern: 'Singleton', category: 'GoF Creational', type: 'UML', question: 'Come è rappresentato il costruttore nel diagramma UML di Singleton?', options: ['Pubblico (+)', 'Privato (-)', 'Protetto (#)', 'Statico (sottolineato)'], correct: 1, explanation: 'Nel Singleton, il costruttore è privato (-) per impedire l\'istanziazione diretta dall\'esterno della classe.' },
+        { pattern: 'Observer', category: 'GoF Behavioral', type: 'UML', question: 'Nel pattern Observer, quale interfaccia implementano tipicamente gli observer?', options: ['Subject', 'Observer o Listener', 'ConcreteSubject', 'Publisher'], correct: 1, explanation: 'Gli observer implementano un\'interfaccia Observer (o Listener) che definisce il metodo update() per ricevere notifiche.' },
+        { pattern: 'Strategy', category: 'GoF Behavioral', type: 'UML', question: 'Nel diagramma UML di Strategy, il Context ha quale tipo di relazione con Strategy?', options: ['Ereditarietà', 'Composizione', 'Realizzazione', 'Dipendenza semplice'], correct: 1, explanation: 'Il Context ha una relazione di composizione con l\'interfaccia Strategy, contenendo un riferimento ad essa.' },
+        { pattern: 'Composite', category: 'GoF Structural', type: 'UML', question: 'Nel pattern Composite, come è mostrata la relazione tra Composite e Component?', options: ['Aggregazione semplice', 'Composizione ricorsiva (Composite contiene Component)', 'Ereditarietà multipla', 'Associazione bidirezionale'], correct: 1, explanation: 'Composite eredita da Component e contiene anche una collezione di Component, creando una struttura ricorsiva.' },
+        { pattern: 'Decorator', category: 'GoF Structural', type: 'UML', question: 'Nel pattern Decorator, quale caratteristica ha la classe Decorator?', options: ['È finale e non può essere estesa', 'Implementa la stessa interfaccia del componente decorato', 'È statica e contiene solo metodi di utilità', 'È astratta e non può essere istanziata'], correct: 1, explanation: 'Decorator implementa la stessa interfaccia del componente che decora, permettendo di sostituirlo trasparentemente.' },
     ];
 
-    let questions = []; // This will hold the filtered and shuffled questions
-    let currentQuestionIndex = 0;
-    let score = 0;
-    // Stores {questionIndex: {userAnswer: index, correct: boolean, shownAnswer: boolean}}
-    let answeredQuestions = new Map();
+    let questions = [];
 
     const dom = {
-        questionText: document.getElementById('question-text'),
-        optionsContainer: document.getElementById('options'),
-        feedbackDiv: document.getElementById('feedback'),
-        explanationText: document.getElementById('explanation-text'),
-        checkBtn: document.getElementById('check-btn'),
-        nextBtn: document.getElementById('next-btn'),
-        prevBtn: document.getElementById('prev-btn'),
-        currentQuestionSpan: document.getElementById('current-question'),
-        totalQuestionsSpan: document.getElementById('total-questions'),
-        scoreSpan: document.getElementById('score'),
-        totalAnsweredSpan: document.getElementById('total-answered'),
-        progressFill: document.getElementById('progress-fill'),
-        patternCategorySpan: document.getElementById('pattern-category'),
-        questionTypeSpan: document.getElementById('question-type'),
-        quizContent: document.getElementById('quiz-content').closest('.quiz-content'),
-        controls: document.querySelector('.controls'),
-        progressSection: document.querySelector('.progress-section'),
-        resultsSection: document.getElementById('results'),
+        quizContent: document.getElementById('quizContent'),
+        progressFill: document.getElementById('progressFill'),
+        currentQuestion: document.getElementById('currentQuestion'),
+        totalQuestions: document.getElementById('totalQuestions'),
+        prevBtn: document.getElementById('prevBtn'),
+        nextBtn: document.getElementById('nextBtn'),
+        showAnswerBtn: document.getElementById('showAnswerBtn'),
+        restartBtn: document.getElementById('restartBtn'),
+        results: document.getElementById('results'),
         scorePercentage: document.getElementById('scorePercentage'),
-        correctStat: document.getElementById('correctStat').querySelector('.stat-value'),
-        incorrectStat: document.getElementById('incorrectStat').querySelector('.stat-value'),
-        answeredCorrectStat: document.getElementById('answeredCorrectStat').querySelector('.stat-value'),
-        answeredIncorrectStat: document.getElementById('answeredIncorrectStat').querySelector('.stat-value'),
+        correctStat: document.querySelector('#correctStat .stat-value'),
+        incorrectStat: document.querySelector('#incorrectStat .stat-value'),
+        answeredCorrectStat: document.querySelector('#answeredCorrectStat .stat-value'),
+        answeredIncorrectStat: document.querySelector('#answeredIncorrectStat .stat-value'),
         scoreCircle: document.getElementById('scoreCircle'),
-        restartBtn: document.getElementById('restart-btn'),
-        // Message Modal related DOM elements
-        messageModal: document.getElementById('messageModal'),
-        closeMessageModalBtn: document.getElementById('closeMessageModalBtn'),
-        messageModalTitle: document.getElementById('message-modal-title'),
-        messageModalOutput: document.getElementById('message-modal-output')
+        progressSection: document.querySelector('.progress-section'),
+        controls: document.querySelector('.controls'),
+        currentCorrectCount: document.getElementById('currentCorrectCount'),
+        currentIncorrectCount: document.getElementById('currentIncorrectCount'),
     };
 
-    // Function to shuffle an array (Fisher-Yates algorithm)
+    let state = {
+        currentQuestionIndex: 0,
+        userAnswers: [],
+        isShowingAnswer: false,
+    };
+
     function shuffleArray(array) {
-        const shuffled = [...array]; // Create a copy
+        const shuffled = [...array];
         for (let i = shuffled.length - 1; i > 0; i--) {
             const j = Math.floor(Math.random() * (i + 1));
             [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
@@ -957,250 +415,176 @@
         return shuffled;
     }
 
-    // Function to get category CSS class
-    function getCategoryClass(category) {
-        if (category === 'GRASP') return 'grasp';
-        if (category === 'GoF Creational') return 'gof-creational';
-        if (category === 'GoF Structural') return 'gof-structural';
-        if (category === 'GoF Behavioral') return 'gof-behavioral';
-        return '';
-    }
-
-    // Helper function to show messages in the modal
-    function showMessageModal(title, message) {
-        dom.messageModalTitle.textContent = title;
-        dom.messageModalOutput.innerHTML = message;
-        dom.messageModal.classList.remove('hidden');
-    }
-
-    // Function to filter questions based on allowed patterns and types
-    function filterQuestions(allQuestions) {
-        return allQuestions.filter(q => {
-            const isAllowedPattern = allowedPatterns.includes(q.pattern);
-            const isAllowedType = allowedTypes.includes(q.type);
-            return isAllowedPattern && isAllowedType;
-        });
-    }
-
-    // Function to shuffle options for a question and update the correct index
     function shuffleOptionsAndCorrectIndex(question) {
         const optionsWithOriginalIndex = question.options.map((text, index) => ({ text, originalIndex: index }));
         const shuffledOptionsWithOriginalIndex = shuffleArray(optionsWithOriginalIndex);
-
         const newOptions = shuffledOptionsWithOriginalIndex.map(opt => opt.text);
         const newCorrectIndex = shuffledOptionsWithOriginalIndex.findIndex(opt => opt.originalIndex === question.correct);
-
-        return {
-            ...question,
-            options: newOptions,
-            correct: newCorrectIndex
-        };
+        return { ...question, options: newOptions, correct: newCorrectIndex };
     }
 
-    // Function to initialize or reset the quiz
+    function getCategoryClass(category) {
+        const classMap = {
+            'GRASP': 'grasp',
+            'GoF Creational': 'gof-creational',
+            'GoF Structural': 'gof-structural',
+            'GoF Behavioral': 'gof-behavioral',
+        };
+        return classMap[category] || '';
+    }
+
     function initQuiz() {
-        // Filter questions first
-        const filtered = filterQuestions(originalQuestions);
-        // Then shuffle options for each filtered question and update correct index
-        questions = filtered.map(q => shuffleOptionsAndCorrectIndex(q));
+        const filtered = originalQuestions.filter(q => allowedPatterns.includes(q.pattern) && allowedTypes.includes(q.type));
+        questions = shuffleArray(filtered).map(q => shuffleOptionsAndCorrectIndex(q));
 
-        currentQuestionIndex = 0;
-        score = 0;
-        answeredQuestions.clear(); // Clear previous answers
+        state.currentQuestionIndex = 0;
+        state.userAnswers = new Array(questions.length).fill(null).map(() => ({ userAnswer: null, correct: null }));
+        state.isShowingAnswer = false;
 
-        // Show quiz elements, hide results
+        dom.results.classList.add('hidden');
         dom.quizContent.classList.remove('hidden');
         dom.controls.classList.remove('hidden');
         dom.progressSection.classList.remove('hidden');
-        dom.resultsSection.classList.add('hidden');
 
-        displayQuestion();
+        loadQuestion();
         updateProgress();
-        updateNavigationButtons();
+        updateNavigation();
+        updateCurrentStats();
     }
 
-    // Function to display the current question
-    function displayQuestion() {
-        const question = questions[currentQuestionIndex];
+    function loadQuestion() {
+        state.isShowingAnswer = false;
+        const question = questions[state.currentQuestionIndex];
+        const userAnswer = state.userAnswers[state.currentQuestionIndex];
 
-        dom.patternCategorySpan.textContent = `${question.category} - ${question.pattern}`;
-        dom.patternCategorySpan.className = `pattern-category ${getCategoryClass(question.category)}`;
-        dom.questionTypeSpan.textContent = question.type;
-        dom.questionText.textContent = question.question;
+        dom.quizContent.innerHTML = `
+            <div class="question-card" data-question-id="${question.pattern}">
+                <div class="question-header">
+                    <span class="pattern-category ${getCategoryClass(question.category)}">${question.category} - ${question.pattern}</span>
+                    <span class="question-type">${question.type}</span>
+                </div>
+                <div class="question-text">${question.question}</div>
+                <div class="options">
+                    ${question.options.map((option, index) => `<div class="option" data-answer="${index}">${option}</div>`).join('')}
+                </div>
+                <div class="explanation hidden">
+                    <h4>Spiegazione:</h4>
+                    <p>${question.explanation}</p>
+                </div>
+            </div>
+        `;
 
-        dom.optionsContainer.innerHTML = ''; // Clear previous options
-        dom.feedbackDiv.classList.remove('show'); // Hide feedback
+        if (userAnswer.userAnswer !== null) {
+            const selectedOption = dom.quizContent.querySelector(`.option[data-answer="${userAnswer.userAnswer}"]`);
+            if (selectedOption) selectedOption.classList.add('selected');
 
-        question.options.forEach((optionText, index) => {
-            const optionDiv = document.createElement('div');
-            optionDiv.classList.add('option');
-            optionDiv.textContent = optionText;
-            optionDiv.dataset.index = index; // Store current index for checking
-            optionDiv.addEventListener('click', handleOptionClick);
-            dom.optionsContainer.appendChild(optionDiv);
-        });
-
-        // Reset button states
-        dom.checkBtn.disabled = true;
-        dom.nextBtn.disabled = true;
-
-        // If the question has been answered before, restore its state
-        if (answeredQuestions.has(currentQuestionIndex)) {
-            const savedAnswer = answeredQuestions.get(currentQuestionIndex);
-            const options = dom.optionsContainer.querySelectorAll('.option');
-
-            options.forEach(option => {
-                option.classList.add('disabled'); // Disable interaction
-                const optionIndex = parseInt(option.dataset.index);
-
-                if (optionIndex === question.correct) {
-                    option.classList.add('correct'); // Mark correct answer
+            if (userAnswer.correct !== null) {
+                state.isShowingAnswer = true;
+                const options = dom.quizContent.querySelectorAll('.option');
+                options.forEach(opt => opt.classList.add('disabled'));
+                const correctOption = dom.quizContent.querySelector(`.option[data-answer="${question.correct}"]`);
+                if(correctOption) correctOption.classList.add('correct');
+                if (!userAnswer.correct && selectedOption) {
+                    selectedOption.classList.add('incorrect');
                 }
-                if (optionIndex === savedAnswer.userAnswer && optionIndex !== question.correct) {
-                    option.classList.add('incorrect'); // Mark user's incorrect answer
-                }
-            });
-
-            dom.explanationText.textContent = question.explanation;
-            dom.feedbackDiv.classList.add('show'); // Show explanation
-            dom.checkBtn.disabled = true;
-            dom.nextBtn.disabled = false;
+                dom.quizContent.querySelector('.explanation').classList.remove('hidden');
+            }
         }
 
-        updateNavigationButtons();
-        updateProgress();
+        dom.showAnswerBtn.classList.toggle('hidden', state.isShowingAnswer);
+        dom.nextBtn.classList.toggle('hidden', !state.isShowingAnswer);
+
+        updateCurrentStats();
     }
 
-    // Function to handle option selection
     function handleOptionClick(event) {
-        const options = dom.optionsContainer.querySelectorAll('.option');
-        options.forEach(option => option.classList.remove('selected')); // Deselect all
+        if (state.isShowingAnswer || !event.target.classList.contains('option')) return;
 
-        event.target.classList.add('selected'); // Select clicked option
-        dom.checkBtn.disabled = false; // Enable check button
+        const optionsContainer = event.currentTarget;
+        optionsContainer.querySelectorAll('.option').forEach(opt => opt.classList.remove('selected'));
+        const selectedOption = event.target;
+        selectedOption.classList.add('selected');
+
+        const answerIndex = parseInt(selectedOption.dataset.answer, 10);
+        state.userAnswers[state.currentQuestionIndex].userAnswer = answerIndex;
     }
 
-    // Function to check the selected answer
-    function checkAnswer() {
-        const selectedOption = dom.optionsContainer.querySelector('.option.selected');
-        if (!selectedOption) {
-            showMessageModal('Attenzione!', 'Seleziona una risposta prima di verificare!');
+    function showAnswer() {
+        if (state.userAnswers[state.currentQuestionIndex].userAnswer === null) {
+            alert("Per favore, seleziona una risposta prima.");
             return;
         }
 
-        const selectedAnswerIndex = parseInt(selectedOption.dataset.index);
-        const question = questions[currentQuestionIndex];
-        const isCorrect = (selectedAnswerIndex === question.correct);
+        const question = questions[state.currentQuestionIndex];
+        const userAnswerIndex = state.userAnswers[state.currentQuestionIndex].userAnswer;
+        const isCorrect = userAnswerIndex === question.correct;
+        state.userAnswers[state.currentQuestionIndex].correct = isCorrect;
 
-        // Disable all options after checking
-        dom.optionsContainer.querySelectorAll('.option').forEach(option => {
-            option.classList.add('disabled');
-            const optionIndex = parseInt(option.dataset.index);
-            if (optionIndex === question.correct) {
-                option.classList.add('correct');
-            } else if (optionIndex === selectedAnswerIndex) {
-                option.classList.add('incorrect');
-            }
-        });
-
-        if (isCorrect && !answeredQuestions.has(currentQuestionIndex)) {
-            score++; // Increment score only if it's the first correct attempt for this question
-        }
-        answeredQuestions.set(currentQuestionIndex, { userAnswer: selectedAnswerIndex, correct: isCorrect, shownAnswer: false });
-
-        dom.explanationText.textContent = question.explanation;
-        dom.feedbackDiv.classList.add('show');
-
-        dom.checkBtn.disabled = true;
-        dom.nextBtn.disabled = false; // Enable next button
-        updateProgress();
+        state.isShowingAnswer = true;
+        loadQuestion(); // Ricarica la domanda per mostrare lo stato aggiornato (corretto/sbagliato)
     }
 
-    // Function to navigate between questions
     function navigate(direction) {
-        if (direction === 1) { // Next
-            if (currentQuestionIndex < questions.length - 1) {
-                currentQuestionIndex++;
-                displayQuestion();
-            } else {
-                showResults(); // End of quiz
-            }
-        } else if (direction === -1) { // Previous
-            if (currentQuestionIndex > 0) {
-                currentQuestionIndex--;
-                displayQuestion();
-            }
+        const newIndex = state.currentQuestionIndex + direction;
+        if (newIndex >= 0 && newIndex < questions.length) {
+            state.currentQuestionIndex = newIndex;
+            loadQuestion();
+            updateProgress();
+            updateNavigation();
+        } else if (newIndex === questions.length) {
+            showResults();
         }
     }
 
-    // Function to update progress bar and score display
     function updateProgress() {
-        const totalQuestions = questions.length;
-        dom.currentQuestionSpan.textContent = currentQuestionIndex + 1;
-        dom.totalQuestionsSpan.textContent = totalQuestions;
-        dom.scoreSpan.textContent = score;
-        dom.totalAnsweredSpan.textContent = answeredQuestions.size;
-
-        const progressPercentage = ((currentQuestionIndex + 1) / totalQuestions) * 100;
-        dom.progressFill.style.width = `${progressPercentage}%`;
+        const progress = ((state.currentQuestionIndex + 1) / questions.length) * 100;
+        dom.progressFill.style.width = `${progress}%`;
+        dom.currentQuestion.textContent = state.currentQuestionIndex + 1;
+        dom.totalQuestions.textContent = questions.length;
     }
 
-    // Function to update navigation button states
-    function updateNavigationButtons() {
-        dom.prevBtn.disabled = currentQuestionIndex === 0;
-        dom.nextBtn.textContent = currentQuestionIndex === questions.length - 1 ? '🏁 Termina Quiz' : 'Successiva →';
-        // Next button is enabled only if the current question has been answered (or answer shown)
-        dom.nextBtn.disabled = !answeredQuestions.has(currentQuestionIndex);
+    function updateNavigation() {
+        dom.prevBtn.disabled = state.currentQuestionIndex === 0;
+        dom.nextBtn.textContent = state.currentQuestionIndex === questions.length - 1 ? '🏁 Termina Quiz' : 'Successiva →';
     }
 
-    // Function to show final results
+    function updateCurrentStats() {
+        const correctCount = state.userAnswers.filter(a => a.correct === true).length;
+        const incorrectCount = state.userAnswers.filter(a => a.correct === false).length;
+        dom.currentCorrectCount.textContent = correctCount;
+        dom.currentIncorrectCount.textContent = incorrectCount;
+    }
+
     function showResults() {
         dom.quizContent.classList.add('hidden');
         dom.controls.classList.add('hidden');
         dom.progressSection.classList.add('hidden');
-        dom.resultsSection.classList.remove('hidden');
+        dom.results.classList.remove('hidden');
 
         const totalQuestions = questions.length;
-        const correctTotal = score;
-        const answeredCount = answeredQuestions.size;
-        const incorrectTotal = answeredCount - correctTotal;
+        const answeredQuestions = state.userAnswers.filter(a => a.userAnswer !== null);
+        const answeredCount = answeredQuestions.length;
+        const correctTotal = state.userAnswers.filter(a => a.correct === true).length;
+        const incorrectTotal = state.userAnswers.filter(a => a.correct === false).length;
 
         const percentageTotal = totalQuestions > 0 ? Math.round((correctTotal / totalQuestions) * 100) : 0;
-
-        // Stats for answered questions
-        const correctOfAnswered = Array.from(answeredQuestions.values()).filter(ans => ans.correct === true).length;
-        const incorrectOfAnswered = Array.from(answeredQuestions.values()).filter(ans => ans.correct === false).length;
 
         dom.scorePercentage.textContent = `${percentageTotal}%`;
         dom.correctStat.textContent = correctTotal;
         dom.incorrectStat.textContent = incorrectTotal;
-        dom.answeredCorrectStat.textContent = `${correctOfAnswered} / ${answeredCount}`;
-        dom.answeredIncorrectStat.textContent = `${incorrectOfAnswered} / ${answeredCount}`;
+        dom.answeredCorrectStat.textContent = `${correctTotal} / ${answeredCount}`;
+        dom.answeredIncorrectStat.textContent = `${incorrectTotal} / ${answeredCount}`;
 
         const gradientDegrees = (percentageTotal / 100) * 360;
         dom.scoreCircle.style.background = `conic-gradient(#4f46e5 ${gradientDegrees}deg, #e2e8f0 ${gradientDegrees}deg)`;
     }
 
-    // Close message modal functionality
-    dom.closeMessageModalBtn.addEventListener('click', () => {
-        dom.messageModal.classList.add('hidden');
-    });
-
-    // Close message modal if clicked outside content
-    window.addEventListener('click', (event) => {
-        if (event.target === dom.messageModal) {
-            dom.messageModal.classList.add('hidden');
-        }
-    });
-
-
-    // Event Listeners for quiz controls
-    dom.checkBtn.addEventListener('click', checkAnswer);
+    dom.quizContent.addEventListener('click', handleOptionClick);
+    dom.showAnswerBtn.addEventListener('click', showAnswer);
     dom.nextBtn.addEventListener('click', () => navigate(1));
     dom.prevBtn.addEventListener('click', () => navigate(-1));
     dom.restartBtn.addEventListener('click', initQuiz);
 
-    // Initialize quiz on page load
     document.addEventListener('DOMContentLoaded', initQuiz);
 </script>
 </body>
