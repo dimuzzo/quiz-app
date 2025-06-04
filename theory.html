@@ -14,8 +14,6 @@
             padding: 0;
             box-sizing: border-box;
         }
-
-        /* Stili del corpo con gradiente e font moderno */
         body {
             font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
@@ -26,8 +24,6 @@
             justify-content: center;
             color: #333;
         }
-
-        /* Contenitore principale */
         .container {
             max-width: 900px;
             width: 100%;
@@ -40,8 +36,6 @@
             display: flex;
             flex-direction: column;
         }
-
-        /* Header del quiz */
         .header {
             background: linear-gradient(135deg, #4f46e5, #06b6d4);
             color: white;
@@ -49,206 +43,134 @@
             text-align: center;
             position: relative;
         }
-
-        .header h1 {
-            font-size: 2.5rem;
-            font-weight: 700;
-        }
-
-        .header p {
-            font-size: 1.1rem;
-            opacity: 0.9;
-            margin-top: 5px;
-        }
-
+        .header h1 { font-size: 2.5rem; font-weight: 700; }
+        .header p { font-size: 1.1rem; opacity: 0.9; margin-top: 5px; }
         .back-link {
-            position: absolute;
-            top: 20px;
-            left: 20px;
-            color: #cbd5e1;
-            text-decoration: none;
-            font-size: 0.95rem;
-            transition: color 0.2s ease;
+            position: absolute; top: 20px; left: 20px; color: #cbd5e1;
+            text-decoration: none; font-size: 0.95rem; transition: color 0.2s ease;
         }
+        .back-link:hover { color: white; }
 
-        .back-link:hover {
-            color: white;
-        }
-
-        /* Sezione della barra di progresso */
         .progress-section {
-            padding: 30px 40px;
-            background: #f8fafc;
-            border-bottom: 1px solid #e2e8f0;
-            transition: opacity 0.3s ease-in-out;
+            padding: 20px 40px; background: #f8fafc;
+            border-bottom: 1px solid #e2e8f0; transition: opacity 0.3s ease-in-out;
         }
-
         .progress-bar {
-            width: 100%;
-            height: 8px;
-            background: #e2e8f0;
-            border-radius: 4px;
-            overflow: hidden;
-            margin-bottom: 15px;
+            width: 100%; height: 8px; background: #e2e8f0;
+            border-radius: 4px; overflow: hidden; margin-bottom: 10px;
         }
-
         .progress-fill {
-            height: 100%;
-            background: linear-gradient(90deg, #4f46e5, #06b6d4);
-            width: 0%;
-            transition: width 0.4s cubic-bezier(0.25, 1, 0.5, 1);
-            border-radius: 4px;
+            height: 100%; background: linear-gradient(90deg, #4f46e5, #06b6d4);
+            width: 0%; transition: width 0.4s cubic-bezier(0.25, 1, 0.5, 1); border-radius: 4px;
         }
-
-        .progress-text {
-            font-weight: 600;
-            color: #475569;
+        .progress-text-container {
+            display: flex; justify-content: space-between; align-items: center;
+            flex-wrap: wrap; gap: 10px; margin-top: 10px; margin-bottom: 15px;
         }
-
-        /* Contenuto del quiz (domande) */
-        .quiz-content {
-            padding: 40px;
-            flex-grow: 1;
-            transition: opacity 0.3s ease-in-out;
+        .progress-text { font-weight: 600; color: #475569; }
+        .question-jump-section { display: flex; align-items: center; gap: 8px; }
+        .question-jump-section label { font-weight: 500; color: #475569; font-size: 0.9rem; }
+        #questionJump {
+            padding: 6px 10px; border-radius: 6px; border: 1px solid #cbd5e1;
+            background-color: white; font-family: 'Inter', sans-serif;
+            font-size: 0.9rem; cursor: pointer; box-shadow: 0 1px 3px rgba(0,0,0,0.05);
         }
+        #questionJump:focus {
+            outline: none; border-color: #4f46e5; box-shadow: 0 0 0 2px rgba(79, 70, 229, 0.2);
+        }
+        .question-map {
+            display: flex; flex-wrap: wrap; gap: 6px;
+            padding-top: 10px; border-top: 1px solid #e2e8f0; margin-top: 10px;
+        }
+        .question-marker {
+            width: 28px; height: 28px; border: 1px solid #d1d5db;
+            border-radius: 50%; display: flex; align-items: center; justify-content: center;
+            font-size: 0.8rem; font-weight: 600; color: #4b5563;
+            cursor: pointer; background-color: #f9fafb; transition: all 0.2s ease-in-out;
+        }
+        .question-marker:hover { border-color: #6366f1; background-color: #eef2ff; color: #4338ca;}
+        .question-marker.current {
+            border-color: #4f46e5; background-color: #4f46e5; color: white;
+            transform: scale(1.15); box-shadow: 0 2px 8px rgba(79, 70, 229, 0.3);
+        }
+        .question-marker.answered { background-color: #e5e7eb; border-color: #9ca3af; color: #374151;}
+        .question-marker.correct { background-color: #10b981; color: white; border-color: #059669;}
+        .question-marker.incorrect { background-color: #ef4444; color: white; border-color: #dc2626;}
 
-        /* Card della singola domanda */
+        .quiz-content { padding: 40px; flex-grow: 1; transition: opacity 0.3s ease-in-out; }
         .question-card {
-            background: white;
-            border-radius: 16px;
-            padding: 35px;
-            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
-            border: 1px solid #f1f5f9;
-            animation: fadeIn 0.5s forwards;
+            background: white; border-radius: 16px; padding: 35px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05); border: 1px solid #f1f5f9;
+            animation: fadeInQuestion 0.5s forwards;
         }
-
-        @keyframes fadeIn {
+        @keyframes fadeInQuestion { /* Rinominato per evitare conflitti se presente altrove */
             from { opacity: 0; transform: translateY(15px); }
             to { opacity: 1; transform: translateY(0); }
         }
-
         .question-number {
-            display: inline-block;
-            background: linear-gradient(135deg, #4f46e5, #06b6d4);
-            color: white;
-            padding: 8px 16px;
-            border-radius: 20px;
-            font-weight: 600;
-            font-size: 0.9rem;
-            margin-bottom: 20px;
+            display: inline-block; background: linear-gradient(135deg, #4f46e5, #06b6d4);
+            color: white; padding: 8px 16px; border-radius: 20px;
+            font-weight: 600; font-size: 0.9rem; margin-bottom: 20px;
         }
-
-        .question-text {
-            font-size: 1.15rem;
-            line-height: 1.6;
-            color: #1e293b;
-            margin-bottom: 25px;
-        }
-
-        /* Opzioni di risposta */
-        .options {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 15px;
-        }
-
+        .question-text { font-size: 1.15rem; line-height: 1.6; color: #1e293b; margin-bottom: 25px; }
+        .options { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; }
         .option {
-            padding: 15px 25px;
-            border: 2px solid #e2e8f0;
-            border-radius: 12px;
-            background: white;
-            cursor: pointer;
-            transition: all 0.2s ease;
-            font-weight: 500;
-            text-align: center;
+            padding: 15px 25px; border: 2px solid #e2e8f0; border-radius: 12px;
+            background: white; cursor: pointer; transition: all 0.2s ease;
+            font-weight: 500; text-align: center;
         }
-
         .option:not(.selected):not(.correct):not(.incorrect):hover {
-            border-color: #4f46e5;
-            transform: translateY(-2px);
+            border-color: #4f46e5; transform: translateY(-2px);
             box-shadow: 0 4px 15px rgba(79, 70, 229, 0.1);
         }
-
         .option.selected {
-            border-color: #4f46e5;
-            background: linear-gradient(135deg, #4f46e5, #06b6d4);
-            color: white;
-            box-shadow: 0 6px 20px rgba(79, 70, 229, 0.2);
+            border-color: #4f46e5; background: linear-gradient(135deg, #4f46e5, #06b6d4);
+            color: white; box-shadow: 0 6px 20px rgba(79, 70, 229, 0.2);
         }
-
         .option.correct {
-            border-color: #10b981;
-            background: linear-gradient(135deg, #10b981, #059669);
-            color: white;
+            border-color: #10b981; background: linear-gradient(135deg, #10b981, #059669); color: white;
         }
-
         .option.incorrect {
-            border-color: #ef4444;
-            background: linear-gradient(135deg, #ef4444, #dc2626);
-            color: white;
+            border-color: #ef4444; background: linear-gradient(135deg, #ef4444, #dc2626); color: white;
         }
-
-        .option.disabled {
-            cursor: not-allowed;
-            opacity: 0.7;
-        }
-
-        /* Spiegazione della risposta */
+        .option.disabled { cursor: not-allowed; opacity: 0.7; }
         .explanation {
-            margin-top: 25px;
-            padding: 20px;
-            background: #f1f5f9;
-            border-radius: 10px;
-            border-left: 4px solid #4f46e5;
-            animation: fadeIn 0.5s 0.2s forwards;
+            margin-top: 25px; padding: 20px; background: #f1f5f9;
+            border-radius: 10px; border-left: 4px solid #4f46e5; animation: fadeInQuestion 0.5s 0.2s forwards;
         }
-
         .explanation h4 { color: #4f46e5; margin-bottom: 10px; }
         .explanation p { color: #475569; line-height: 1.6; }
 
-        /* Controlli di navigazione */
         .controls {
-            padding: 30px 40px;
-            background: #f8fafc;
-            border-top: 1px solid #e2e8f0;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            flex-wrap: wrap;
-            gap: 15px;
+            padding: 30px 40px; background: #f8fafc; border-top: 1px solid #e2e8f0;
+            display: flex; justify-content: space-between; align-items: center;
+            flex-wrap: wrap; gap: 15px;
         }
-
         .btn {
-            padding: 12px 28px;
-            border: none;
-            border-radius: 10px;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.2s ease;
-            font-size: 0.95rem;
+            padding: 12px 28px; border: none; border-radius: 10px;
+            font-weight: 600; cursor: pointer; transition: all 0.2s ease; font-size: 0.95rem;
         }
-
         .btn:disabled { opacity: 0.5; cursor: not-allowed; }
         .btn-primary { background: linear-gradient(135deg, #4f46e5, #06b6d4); color: white; }
         .btn-secondary { background: #e2e8f0; color: #475569; }
         .btn-danger { background: linear-gradient(135deg, #ef4444, #b91c1c); color: white; }
-
         .current-stats {
-            display: flex;
-            gap: 20px;
-            font-weight: 600;
-            color: #475569;
-            flex-grow: 1;
-            justify-content: center;
+            display: flex; gap: 20px; font-weight: 600; color: #475569;
+            flex-grow: 1; justify-content: center;
         }
         .current-stats span { display: flex; align-items: center; gap: 5px; }
         .current-stats .correct-count { color: #10b981; }
         .current-stats .incorrect-count { color: #ef4444; }
 
-        /* Sezione dei risultati */
         .results { text-align: center; padding: 60px 40px; }
-        .score-circle { width: 150px; height: 150px; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 30px; }
-        .score-inner { width: 120px; height: 120px; background: white; border-radius: 50%; display: flex; flex-direction: column; align-items: center; justify-content: center; }
+        .score-circle {
+            width: 150px; height: 150px; border-radius: 50%; display: flex;
+            align-items: center; justify-content: center; margin: 0 auto 30px;
+        }
+        .score-inner {
+            width: 120px; height: 120px; background: white; border-radius: 50%;
+            display: flex; flex-direction: column; align-items: center; justify-content: center;
+        }
         .score-percentage { font-size: 2.2rem; font-weight: 700; color: #4f46e5; }
         .score-label { font-size: 0.9rem; color: #6b7280; margin-top: 5px; }
         .results h2 { font-size: 2rem; color: #1e293b; margin-bottom: 15px; }
@@ -272,6 +194,10 @@
             .options { grid-template-columns: 1fr; }
             .controls { flex-direction: column; gap: 15px; }
             .current-stats { width: 100%; justify-content: space-around; }
+            .progress-text-container { flex-direction: column; align-items: flex-start; gap: 12px; }
+            .question-jump-section { width: 100%; }
+            #questionJump { flex-grow: 1; }
+            .question-map { justify-content: center; }
         }
     </style>
 </head>
@@ -287,13 +213,21 @@
         <div class="progress-bar">
             <div class="progress-fill" id="progressFill"></div>
         </div>
-        <div class="progress-text">
-            Domanda <span id="currentQuestion">1</span> di <span id="totalQuestions">0</span>
+        <div class="progress-text-container">
+            <span class="progress-text">
+                Domanda <span id="currentQuestion">1</span> di <span id="totalQuestions">0</span>
+            </span>
+            <div class="question-jump-section">
+                <label for="questionJump">Vai a:</label>
+                <select id="questionJump" aria-label="Salta alla domanda"></select>
+            </div>
         </div>
+        <div id="questionMap" class="question-map" role="navigation" aria-label="Mappa delle domande">
+            </div>
     </section>
 
     <main class="quiz-content" id="quizContent">
-    </main>
+        </main>
 
     <footer class="controls">
         <button class="btn btn-secondary" id="prevBtn">← Precedente</button>
@@ -1338,12 +1272,13 @@
     }
 
     document.addEventListener('DOMContentLoaded', () => {
-
         const dom = {
             quizContent: document.getElementById('quizContent'),
             progressFill: document.getElementById('progressFill'),
             currentQuestion: document.getElementById('currentQuestion'),
             totalQuestions: document.getElementById('totalQuestions'),
+            questionJumpSelect: document.getElementById('questionJump'),
+            questionMapContainer: document.getElementById('questionMap'),
             prevBtn: document.getElementById('prevBtn'),
             nextBtn: document.getElementById('nextBtn'),
             showAnswerBtn: document.getElementById('showAnswerBtn'),
@@ -1369,9 +1304,12 @@
         };
 
         function initQuiz() {
-            questions = shuffleArray(originalQuestions);
+            questions = shuffleArray([...originalQuestions]); // Usa una copia per lo shuffle
             state.currentQuestionIndex = 0;
-            state.userAnswers = new Array(questions.length).fill(null).map(() => ({ answer: null, correct: null }));
+            state.userAnswers = new Array(questions.length).fill(null).map(() => ({
+                answer: null, // Per theory.html questo sarà true/false
+                correct: null
+            }));
             state.isShowingAnswer = false;
 
             dom.results.classList.add('hidden');
@@ -1379,6 +1317,18 @@
             dom.controls.classList.remove('hidden');
             dom.progressSection.classList.remove('hidden');
 
+            if (questions.length === 0) {
+                dom.quizContent.innerHTML = "<p style='text-align:center; font-size:1.2rem; color:#6b7280;'>Nessuna domanda disponibile.</p>";
+                dom.controls.classList.add('hidden');
+                dom.progressSection.classList.add('hidden');
+                if (dom.questionJumpSelect) dom.questionJumpSelect.disabled = true;
+                if (dom.questionMapContainer) dom.questionMapContainer.innerHTML = '';
+                return;
+            }
+            if (dom.questionJumpSelect) dom.questionJumpSelect.disabled = false;
+
+            populateQuestionJump();
+            populateQuestionMap();
             loadQuestion();
             updateProgress();
             updateNavigation();
@@ -1386,9 +1336,10 @@
         }
 
         function loadQuestion() {
+            if (questions.length === 0) return;
             state.isShowingAnswer = false;
             const question = questions[state.currentQuestionIndex];
-            const userAnswer = state.userAnswers[state.currentQuestionIndex];
+            const userAnswerObj = state.userAnswers[state.currentQuestionIndex];
 
             dom.quizContent.innerHTML = `
                 <div class="question-card" data-question-id="${question.id}">
@@ -1406,19 +1357,21 @@
             `;
 
             const optionsContainer = dom.quizContent.querySelector('.options');
-            optionsContainer.addEventListener('click', handleOptionClick);
+            if (optionsContainer) {
+                 optionsContainer.addEventListener('click', handleOptionClick);
+            }
 
-            if (userAnswer.answer !== null) {
-                const selectedOption = dom.quizContent.querySelector(`.option[data-answer="${userAnswer.answer}"]`);
+            if (userAnswerObj.answer !== null) {
+                const selectedOption = dom.quizContent.querySelector(`.option[data-answer="${userAnswerObj.answer}"]`);
                 if (selectedOption) selectedOption.classList.add('selected');
 
-                if (userAnswer.correct !== null) {
+                if (userAnswerObj.correct !== null) {
                     state.isShowingAnswer = true;
-                    optionsContainer.querySelectorAll('.option').forEach(opt => opt.classList.add('disabled'));
-                    const correctOption = dom.quizContent.querySelector(`.option[data-answer="${question.correct}"]`);
-                    if(correctOption) correctOption.classList.add('correct');
-                    if (!userAnswer.correct && selectedOption) {
-                        selectedOption.classList.add('incorrect');
+                    dom.quizContent.querySelectorAll('.option').forEach(opt => opt.classList.add('disabled'));
+                    const correctOptionEl = dom.quizContent.querySelector(`.option[data-answer="${question.correct}"]`);
+                    if (correctOptionEl) correctOptionEl.classList.add('correct');
+                    if (!userAnswerObj.correct && selectedOption) {
+                         selectedOption.classList.add('incorrect');
                     }
                     dom.quizContent.querySelector('.explanation').classList.remove('hidden');
                 }
@@ -1427,14 +1380,19 @@
             dom.showAnswerBtn.classList.toggle('hidden', state.isShowingAnswer);
             dom.nextBtn.classList.toggle('hidden', !state.isShowingAnswer);
 
+            updateQuestionJumpHighlight();
+            updateQuestionMapStyles();
+            updateNavigation();
             updateCurrentStats();
         }
 
         function handleOptionClick(event) {
-            const target = event.target;
-            if (state.isShowingAnswer || !target.classList.contains('option')) return;
+            const target = event.target.closest('.option');
+            if (!target || state.isShowingAnswer || !target.classList.contains('option')) return;
 
             const optionsContainer = target.closest('.options');
+            if (!optionsContainer) return;
+
             optionsContainer.querySelectorAll('.option').forEach(opt => opt.classList.remove('selected'));
             target.classList.add('selected');
 
@@ -1443,33 +1401,53 @@
         }
 
         function showAnswer() {
+            if (state.isShowingAnswer) return;
             if (state.userAnswers[state.currentQuestionIndex].answer === null) {
                 alert("Per favore, seleziona una risposta prima.");
                 return;
             }
 
+            state.isShowingAnswer = true;
             const question = questions[state.currentQuestionIndex];
-            const userAnswer = state.userAnswers[state.currentQuestionIndex].answer;
-            const isCorrect = userAnswer === question.correct;
+            const isCorrect = state.userAnswers[state.currentQuestionIndex].answer === question.correct;
             state.userAnswers[state.currentQuestionIndex].correct = isCorrect;
 
-            state.isShowingAnswer = true;
-            loadQuestion();
+            // Ricarica la domanda per mostrare gli stili di corretto/sbagliato
+            // Non è necessario chiamare loadQuestion() completamente, basta aggiornare le classi e la visibilità
+            const options = dom.quizContent.querySelectorAll('.option');
+            const selectedOption = dom.quizContent.querySelector(`.option[data-answer="${state.userAnswers[state.currentQuestionIndex].answer}"]`);
+
+            options.forEach(opt => {
+                opt.classList.add('disabled');
+                const optionValue = opt.dataset.answer === 'true';
+                if (optionValue === question.correct) {
+                    opt.classList.add('correct');
+                } else if (opt === selectedOption) { // Solo se è quella selezionata ed è sbagliata
+                    opt.classList.add('incorrect');
+                }
+            });
+            
+            dom.quizContent.querySelector('.explanation').classList.remove('hidden');
+            dom.showAnswerBtn.classList.add('hidden');
+            dom.nextBtn.classList.remove('hidden');
+
+            updateCurrentStats();
+            updateQuestionMapStyles();
         }
 
         function navigate(direction) {
             const newIndex = state.currentQuestionIndex + direction;
             if (newIndex >= 0 && newIndex < questions.length) {
                 state.currentQuestionIndex = newIndex;
-                loadQuestion();
+                loadQuestion(); // Questo aggiornerà anche mappa e dropdown
                 updateProgress();
-                updateNavigation();
             } else if (newIndex === questions.length) {
                 showResults();
             }
         }
 
         function updateProgress() {
+            if (questions.length === 0) return;
             const progress = ((state.currentQuestionIndex + 1) / questions.length) * 100;
             dom.progressFill.style.width = `${progress}%`;
             dom.currentQuestion.textContent = state.currentQuestionIndex + 1;
@@ -1477,6 +1455,11 @@
         }
 
         function updateNavigation() {
+            if (questions.length === 0) {
+                dom.prevBtn.disabled = true;
+                dom.nextBtn.disabled = true;
+                return;
+            }
             dom.prevBtn.disabled = state.currentQuestionIndex === 0;
             dom.nextBtn.textContent = state.currentQuestionIndex === questions.length - 1 ? '🏁 Termina Quiz' : 'Successiva →';
         }
@@ -1494,13 +1477,12 @@
             dom.progressSection.classList.add('hidden');
             dom.results.classList.remove('hidden');
 
-            const totalQuestions = questions.length;
-            const answeredQuestions = state.userAnswers.filter(a => a.answer !== null);
-            const answeredCount = answeredQuestions.length;
+            const totalValidQuestions = questions.length;
+            const answeredCount = state.userAnswers.filter(a => a.answer !== null).length;
             const correctTotal = state.userAnswers.filter(a => a.correct === true).length;
             const incorrectTotal = state.userAnswers.filter(a => a.correct === false).length;
 
-            const percentageTotal = totalQuestions > 0 ? Math.round((correctTotal / totalQuestions) * 100) : 0;
+            const percentageTotal = totalValidQuestions > 0 ? Math.round((correctTotal / totalValidQuestions) * 100) : 0;
 
             dom.scorePercentage.textContent = `${percentageTotal}%`;
             dom.correctStat.textContent = correctTotal;
@@ -1512,13 +1494,95 @@
             dom.scoreCircle.style.background = `conic-gradient(#4f46e5 ${gradientDegrees}deg, #e2e8f0 ${gradientDegrees}deg)`;
         }
 
+        function populateQuestionJump() {
+            if (!dom.questionJumpSelect || questions.length === 0) return;
+            dom.questionJumpSelect.innerHTML = '';
+            questions.forEach((_, index) => {
+                const option = document.createElement('option');
+                option.value = index;
+                option.textContent = index + 1;
+                dom.questionJumpSelect.appendChild(option);
+            });
+            dom.questionJumpSelect.value = state.currentQuestionIndex;
+        }
+
+        function updateQuestionJumpHighlight() {
+            if (dom.questionJumpSelect) {
+                dom.questionJumpSelect.value = state.currentQuestionIndex;
+            }
+        }
+
+        function handleQuestionJump(event) {
+            const newIndex = parseInt(event.target.value, 10);
+            if (newIndex >= 0 && newIndex < questions.length && newIndex !== state.currentQuestionIndex) {
+                state.currentQuestionIndex = newIndex;
+                loadQuestion();
+                updateProgress();
+            }
+        }
+
+        function populateQuestionMap() {
+            if (!dom.questionMapContainer || questions.length === 0) return;
+            dom.questionMapContainer.innerHTML = '';
+            questions.forEach((_, index) => {
+                const marker = document.createElement('div');
+                marker.classList.add('question-marker');
+                marker.dataset.index = index;
+                marker.textContent = index + 1;
+                marker.setAttribute('role', 'button');
+                marker.setAttribute('tabindex', '0'); // Per accessibilità da tastiera
+                marker.setAttribute('aria-label', `Vai alla domanda ${index + 1}`);
+                marker.addEventListener('click', () => handleQuestionMarkerClick(index));
+                marker.addEventListener('keydown', (event) => { // Per accessibilità da tastiera
+                    if (event.key === 'Enter' || event.key === ' ') {
+                        handleQuestionMarkerClick(index);
+                    }
+                });
+                dom.questionMapContainer.appendChild(marker);
+            });
+            updateQuestionMapStyles();
+        }
+
+        function handleQuestionMarkerClick(index) {
+            if (index >= 0 && index < questions.length && index !== state.currentQuestionIndex) {
+                state.currentQuestionIndex = index;
+                loadQuestion();
+                updateProgress();
+            }
+        }
+
+        function updateQuestionMapStyles() {
+            if (!dom.questionMapContainer || questions.length === 0) return;
+            const markers = dom.questionMapContainer.querySelectorAll('.question-marker');
+            markers.forEach(marker => {
+                const index = parseInt(marker.dataset.index, 10);
+                marker.classList.remove('current', 'answered', 'correct', 'incorrect');
+
+                if (index === state.currentQuestionIndex) {
+                    marker.classList.add('current');
+                }
+
+                const answerInfo = state.userAnswers[index];
+                if (answerInfo.correct === true) {
+                    marker.classList.add('correct');
+                } else if (answerInfo.correct === false) {
+                    marker.classList.add('incorrect');
+                } else if (answerInfo.answer !== null) { // 'answer' invece di 'userAnswer' per coerenza con la struct di theory.html
+                    marker.classList.add('answered');
+                }
+            });
+        }
+
         // EVENT LISTENERS
         dom.showAnswerBtn.addEventListener('click', showAnswer);
-        dom.stopBtn.addEventListener('click', showResults);
+        if(dom.stopBtn) dom.stopBtn.addEventListener('click', showResults);
         dom.nextBtn.addEventListener('click', () => navigate(1));
         dom.prevBtn.addEventListener('click', () => navigate(-1));
         dom.restartBtn.addEventListener('click', initQuiz);
-
+        if (dom.questionJumpSelect) {
+            dom.questionJumpSelect.addEventListener('change', handleQuestionJump);
+        }
+        
         initQuiz();
     });
 </script>
