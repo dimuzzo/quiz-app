@@ -33,7 +33,7 @@ Both quizzes provide immediate feedback with detailed explanations for each answ
     * Number of correct/incorrect answers out of the total questions.
     * Number of correct/incorrect answers out of the total questions answered.
 * **Modern and Responsive Design:** Pleasant user interface adaptable to different devices.
-* **PWA (Progressive Web App) Ready:** Includes a `manifest.json` for an experience similar to a native app (although icons are not provided in this repository).
+* **PWA (Progressive Web App) Ready:** Includes a `manifest.json` for an experience similar to a native app.
 
 ---
 
