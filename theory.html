@@ -782,7 +782,7 @@
             id: 84,
             text: "I pattern GoF incentivano l'uso dell'ereditarietà come meccanismo di riuso del codice, in particolare attraverso il pattern composite",
             correct: false,
-            explanation: "I pattern GoF generalmente SCORAGGIANO l'uso eccessivo dell'ereditarietà per il riuso. Il pattern Composite usa l'ereditarietà per il polimorfismo, non per il riuso."
+            explanation: "I pattern GoF generalmente SCORAGGIANO l'uso eccessivo dell'ereditarietà per il riuso preferendo la composizione. Il pattern Composite usa l'ereditarietà per il polimorfismo, non per il riuso."
         },
         {
             id: 85,
@@ -1257,7 +1257,128 @@
             text: "La fase di Verifica in un test unitario consiste nel preparare gli oggetti e le risorse necessarie per l'esecuzione del test.",
             correct: false,
             explanation: "La fase di Preparazione (Setup) crea l'oggetto o il gruppo di oggetti da verificare e prepara risorse. La fase di Verifica valuta se i risultati ottenuti corrispondono a quelli attesi."
+        },
+        {
+            "id": 164,
+            "text": "L’analisi orientata agli oggetti è guidata dalle responsabilità.",
+            "correct": false,
+            "explanation": "No, è la progettazione orientata agli oggetti ad essere guidata dalle responsabilità."
+        },
+        {
+            "id": 165,
+            "text": "L’analisi orientata agli oggetti considera un progetto software come una “comunità di oggetti” con responsabilità che collaborano.",
+            "correct": false,
+            "explanation": "No, è la progettazione orientata agli oggetti che considera un progetto software come una “comunità di oggetti” con responsabilità che collaborano."
+        },
+        {
+            "id": 166,
+            "text": "Identificazione delle responsabilità, assegnazione di queste responsabilità, indagine di come soddisfare queste responsabilità sono i passi della “responsibility-driven development”.",
+            "correct": true,
+            "explanation": "Il Responsibility-Driven Development si basa esattamente su quei passaggi: identificare responsabilità, assegnarle agli oggetti e determinare come realizzarle."
+        },
+        {
+            "id": 167,
+            "text": "Controller, High Cohesion, Abstract Factory sono alcuni esempi di pattern GRASP.",
+            "correct": false,
+            "explanation": "Controller e High Cohesion fanno parte dei pattern GRASP, mentre Abstract Factory è un pattern GoF, non GRASP."
+        },
+        {
+            "id": 168,
+            "text": "I pattern GRASP sono lo strumento principale utilizzato nella disciplina dei requisiti di UP.",
+            "correct": false,
+            "explanation": "I pattern GRASP vengono impiegati nella progettazione orientata agli oggetti, non come strumento principale per la raccolta dei requisiti in UP."
+        },
+        {
+            "id": 169,
+            "text": "UP organizza temporalmente il ciclo di sviluppo in quattro iterazioni e le iterazioni in diverse fasi.",
+            "correct": false,
+            "explanation": "In UP si parla di quattro fasi (ideazione, elaborazione, costruzione, transizione), ciascuna delle quali può contenere più iterazioni; non di quattro iterazioni complessive."
+        },
+        {
+            "id": 170,
+            "text": "Ideazione, elaborazione, costruzione e transizione di UP sono separate temporalmente e non si intrecciano mai.",
+            "correct": true,
+            "explanation": "Sono fasi distinte e non si intrecciano mai. "
+        },
+        {
+            "id": 171,
+            "text": "Specifica, sviluppo, convalida ed evoluzione in UP sono attività separate temporalmente e non si intrecciano mai.",
+            "correct": false,
+            "explanation": "In UP le discipline (specifica, sviluppo, convalida, evoluzione, ecc.) avvengono in modo concorrente durante le iterazioni, non in sequenza isolata."
+        },
+        {
+            "id": 172,
+            "text": "Durante lo sviluppo tramite UP non si fa uso di meccanismi di refactoring per far fronte ai cambiamenti.",
+            "correct": false,
+            "explanation": "UP incoraggia il refactoring continuo all’interno delle iterazioni per gestire i cambiamenti in modo iterativo."
+        },
+        {
+            "id": 173,
+            "text": "Modellazione del business, requisiti, progettazione, implementazione, test, rilascio in UP sono separate temporalmente e non si intrecciano mai.",
+            "correct": false,
+            "explanation": "Le discipline di UP (modellazione del business, requisiti, progettazione, implementazione, test, rilascio, ecc.) si svolgono in parallelo all’interno di ciascuna iterazione, non in fasi separate."
+        },
+        {
+            "id": 174,
+            "text": "Il test-driven development è una pratica promossa dal metodo a cascata che prevede lo sviluppo preceduto dai test.",
+            "correct": false,
+            "explanation": "Il TDD è nato nell’ambito dell’Extreme Programming, non nel modello a cascata."
+        },
+        {
+            "id": 175,
+            "text": "I test unitari hanno lo scopo di verificare la comunicazione tra specifiche parti del sistema.",
+            "correct": false,
+            "explanation": "I test unitari verificano il corretto funzionamento di singole unità di codice, non la comunicazione tra moduli."
+        },
+        {
+            "id": 176,
+            "text": "I test unitari hanno lo scopo di verificare il collegamento complessivo tra tutti gli elementi del sistema.",
+            "correct": false,
+            "explanation": "Il test unitario controlla componenti isolate; verificare il collegamento complessivo è compito dei test di integrazione o di sistema."
+        },
+        {
+            "id": 177,
+            "text": "I test unitari si compongono di preparazione, esecuzione, verifica e rilascio.",
+            "correct": true,
+            "explanation": "Un tipico ciclo di un test unitario include setup (preparazione), esecuzione, assertion (verifica) e teardown (rilascio)."
+        },
+        {
+            "id": 178,
+            "text": "Il test-driven development e il refactoring sono pratiche promosse in particolar modo dallo sviluppo noto come extreme programming.",
+            "correct": true,
+            "explanation": "TDD e refactoring sono due pratiche cardine dell’Extreme Programming."
+        },
+        {
+            "id": 179,
+            "text": "Il pattern Strategy si occupa del modo in cui un oggetto esegue un determinato compito ed incapsula un algoritmo.",
+            "correct": true,
+            "explanation": "Strategy definisce una famiglia di algoritmi intercambiabili e la scelta del comportamento è delegata a classi diverse che incapsulano ciascun algoritmo."
+        },
+        {
+            "id": 180,
+            "text": "Il pattern State si occupa del modo in cui un oggetto esegue un determinato compito ed incapsula un algoritmo.",
+            "correct": false,
+            "explanation": "State incapsula stati diversi di un oggetto e cambia comportamento in base allo stato, non in base a algoritmi intercambiabili."
+        },
+        {
+            "id": 181,
+            "text": "Il pattern State consente la definizione di una famiglia di algoritmi, intercambiabili tra loro.",
+            "correct": false,
+            "explanation": "La definizione di una famiglia di algoritmi intercambiabili è caratteristica del pattern Strategy, non dello State."
+        },
+        {
+            "id": 182,
+            "text": "Il pattern State disaccoppia gli algoritmi dei clienti che vogliono usarli dinamicamente.",
+            "correct": false,
+            "explanation": "Disaccoppiare algoritmi e clienti è compito del pattern Strategy; State disaccoppia invece il comportamento in base allo stato interno."
+        },
+        {
+            "id": 183,
+            "text": "Il pattern State e il pattern Strategy sono sintatticamente equivalenti ma differiscono nell’applicazione.",
+            "correct": false,
+            "explanation": "Sono sintatticamente diversi."
         }
+
     ];
 
     let questions = [];
