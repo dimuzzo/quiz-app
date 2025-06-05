@@ -17,7 +17,9 @@ Both quizzes provide immediate feedback with detailed explanations for each answ
 
 ## ✨ Key Features
 
-* **Two Quiz Modes:** Theory and Design Patterns.
+* **Two Quiz Modes:**
+     * Theory, where you can select the number of questions as your choice
+     * Design Patterns
 * **Random Questions:** Questions are shuffled each session for a new experience every time.
 * **Immediate Feedback:** Instantly see if your answer is correct or incorrect.
 * **Detailed Explanations:** Understand the reasoning behind each answer.
