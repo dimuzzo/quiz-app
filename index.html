@@ -120,6 +120,10 @@
       position: relative;
       overflow: hidden;
     }
+    
+    .quiz-card#theoryQuizLauncher { /* Per rendere cliccabile la card stessa */
+        cursor: pointer;
+    }
 
     .quiz-card::before {
       content: '';
@@ -136,11 +140,16 @@
       left: 100%;
     }
 
-    .quiz-card:hover {
+    .quiz-card:hover:not(#theoryQuizLauncher) { /* L'hover non si applica al launcher se le opzioni sono visibili */
       transform: translateY(-12px) scale(1.02);
       box-shadow: 0 20px 40px rgba(79, 70, 229, 0.15);
       border-color: rgba(79, 70, 229, 0.3);
     }
+     .quiz-card#theoryQuizLauncher:hover { /* Stile hover leggermente diverso per il launcher */
+        transform: translateY(-5px);
+        box-shadow: 0 12px 30px rgba(79, 70, 229, 0.12);
+    }
+
 
     .quiz-icon {
       font-size: 4rem;
@@ -171,7 +180,46 @@
       line-height: 1.6;
       position: relative;
       z-index: 1;
+      margin-bottom: 10px; /* Aggiunto spazio per i bottoni sotto */
     }
+
+    /* Stili per le opzioni del numero di domande */
+    .theory-sub-options {
+      display: flex; /* Modificato da 'none' per gestirlo con JS, ma 'flex' è il default quando visibile */
+      flex-direction: column;
+      gap: 10px;
+      margin-top: 20px; /* Spazio sopra i bottoni */
+      width: 80%; /* Larghezza dei bottoni rispetto alla card */
+      max-width: 250px; /* Larghezza massima */
+      align-self: center; /* Centra il blocco dei bottoni */
+    }
+
+    .theory-sub-options .sub-option-btn {
+      display: block;
+      padding: 12px 15px;
+      background: #4f46e5; /* Blu primario */
+      color: white;
+      text-decoration: none;
+      border-radius: 10px;
+      text-align: center;
+      font-weight: 600;
+      transition: background-color 0.2s ease, transform 0.2s ease;
+      border: 2px solid transparent;
+    }
+
+    .theory-sub-options .sub-option-btn:hover {
+      background: #4338ca; /* Blu più scuro per hover */
+      transform: translateY(-2px);
+      box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+    }
+    
+    .theory-sub-options p {
+        font-weight: 600; /* Sostituito 'bold' con 600 per coerenza */
+        color: #374151; /* Un grigio scuro per leggibilità */
+        margin-bottom: 8px;
+        font-size: 0.95rem;
+    }
+
 
     /* Footer */
     .footer {
@@ -214,6 +262,9 @@
       .quiz-card {
         padding: 30px 20px;
       }
+       .theory-sub-options {
+        width: 90%;
+      }
 
       .footer {
         padding: 20px;
@@ -240,11 +291,18 @@
 
   <div class="main-content">
     <div class="quiz-options">
-      <a href="theory.html" class="quiz-card">
+      <div class="quiz-card" id="theoryQuizLauncher">
         <span class="quiz-icon">📚</span>
         <div class="quiz-title">Quiz di Teoria</div>
         <div class="quiz-description">Metti alla prova le tue conoscenze sui concetti fondamentali dello sviluppo di applicazioni software.</div>
-      </a>
+        <div class="theory-sub-options" id="theorySubOptions" style="display: none;">
+          <p>Scegli il numero di domande:</p>
+          <a href="theory.html?numQuestions=20" class="sub-option-btn">20 Domande</a>
+          <a href="theory.html?numQuestions=50" class="sub-option-btn">50 Domande</a>
+          <a href="theory.html?numQuestions=100" class="sub-option-btn">100 Domande</a>
+          <a href="theory.html?numQuestions=all" class="sub-option-btn">Tutte le Domande</a>
+        </div>
+      </div>
       <a href="pattern.html" class="quiz-card">
         <span class="quiz-icon">🏗️</span>
         <div class="quiz-title">Quiz sui Design Patterns</div>
@@ -257,5 +315,35 @@
     © 2025 SAS Quiz. Tutti i diritti riservati.
   </div>
 </div>
+
+<script>
+  document.addEventListener('DOMContentLoaded', () => {
+    const theoryLauncher = document.getElementById('theoryQuizLauncher');
+    const theorySubOptions = document.getElementById('theorySubOptions');
+    const patternCard = document.querySelector('a[href="pattern.html"].quiz-card'); // Selettore più specifico
+
+    if (theoryLauncher && theorySubOptions) {
+      theoryLauncher.addEventListener('click', (event) => {
+        // Se il click avviene su un bottone delle sub-opzioni, lascia che il link funzioni normalmente.
+        if (event.target.classList.contains('sub-option-btn') || event.target.closest('.sub-option-btn')) {
+          return;
+        }
+        
+        // Altrimenti, mostra/nascondi le sub-opzioni
+        event.preventDefault(); // Impedisce comportamenti di default se theoryLauncher fosse un <a>
+        const isHidden = theorySubOptions.style.display === 'none' || theorySubOptions.style.display === '';
+        theorySubOptions.style.display = isHidden ? 'flex' : 'none';
+
+        // Opzionale: adatta l'hover della card quando le opzioni sono visibili
+        if(isHidden) {
+            theoryLauncher.classList.add('options-visible'); // Aggiungi una classe per stili specifici se necessario
+        } else {
+            theoryLauncher.classList.remove('options-visible');
+        }
+      });
+    }
+  });
+</script>
+
 </body>
 </html>
