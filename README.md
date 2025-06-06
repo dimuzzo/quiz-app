@@ -28,8 +28,9 @@ Both quizzes provide immediate feedback with detailed explanations for each answ
     * "Show Answer" button.
     * "Stop Quiz" button to end early and see partial results.
 * **Progress Tracking:**
-    * Progress bar.
-    * Real-time count of correct and incorrect answers during the quiz.
+    * Dropdown Menu: Jump directly to any question using a convenient dropdown menu
+    * Sequential Navigation: Move step-by-step with "Previous" and "Next" buttons.
+    * In-Quiz Options: Use "Show Answer" to reveal the correct choice or "Stop Quiz" to end the session early and view partial results.
 * **Results Summary:**
     * Total percentage score.
     * Number of correct/incorrect answers out of the total questions.
