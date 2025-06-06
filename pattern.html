@@ -585,7 +585,7 @@
         populateQuestionJump();
         populateQuestionMap();
 
-        loadQuestion(); // Carica la prima domanda
+        loadQuestion(); 
         updateProgress();
         updateNavigation();
         updateCurrentStats();
@@ -759,7 +759,6 @@
             state.currentQuestionIndex = newIndex;
             loadQuestion();
             updateProgress();
-            // updateNavigation e updateQuestionMapStyles sono chiamate da loadQuestion
         }
     }
 
@@ -782,7 +781,6 @@
             state.currentQuestionIndex = index;
             loadQuestion();
             updateProgress();
-             // updateNavigation e updateQuestionMapStyles sono chiamate da loadQuestion
         }
     }
 

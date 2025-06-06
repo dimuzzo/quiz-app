@@ -334,7 +334,6 @@
         const isHidden = theorySubOptions.style.display === 'none' || theorySubOptions.style.display === '';
         theorySubOptions.style.display = isHidden ? 'flex' : 'none';
 
-        // Opzionale: adatta l'hover della card quando le opzioni sono visibili
         if(isHidden) {
             theoryLauncher.classList.add('options-visible'); // Aggiungi una classe per stili specifici se necessario
         } else {

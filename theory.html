@@ -278,7 +278,6 @@
 </div>
 
 <script>
-    // Funzione per leggere i parametri dall'URL
     function getQueryParam(param) {
         const urlParams = new URLSearchParams(window.location.search);
         return urlParams.get(param);
@@ -396,7 +395,7 @@
         },
         {
             id: 19,
-            text: "Un caso d'uso rappresenta una maniera di utilizzare il sistema da parte di un utente per raggiungere un suo obbiettivo",
+            text: "Un caso d'uso rappresenta una maniera di utilizzare il sistema da parte di un utente per raggiungere un suo obiettivo",
             correct: true,
             explanation: "Corretto. Un caso d'uso descrive come un attore (utente) interagisce con il sistema per raggiungere un obiettivo specifico."
         },
@@ -462,7 +461,7 @@
         },
         {
             id: 30,
-            text: "I CASI D'USO Sono una collezione di soli scenari di successo che descrivono un attore che usa il sistema per raggiungere un obbiettivo specifico",
+            text: "I CASI D'USO Sono una collezione di soli scenari di successo che descrivono un attore che usa il sistema per raggiungere un obiettivo specifico",
             correct: false,
             explanation: "I casi d'uso includono sia scenari di SUCCESSO che scenari ALTERNATIVI (inclusi quelli di fallimento). Non sono limitati ai soli scenari di successo."
         },
@@ -1523,7 +1522,7 @@
         let state = {
             currentQuestionIndex: 0,
             userAnswers: [],
-            isShowingAnswer: false, // Questo stato indica se la RISPOSTA CORRENTE è stata mostrata
+            isShowingAnswer: false, 
         };
 
         function initQuiz() {
@@ -1548,7 +1547,6 @@
                 answer: null, 
                 correct: null // Indica se la domanda è stata valutata (Mostra Risposta cliccato)
             }));
-            // state.isShowingAnswer NON viene resettato qui, perché si riferisce alla domanda *attualmente* visualizzata
 
             dom.results.classList.add('hidden');
             dom.quizContent.classList.remove('hidden');
@@ -1605,7 +1603,6 @@
             }
             console.log("--- FINE DEBUG ---");
 
-            // USA I BACKTICK PER L'INTERPOLAZIONE DELLE STRINGHE
             dom.quizContent.innerHTML = `  
                 <div class="question-card" data-question-id="${question.id}">
                     <div class="question-number">Domanda ${state.currentQuestionIndex + 1}</div>
@@ -1680,7 +1677,6 @@
 
             const answer = target.dataset.answer === 'true';
             state.userAnswers[state.currentQuestionIndex].answer = answer;
-            // NON impostare state.userAnswers[state.currentQuestionIndex].correct qui
         }
 
         function showAnswer() {
@@ -1692,7 +1688,7 @@
                 return;
             }
 
-            state.isShowingAnswer = true; // Ora la risposta per la domanda corrente è stata mostrata
+            state.isShowingAnswer = true; 
             const question = questions[state.currentQuestionIndex];
             const isCorrect = state.userAnswers[state.currentQuestionIndex].answer === question.correct;
             state.userAnswers[state.currentQuestionIndex].correct = isCorrect; // Segna come valutata
@@ -1735,7 +1731,6 @@
         function updateProgress() {
             if (questions.length === 0) return;
             const progress = ((state.currentQuestionIndex + 1) / questions.length) * 100;
-            // USA I BACKTICK
             dom.progressFill.style.width = `${progress}%`;
             dom.currentQuestion.textContent = state.currentQuestionIndex + 1;
             dom.totalQuestions.textContent = questions.length; 
@@ -1771,7 +1766,6 @@
 
             const percentageTotal = totalValidQuestions > 0 ? Math.round((correctTotal / totalValidQuestions) * 100) : 0;
 
-            // USA I BACKTICK
             dom.scorePercentage.textContent = `${percentageTotal}%`;
             dom.correctStat.textContent = correctTotal;
             dom.incorrectStat.textContent = incorrectTotal;
@@ -1779,7 +1773,6 @@
             dom.answeredIncorrectStat.textContent = `${incorrectTotal} / ${answeredCount}`;
 
             const gradientDegrees = (percentageTotal / 100) * 360;
-            // USA I BACKTICK
             dom.scoreCircle.style.background = `conic-gradient(#4f46e5 ${gradientDegrees}deg, #e2e8f0 ${gradientDegrees}deg)`;
         }
 
@@ -1820,7 +1813,6 @@
                 marker.textContent = index + 1;
                 marker.setAttribute('role', 'button');
                 marker.setAttribute('tabindex', '0'); 
-                // USA I BACKTICK
                 marker.setAttribute('aria-label', `Vai alla domanda ${index + 1}`);
                 marker.addEventListener('click', () => handleQuestionMarkerClick(index));
                 marker.addEventListener('keydown', (event) => { 
