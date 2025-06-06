@@ -24,13 +24,12 @@ Both quizzes provide immediate feedback with detailed explanations for each answ
 * **Immediate Feedback:** Instantly see if your answer is correct or incorrect.
 * **Detailed Explanations:** Understand the reasoning behind each answer.
 * **Flexible Navigation:**
-    * "Previous" and "Next" buttons.
-    * "Show Answer" button.
-    * "Stop Quiz" button to end early and see partial results.
-* **Progress Tracking:**
     * Dropdown Menu: Jump directly to any question using a convenient dropdown menu
     * Sequential Navigation: Move step-by-step with "Previous" and "Next" buttons.
     * In-Quiz Options: Use "Show Answer" to reveal the correct choice or "Stop Quiz" to end the session early and view partial results.
+* **Progress Tracking:**
+    * Progress bar.
+    * Real-time count of correct and incorrect answers during the quiz.
 * **Results Summary:**
     * Total percentage score.
     * Number of correct/incorrect answers out of the total questions.
