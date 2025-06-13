@@ -57,7 +57,7 @@ The application is entirely client-side and does not require a backend or comple
     Alternatively, download the ZIP and unzip it.
 
 2.  **Open the files in your browser:**
-    * Navigate to the site: https://dimuzzo.github.io/quiz-app/
+    https://dimuzzo.github.io/quiz-app/
 
 ---
 
