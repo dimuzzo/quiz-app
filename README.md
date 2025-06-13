@@ -52,7 +52,7 @@ The application is entirely client-side and does not require a backend or comple
 
 1.  **Clone the repository (or download the files):**
     ```bash
-    git clone [https://github.com/dimuzzo/quiz-app.git](https://github.com/dimuzzo/quiz-app.git)
+    git clone https://github.com/dimuzzo/quiz-app.git
     ```
     Alternatively, download the ZIP and unzip it.
 
