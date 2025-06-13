@@ -81,7 +81,12 @@
     padding: 8px 16px; border-radius: 20px; font-size: 0.85rem;
     font-weight: 600; color: white;
 }
-.question-number { background: linear-gradient(135deg, #4f46e5, #06b6d4); }
+
+.question-number {
+    display: inline-block;
+    background: linear-gradient(135deg, #4f46e5, #06b6d4);
+    margin-bottom: 20px;   /
+}
 .grasp { background: linear-gradient(135deg, #10b981, #059669); }
 .gof-creational { background: linear-gradient(135deg, #f59e0b, #d97706); }
 .gof-structural { background: linear-gradient(135deg, #3b82f6, #2563eb); }
