@@ -1,6 +1,6 @@
 # SAS Quiz 🎓📚🏗️
 
-Welcome to the SAS Quiz application! This is a web app designed to test your knowledge of Sviluppo Applicazioni Software (as the app it's only in Italian).
+Welcome to the SAS Quiz application! This is a web app designed to test your knowledge of Sviluppo Applicazioni Software (the app is currently only in Italian).
 
 ---
 
@@ -18,23 +18,22 @@ Both quizzes provide immediate feedback with detailed explanations for each answ
 ## ✨ Key Features
 
 * **Two Quiz Modes:**
-     * Theory, where you can select the number of questions as your choice
-     * Design Patterns
-* **Random Questions:** Questions are shuffled each session for a new experience every time.
+    * Theory, where you can select the number of questions.
+    * Design Patterns, with multiple-choice and UML-based questions.
+* **Random Questions:** Questions and options are shuffled each session for a new experience every time.
 * **Immediate Feedback:** Instantly see if your answer is correct or incorrect.
 * **Detailed Explanations:** Understand the reasoning behind each answer.
 * **Flexible Navigation:**
-    * Dropdown Menu: Jump directly to any question using a convenient dropdown menu
-    * Sequential Navigation: Move step-by-step with "Previous" and "Next" buttons.
-    * In-Quiz Options: Use "Show Answer" to reveal the correct choice or "Stop Quiz" to end the session early and view partial results.
+    * Jump directly to any question using a convenient dropdown menu and a visual question map.
+    * Move step-by-step with "Previous" and "Next" buttons.
+    * Use "Show Answer" to reveal the correct choice or "Stop Quiz" to end the session early.
 * **Progress Tracking:**
-    * Progress bar.
-    * Real-time count of correct and incorrect answers during the quiz.
+    * A visual progress bar.
+    * A real-time count of correct and incorrect answers during the quiz.
 * **Results Summary:**
-    * Total percentage score.
-    * Number of correct/incorrect answers out of the total questions.
-    * Number of correct/incorrect answers out of the total questions answered.
-* **Modern and Responsive Design:** Pleasant user interface adaptable to different devices.
+    * A final percentage score.
+    * A detailed breakdown of correct/incorrect answers.
+* **Modern and Responsive Design:** A clean, pleasant user interface that adapts to different devices.
 * **PWA (Progressive Web App) Ready:** Includes a `manifest.json` for an experience similar to a native app.
 
 ---
@@ -42,8 +41,8 @@ Both quizzes provide immediate feedback with detailed explanations for each answ
 ## 🛠️ Technologies Used
 
 * HTML5
-* CSS3 (with Flexbox and Grid for layout)
-* JavaScript (Vanilla JS for all quiz logic)
+* CSS3 (with Flexbox, Grid, and animations)
+* JavaScript (Vanilla JS, refactored for modularity)
 
 ---
 
@@ -57,19 +56,23 @@ The application is entirely client-side and does not require a backend or comple
     ```
     Alternatively, download the ZIP and unzip it.
 
-2.  **Open the files in your browser:**
-    * Navigate to the site: https://dimuzzo.github.io/quiz-app/
+2.  **Open the files in your browser:**
+    * Navigate to the site: https://dimuzzo.github.io/quiz-app/
 
 ---
 
 ## 📁 File Structure
 
-* `index.html`: The main page from which the user chooses the type of quiz.
-* `theory.html`: Contains the logic and questions for the theory quiz.
-* `pattern.html`: Contains the logic and questions for the design patterns quiz.
+The project is organized to separate content, styling, and logic for better maintainability.
+
+* `index.html`: The main page where the user chooses the quiz type.
+* `theory.html`: The HTML structure for the theory quiz. It loads the specific questions and initializes the quiz.
+* `pattern.html`: The HTML structure for the design patterns quiz. It loads its specific questions and initializes the quiz.
+* `style.css`: Contains the common CSS styles shared across all pages (layout, header, footer, etc.).
+* `quiz-style.css`: Contains specific styles for the quiz interface (progress bar, question cards, options, etc.).
+* `quiz-logic.js`: The core JavaScript engine for the quizzes. It handles question rendering, navigation, scoring, and results.
 * `manifest.json`: Configuration file for the Progressive Web App.
-* `icon-192.png`: Icon for the PWA.
-* `icon-512.png`: Icon for the PWA.
+* `icon-192.png` & `icon-512.png`: Icons for the PWA.
 
 ---
 
