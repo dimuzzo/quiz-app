@@ -1,5 +1,9 @@
 # SAS Quiz 🎓📚🏗️
 
+![GitHub last commit](https://img.shields.io/github/last-commit/dimuzzo/quiz-app?style=flat-square&logo=github&label=Last%20Commit)
+![GitHub repo size](https://img.shields.io/github/repo-size/dimuzzo/quiz-app?style=flat-square&logo=github&label=Repo%20Size)
+![GitHub stars](https://img.shields.io/github/stars/dimuzzo/quiz-app?style=flat-square&logo=github&label=Stars)
+
 Welcome to the SAS Quiz application! This is a web app designed to test your knowledge of Sviluppo Applicazioni Software (the app is currently only in Italian).
 
 ---
@@ -81,3 +85,5 @@ The project is organized to separate content, styling, and logic for better main
 If you want to contribute to the project, feel free to fork the repository and submit a pull request!
 
 ---
+
+> Created with passion by [dimuzzo](https://github.com/dimuzzo)
