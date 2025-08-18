@@ -6,7 +6,9 @@
 
 Welcome to the SAS Quiz application! This is a web app designed to test your knowledge of Sviluppo Applicazioni Software.
 
-The app is currently only in Italian, but the English version will be updated soon!
+The app is in Italian, but the English version is now live!
+
+You can choose to switch up between the two languages whenever you want!
 
 ---
 
