@@ -1,4 +1,4 @@
-# SAS Quiz 🎓📚🏗️
+# SAS Quiz App 🎓
 
 ![GitHub last commit](https://img.shields.io/github/last-commit/dimuzzo/quiz-app?style=flat-square&logo=github&label=Last%20Commit)
 ![GitHub repo size](https://img.shields.io/github/repo-size/dimuzzo/quiz-app?style=flat-square&logo=github&label=Repo%20Size)
@@ -10,7 +10,7 @@ Welcome to the SAS Quiz application! This is a web app designed to test your kno
 
 ## 🌟 Overview
 
-The application offers two main quiz modes:
+This application offers two main quiz modes:
 
 1.  **Theory Quiz:** True/false questions to verify understanding of fundamental software application development concepts and the Unified Process.
 2.  **Design Patterns Quiz:** Multiple-choice questions focused on GRASP and GoF design patterns (creational, structural, behavioral), with problem-solution scenarios and UML diagram interpretation.
@@ -46,7 +46,7 @@ Both quizzes provide immediate feedback with detailed explanations for each answ
 
 * HTML5
 * CSS3 (with Flexbox, Grid, and animations)
-* JavaScript (Vanilla JS, refactored for modularity)
+* JavaScript (Vanilla JS)
 
 ---
 
