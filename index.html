@@ -9,7 +9,7 @@
   <meta name="theme-color" content="#ffffff">
   <link rel="stylesheet" href="style.css">
   <style>
-    /* Stili specifici solo per la card della home page */
+    /* Styles specific to the home page card */
     .main-content {
       padding: 50px 40px;
       flex-grow: 1;
@@ -82,6 +82,30 @@
         margin-bottom: 8px; font-size: 0.95rem;
     }
 
+    /* Simple style for the language switcher */
+    .language-switcher {
+        position: absolute;
+        top: 15px;
+        right: 15px;
+        display: flex;
+        gap: 8px;
+        z-index: 10;
+    }
+    .language-switcher button {
+        background: rgba(255, 255, 255, 0.2);
+        border: none;
+        color: white;
+        padding: 8px 12px;
+        border-radius: 8px;
+        cursor: pointer;
+        font-weight: 600;
+        transition: background-color 0.2s;
+    }
+    .language-switcher button:hover {
+        background: rgba(255, 255, 255, 0.3);
+    }
+
+
     @media (max-width: 768px) {
       .main-content { padding: 30px 20px; }
       .quiz-options { grid-template-columns: 1fr; gap: 20px; }
@@ -94,46 +118,54 @@
   </style>
 </head>
 <body>
+<script src="i18n.js"></script>
+
 <div class="container">
   <div class="header">
-    <h1>🎓 SAS QUIZ</h1>
-    <p class="subtitle">Scegli il tipo di quiz che vuoi affrontare</p>
+    <div class="language-switcher">
+        <button onclick="i18n.setLanguage('it')">Italian</button>
+        <button onclick="i18n.setLanguage('en')">English</button>
+    </div>
+    <h1 data-i18n-key="home.main_title"></h1>
+    <p class="subtitle" data-i18n-key="home.subtitle"></p>
   </div>
 
   <div class="main-content">
     <div class="quiz-options">
       <div class="quiz-card" id="theoryQuizLauncher">
         <span class="quiz-icon">📚</span>
-        <div class="quiz-title">Quiz di Teoria</div>
-        <div class="quiz-description">Metti alla prova le tue conoscenze sui concetti fondamentali dello sviluppo di applicazioni software.</div>
+        <div class="quiz-title" data-i18n-key="home.theory_title"></div>
+        <div class="quiz-description" data-i18n-key="home.theory_desc"></div>
         <div class="theory-sub-options" id="theorySubOptions" style="display: none;">
-          <p>Scegli il numero di domande:</p>
-          <a href="theory.html?numQuestions=20" class="sub-option-btn">20 Domande</a>
-          <a href="theory.html?numQuestions=50" class="sub-option-btn">50 Domande</a>
-          <a href="theory.html?numQuestions=100" class="sub-option-btn">100 Domande</a>
-          <a href="theory.html?numQuestions=all" class="sub-option-btn">Tutte le Domande</a>
+          <p data-i18n-key="home.theory_prompt"></p>
+          <a href="theory.html?numQuestions=20" class="sub-option-btn" data-i18n-key="home.theory_20"></a>
+          <a href="theory.html?numQuestions=50" class="sub-option-btn" data-i18n-key="home.theory_50"></a>
+          <a href="theory.html?numQuestions=100" class="sub-option-btn" data-i18n-key="home.theory_100"></a>
+          <a href="theory.html?numQuestions=all" class="sub-option-btn" data-i18n-key="home.theory_all"></a>
         </div>
       </div>
       <a href="pattern.html" class="quiz-card">
         <span class="quiz-icon">🏗️</span>
-        <div class="quiz-title">Quiz sui Design Patterns</div>
-        <div class="quiz-description">Approfondisci i pattern di progettazione, dai GRASP ai GoF, e come applicarli.</div>
+        <div class="quiz-title" data-i18n-key="home.pattern_title"></div>
+        <div class="quiz-description" data-i18n-key="home.pattern_desc"></div>
       </a>
     </div>
   </div>
 
   <div class="footer">
-    © 2025 SAS Quiz. Tutti i diritti riservati.
+    © 2025 SAS Quiz. All rights reserved.
   </div>
 </div>
 
 <script>
+  // This script remains for the UI interaction of the theory card.
   document.addEventListener('DOMContentLoaded', () => {
     const theoryLauncher = document.getElementById('theoryQuizLauncher');
     const theorySubOptions = document.getElementById('theorySubOptions');
 
     if (theoryLauncher && theorySubOptions) {
       theoryLauncher.addEventListener('click', (event) => {
+        // Do not toggle if a sub-option button was clicked
         if (event.target.classList.contains('sub-option-btn') || event.target.closest('.sub-option-btn')) {
           return;
         }

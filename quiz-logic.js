@@ -1,3 +1,8 @@
+/**
+ * Shuffles an array in place using the Fisher-Yates algorithm.
+ * @param {Array} array - The array to shuffle.
+ * @returns {Array} The shuffled array.
+ */
 function shuffleArray(array) {
     const shuffled = [...array];
     for (let i = shuffled.length - 1; i > 0; i--) {
@@ -7,12 +12,17 @@ function shuffleArray(array) {
     return shuffled;
 }
 
+/**
+ * Initializes and manages the entire quiz lifecycle.
+ * @param {Array} quizQuestions - An array of question objects.
+ * @param {Function} questionRenderer - A function that returns the HTML for a question.
+ * @returns {Object} An object with methods to control the quiz.
+ */
 function initializeQuiz(quizQuestions, questionRenderer) {
     const dom = {
         quizContent: document.getElementById('quizContent'),
         progressFill: document.getElementById('progressFill'),
-        currentQuestion: document.getElementById('currentQuestion'),
-        totalQuestions: document.getElementById('totalQuestions'),
+        progressText: document.getElementById('progressText'),
         questionJumpSelect: document.getElementById('questionJump'),
         questionMapContainer: document.getElementById('questionMap'),
         prevBtn: document.getElementById('prevBtn'),
@@ -36,86 +46,51 @@ function initializeQuiz(quizQuestions, questionRenderer) {
     let state = {
         currentQuestionIndex: 0,
         userAnswers: [],
-        isShowingAnswer: false,
     };
     
     let questions = [];
-
-    function initQuiz() {
-        questions = quizQuestions; // Usa le domande passate
-        state.currentQuestionIndex = 0;
-        state.userAnswers = new Array(questions.length).fill(null).map(() => ({ userAnswer: null, correct: null }));
-        state.isShowingAnswer = false;
-
-        dom.results.classList.add('hidden');
-        dom.quizContent.classList.remove('hidden');
-        dom.controls.classList.remove('hidden');
-        dom.progressSection.classList.remove('hidden');
-
-        if (questions.length === 0) {
-            dom.quizContent.innerHTML = "<p style='text-align:center; font-size:1.2rem; color:#6b7280;'>Nessuna domanda disponibile.</p>";
-            dom.controls.classList.add('hidden');
-            dom.progressSection.classList.add('hidden');
-            return;
-        }
-
-        populateQuestionJump();
-        populateQuestionMap();
-        loadQuestion();
-        updateProgress();
-        updateNavigation();
-        updateCurrentStats();
-    }
+    let questionOrder = [];
 
     function loadQuestion() {
-        if (questions.length === 0) return;
-        state.isShowingAnswer = false;
+        if (!questions || questions.length === 0) return;
+        const isAnswered = state.userAnswers[state.currentQuestionIndex].correct !== null;
+        
         const question = questions[state.currentQuestionIndex];
         const userAnswerObj = state.userAnswers[state.currentQuestionIndex];
 
-        // Usa il renderer passato come argomento per generare l'HTML
         dom.quizContent.innerHTML = questionRenderer(question, state);
 
         const optionsContainer = dom.quizContent.querySelector('.options');
         optionsContainer.addEventListener('click', handleOptionClick);
         
-        // Controlla se la domanda è già stata valutata
-        if (userAnswerObj.correct !== null) {
-            state.isShowingAnswer = true;
+        if (isAnswered) {
             const options = dom.quizContent.querySelectorAll('.option');
             const selectedOptionEl = dom.quizContent.querySelector(`.option[data-answer="${userAnswerObj.userAnswer}"]`);
             
             options.forEach(opt => {
                 opt.classList.add('disabled');
-                const optionValue = opt.dataset.answer === 'true' ? true : (opt.dataset.answer === 'false' ? false : parseInt(opt.dataset.answer, 10));
-                if (optionValue === question.correct) {
-                    opt.classList.add('correct');
-                } else if (opt === selectedOptionEl) {
-                    opt.classList.add('incorrect');
-                }
+                const questionCorrectAnswer = question.correct;
+                const optionValueRaw = opt.dataset.answer;
+                const optionValue = optionValueRaw === 'true' ? true : (optionValueRaw === 'false' ? false : parseInt(optionValueRaw, 10));
+
+                if (optionValue === questionCorrectAnswer) opt.classList.add('correct');
+                else if (opt === selectedOptionEl) opt.classList.add('incorrect');
             });
 
             if (selectedOptionEl) selectedOptionEl.classList.add('selected');
             dom.quizContent.querySelector('.explanation').classList.remove('hidden');
         } else if (userAnswerObj.userAnswer !== null) {
-            // Ripristina solo lo stato 'selected' se la domanda è stata risposta ma non valutata
             const selectedOptionEl = dom.quizContent.querySelector(`.option[data-answer="${userAnswerObj.userAnswer}"]`);
             if (selectedOptionEl) selectedOptionEl.classList.add('selected');
         }
 
-        dom.showAnswerBtn.classList.toggle('hidden', state.isShowingAnswer);
-        dom.nextBtn.classList.toggle('hidden', !state.isShowingAnswer);
-
-        updateQuestionJumpHighlight();
-        updateQuestionMapStyles();
         updateNavigation();
     }
 
     function handleOptionClick(event) {
         const target = event.target.closest('.option');
-        if (!target || state.isShowingAnswer || state.userAnswers[state.currentQuestionIndex].correct !== null) {
-            return;
-        }
+        const isAnswered = state.userAnswers[state.currentQuestionIndex].correct !== null;
+        if (!target || isAnswered) return;
 
         target.closest('.options').querySelectorAll('.option').forEach(opt => opt.classList.remove('selected'));
         target.classList.add('selected');
@@ -126,29 +101,26 @@ function initializeQuiz(quizQuestions, questionRenderer) {
     }
 
     function showAnswer() {
-        if (state.isShowingAnswer) return;
+        const isAnswered = state.userAnswers[state.currentQuestionIndex].correct !== null;
+        if (isAnswered) return;
+
         if (state.userAnswers[state.currentQuestionIndex].userAnswer === null) {
-            alert("Per favore, seleziona una risposta prima.");
+            alert(i18n.getString('global.select_answer_alert'));
             return;
         }
 
-        state.isShowingAnswer = true;
         const question = questions[state.currentQuestionIndex];
         const isCorrect = state.userAnswers[state.currentQuestionIndex].userAnswer === question.correct;
         state.userAnswers[state.currentQuestionIndex].correct = isCorrect;
-
-        // Ricarica la domanda per mostrare gli stili corretto/sbagliato
-        loadQuestion();
-        updateCurrentStats();
-        updateQuestionMapStyles();
+        
+        fullRender();
     }
 
     function navigate(direction) {
         const newIndex = state.currentQuestionIndex + direction;
         if (newIndex >= 0 && newIndex < questions.length) {
             state.currentQuestionIndex = newIndex;
-            loadQuestion();
-            updateProgress();
+            fullRender();
         } else if (newIndex === questions.length) {
             showResults();
         }
@@ -158,18 +130,22 @@ function initializeQuiz(quizQuestions, questionRenderer) {
         if (questions.length === 0) return;
         const progress = ((state.currentQuestionIndex + 1) / questions.length) * 100;
         dom.progressFill.style.width = `${progress}%`;
-        dom.currentQuestion.textContent = state.currentQuestionIndex + 1;
-        dom.totalQuestions.textContent = questions.length;
+        dom.progressText.textContent = i18n.getString('global.question_progress', {
+            current: state.currentQuestionIndex + 1,
+            total: questions.length
+        });
     }
 
     function updateNavigation() {
-        if (questions.length === 0) {
-            dom.prevBtn.disabled = true;
-            dom.nextBtn.disabled = true;
-            return;
-        }
+        if (questions.length === 0) return;
+        const isAnswered = state.userAnswers[state.currentQuestionIndex].correct !== null;
+
         dom.prevBtn.disabled = state.currentQuestionIndex === 0;
-        dom.nextBtn.textContent = state.currentQuestionIndex === questions.length - 1 ? '🏁 Termina Quiz' : 'Successiva →';
+        const nextButtonKey = state.currentQuestionIndex === questions.length - 1 ? 'global.finish_quiz_button' : 'global.next';
+        dom.nextBtn.textContent = i18n.getString(nextButtonKey);
+        
+        dom.showAnswerBtn.classList.toggle('hidden', isAnswered);
+        dom.nextBtn.classList.toggle('hidden', !isAnswered);
     }
     
     function updateCurrentStats() {
@@ -185,77 +161,93 @@ function initializeQuiz(quizQuestions, questionRenderer) {
         dom.progressSection.classList.add('hidden');
         dom.results.classList.remove('hidden');
 
-        const totalValidQuestions = questions.length;
-        const answeredCount = state.userAnswers.filter(a => a.userAnswer !== null).length;
         const correctTotal = state.userAnswers.filter(a => a.correct === true).length;
+        const answeredCount = state.userAnswers.filter(a => a.userAnswer !== null).length;
         const incorrectTotal = state.userAnswers.filter(a => a.correct === false).length;
-        const percentageTotal = totalValidQuestions > 0 ? Math.round((correctTotal / totalValidQuestions) * 100) : 0;
+        const percentageTotal = questions.length > 0 ? Math.round((correctTotal / questions.length) * 100) : 0;
 
         dom.scorePercentage.textContent = `${percentageTotal}%`;
         dom.correctStat.textContent = correctTotal;
         dom.incorrectStat.textContent = incorrectTotal;
         dom.answeredCorrectStat.textContent = `${correctTotal} / ${answeredCount}`;
         dom.answeredIncorrectStat.textContent = `${incorrectTotal} / ${answeredCount}`;
-
+        
         const gradientDegrees = (percentageTotal / 100) * 360;
         dom.scoreCircle.style.background = `conic-gradient(#4f46e5 ${gradientDegrees}deg, #e2e8f0 ${gradientDegrees}deg)`;
     }
+    
+    function fullRender() {
+        loadQuestion();
+        updateProgress();
+        updateCurrentStats();
+        updateQuestionMapStyles();
+        if (dom.questionJumpSelect) dom.questionJumpSelect.value = state.currentQuestionIndex;
+    }
 
-    function populateQuestionJump() {
-        if (!dom.questionJumpSelect || questions.length === 0) return;
-        dom.questionJumpSelect.innerHTML = '';
+    function updateLanguage(allNewQuestions, optionShuffler) {
+        const newQuestionsMap = new Map(allNewQuestions.map(q => [q.id || q.pattern, q]));
+        questions = questionOrder.map(id => {
+            const newQuestionData = newQuestionsMap.get(id);
+            return optionShuffler ? optionShuffler(newQuestionData) : newQuestionData;
+        });
+        fullRender();
+    }
+    
+    function initQuiz() {
+        questions = quizQuestions;
+        questionOrder = questions.map(q => q.id || q.pattern);
+        state.currentQuestionIndex = 0;
+        state.userAnswers = new Array(questions.length).fill(null).map(() => ({ userAnswer: null, correct: null }));
+
+        dom.results.classList.add('hidden');
+        dom.quizContent.classList.remove('hidden');
+        dom.controls.classList.remove('hidden');
+        dom.progressSection.classList.remove('hidden');
+
+        if (questions.length === 0) {
+            dom.quizContent.innerHTML = `<p style='text-align:center;'>No questions available.</p>`;
+            return;
+        }
+
+        const questionJumpSelect = dom.questionJumpSelect;
+        questionJumpSelect.innerHTML = '';
         questions.forEach((_, index) => {
             const option = document.createElement('option');
             option.value = index;
             option.textContent = index + 1;
-            dom.questionJumpSelect.appendChild(option);
+            questionJumpSelect.appendChild(option);
         });
-        dom.questionJumpSelect.value = state.currentQuestionIndex;
-    }
 
-    function updateQuestionJumpHighlight() {
-        if (dom.questionJumpSelect) dom.questionJumpSelect.value = state.currentQuestionIndex;
-    }
-
-    function handleQuestionJump(event) {
-        const newIndex = parseInt(event.target.value, 10);
-        if (newIndex >= 0 && newIndex < questions.length && newIndex !== state.currentQuestionIndex) {
-            state.currentQuestionIndex = newIndex;
-            loadQuestion();
-            updateProgress();
-        }
-    }
-    
-    function populateQuestionMap() {
-        if (!dom.questionMapContainer || questions.length === 0) return;
-        dom.questionMapContainer.innerHTML = '';
+        const questionMapContainer = dom.questionMapContainer;
+        questionMapContainer.innerHTML = '';
         questions.forEach((_, index) => {
             const marker = document.createElement('div');
             marker.classList.add('question-marker');
             marker.dataset.index = index;
             marker.textContent = index + 1;
-            marker.addEventListener('click', () => handleQuestionMarkerClick(index));
-            dom.questionMapContainer.appendChild(marker);
+            marker.addEventListener('click', () => { state.currentQuestionIndex = index; fullRender(); });
+            questionMapContainer.appendChild(marker);
         });
-        updateQuestionMapStyles();
+        
+        dom.showAnswerBtn.addEventListener('click', showAnswer);
+        dom.stopBtn.addEventListener('click', showResults);
+        dom.nextBtn.addEventListener('click', () => navigate(1));
+        dom.prevBtn.addEventListener('click', () => navigate(-1));
+        dom.restartBtn.addEventListener('click', initQuiz);
+        questionJumpSelect.addEventListener('change', (e) => {
+            state.currentQuestionIndex = parseInt(e.target.value, 10);
+            fullRender();
+        });
+
+        fullRender();
     }
 
-    function handleQuestionMarkerClick(index) {
-        if (index >= 0 && index < questions.length && index !== state.currentQuestionIndex) {
-            state.currentQuestionIndex = index;
-            loadQuestion();
-            updateProgress();
-        }
-    }
-    
     function updateQuestionMapStyles() {
-        if (!dom.questionMapContainer || questions.length === 0) return;
+        if (!dom.questionMapContainer) return;
         const markers = dom.questionMapContainer.querySelectorAll('.question-marker');
-        markers.forEach(marker => {
-            const index = parseInt(marker.dataset.index, 10);
-            marker.classList.remove('current', 'answered', 'correct', 'incorrect');
+        markers.forEach((marker, index) => {
+            marker.className = 'question-marker';
             if (index === state.currentQuestionIndex) marker.classList.add('current');
-            
             const answerInfo = state.userAnswers[index];
             if (answerInfo.correct === true) marker.classList.add('correct');
             else if (answerInfo.correct === false) marker.classList.add('incorrect');
@@ -263,15 +255,10 @@ function initializeQuiz(quizQuestions, questionRenderer) {
         });
     }
 
-    // Event Listeners
-    dom.showAnswerBtn.addEventListener('click', showAnswer);
-    dom.stopBtn.addEventListener('click', showResults);
-    dom.nextBtn.addEventListener('click', () => navigate(1));
-    dom.prevBtn.addEventListener('click', () => navigate(-1));
-    dom.restartBtn.addEventListener('click', initQuiz);
-    if (dom.questionJumpSelect) {
-        dom.questionJumpSelect.addEventListener('change', handleQuestionJump);
-    }
-
     initQuiz();
+    
+    return {
+        fullRender,
+        updateLanguage
+    };
 }

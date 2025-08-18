@@ -9,42 +9,46 @@
     <meta name="theme-color" content="#ffffff">
     <link rel="stylesheet" href="style.css">
     <link rel="stylesheet" href="quiz-style.css">
+    <style>
+        .language-switcher { position: absolute; top: 15px; right: 15px; display: flex; gap: 8px; z-index: 10; }
+        .language-switcher button { background: rgba(255, 255, 255, 0.2); border: none; color: white; padding: 8px 12px; border-radius: 8px; cursor: pointer; font-weight: 600; transition: background-color 0.2s; }
+        .language-switcher button:hover { background: rgba(255, 255, 255, 0.3); }
+    </style>
 </head>
 <body>
+<script src="i18n.js"></script>
+
 <div class="container">
     <header class="header">
-        <h1>🏗️ Design Patterns Quiz</h1>
-        <a href="index.html" class="back-link">← Torna alla homepage</a>
-    </header>
-
-    <section class="progress-section" aria-live="polite">
-        <div class="progress-bar">
-            <div class="progress-fill" id="progressFill"></div>
+        <div class="language-switcher">
+            <button onclick="i18n.setLanguage('it')">Italian</button>
+            <button onclick="i18n.setLanguage('en')">English</button>
         </div>
+        <h1 data-i18n-key="pattern_page.title"></h1>
+        <a href="index.html" class="back-link" data-i18n-key="global.back_to_home"></a>
+    </header>
+    <section class="progress-section" aria-live="polite">
+        <div class="progress-bar"><div class="progress-fill" id="progressFill"></div></div>
         <div class="progress-text-container">
-            <span class="progress-text">
-                Domanda <span id="currentQuestion">1</span> di <span id="totalQuestions">0</span>
-            </span>
+            <span class="progress-text" id="progressText"></span>
             <div class="question-jump-section">
-                <label for="questionJump">Vai a:</label>
+                <label for="questionJump" data-i18n-key="global.go_to"></label>
                 <select id="questionJump"></select>
             </div>
         </div>
         <div id="questionMap" class="question-map"></div>
     </section>
-
     <main class="quiz-content" id="quizContent"></main>
-
     <footer class="controls">
-        <button class="btn btn-secondary" id="prevBtn">← Precedente</button>
-        <button class="btn btn-danger" id="stopBtn">Ferma Quiz</button>
+        <button class="btn btn-secondary" id="prevBtn" data-i18n-key="global.previous"></button>
+        <button class="btn btn-danger" id="stopBtn" data-i18n-key="global.stop_quiz"></button>
         <div class="current-stats">
-            <span class="correct-count">Corrette: <span id="currentCorrectCount">0</span></span>
-            <span class="incorrect-count">Sbagliate: <span id="currentIncorrectCount">0</span></span>
+            <span class="correct-count"><span data-i18n-key="global.correct"></span>: <span id="currentCorrectCount">0</span></span>
+            <span class="incorrect-count"><span data-i18n-key="global.incorrect"></span>: <span id="currentIncorrectCount">0</span></span>
         </div>
         <div>
-            <button class="btn btn-primary" id="showAnswerBtn">Mostra Risposta</button>
-            <button class="btn btn-primary hidden" id="nextBtn">Successiva →</button>
+            <button class="btn btn-primary" id="showAnswerBtn" data-i18n-key="global.show_answer"></button>
+            <button class="btn btn-primary hidden" id="nextBtn"></button>
         </div>
     </footer>
 
@@ -52,86 +56,62 @@
         <div class="score-circle" id="scoreCircle">
             <div class="score-inner">
                 <div class="score-percentage" id="scorePercentage">0%</div>
-                <div class="score-label">Punteggio Totale</div>
+                <div class="score-label" data-i18n-key="global.total_score"></div>
             </div>
         </div>
-        <h2>Quiz Terminato!</h2>
-        <p>Ecco il riepilogo della tua sessione.</p>
+        <h2 data-i18n-key="global.quiz_finished"></h2>
+        <p data-i18n-key="global.score_summary"></p>
         <div class="stats">
-            <div class="stat" id="correctStat"><div class="stat-value">0</div><div class="stat-label">Corrette (su Totali)</div></div>
-            <div class="stat" id="incorrectStat"><div class="stat-value">0</div><div class="stat-label">Sbagliate (su Totali)</div></div>
-            <div class="stat" id="answeredCorrectStat"><div class="stat-value">0 / 0</div><div class="stat-label">Corrette / Date</div></div>
-            <div class="stat" id="answeredIncorrectStat"><div class="stat-value">0 / 0</div><div class="stat-label">Sbagliate / Date</div></div>
+            <div class="stat" id="correctStat"><div class="stat-value">0</div><div class="stat-label" data-i18n-key="global.correct_total"></div></div>
+            <div class="stat" id="incorrectStat"><div class="stat-value">0</div><div class="stat-label" data-i18n-key="global.incorrect_total"></div></div>
+            <div class="stat" id="answeredCorrectStat"><div class="stat-value">0 / 0</div><div class="stat-label" data-i18n-key="global.correct_answered"></div></div>
+            <div class="stat" id="answeredIncorrectStat"><div class="stat-value">0 / 0</div><div class="stat-label" data-i18n-key="global.incorrect_answered"></div></div>
         </div>
-        <button class="btn btn-primary" id="restartBtn">🔄 Ricomincia Quiz</button>
+        <button class="btn btn-primary" id="restartBtn" data-i18n-key="global.restart_quiz"></button>
     </section>
 </div>
 
 <script src="quiz-logic.js"></script>
 <script>
 document.addEventListener('DOMContentLoaded', () => {
-    const originalQuestions = [
-        // GRASP
-        { pattern: 'Creator', category: 'GRASP', type: 'Problema-Soluzione', question: 'Quale problema risolve il pattern Creator?', options: ['Chi deve essere responsabile per la creazione di istanze di una classe?', 'Come mantenere basso l\'accoppiamento tra classi?', 'Come assegnare responsabilità agli oggetti?', 'Come gestire la comunicazione tra oggetti?'], correct: 0, explanation: 'Il pattern Creator affronta il problema di determinare quale classe dovrebbe essere responsabile della creazione di istanze di altre classi.' },
-        { pattern: 'Information Expert', category: 'GRASP', type: 'Problema-Soluzione', question: 'Quale soluzione propone il pattern Information Expert?', options: ['Centralizzare tutte le informazioni in una classe', 'Assegnare la responsabilità alla classe che ha le informazioni necessarie', 'Creare una classe dedicata per ogni tipo di informazione', 'Utilizzare variabili globali per condividere informazioni'], correct: 1, explanation: 'Information Expert suggerisce di assegnare la responsabilità alla classe che possiede le informazioni necessarie per svolgere quel compito.' },
-        { pattern: 'Low Coupling', category: 'GRASP', type: 'Problema-Soluzione', question: 'Quale problema affronta il pattern Low Coupling?', options: ['Come aumentare la dipendenza tra classi?', 'Come ridurre l\'impatto dei cambiamenti e aumentare il riuso?', 'Come centralizzare le responsabilità?', 'Come aumentare le prestazioni del sistema?'], correct: 1, explanation: 'Low Coupling mira a ridurre le dipendenze tra classi per minimizzare l\'impatto dei cambiamenti e favorire il riuso.' },
-        { pattern: 'High Cohesion', category: 'GRASP', type: 'Problema-Soluzione', question: 'Cosa promuove il pattern High Cohesion?', options: ['Classi con responsabilità molto diverse tra loro', 'Classi con responsabilità strettamente correlate e focalizzate', 'Classi con molte dipendenze esterne', 'Classi con metodi molto lunghi e complessi'], correct: 1, explanation: 'High Cohesion promuove classi con responsabilità strettamente correlate e ben focalizzate, rendendo il codice più comprensibile e mantenibile.' },
-        { pattern: 'Controller', category: 'GRASP', type: 'Problema-Soluzione', question: 'Quale problema risolve il pattern Controller?', options: ['Come gestire l\'interfaccia utente?', 'Chi dovrebbe gestire gli eventi di input del sistema?', 'Come implementare la persistenza dei dati?', 'Come ottimizzare le prestazioni del database?'], correct: 1, explanation: 'Il pattern Controller determina quale oggetto dovrebbe ricevere e coordinare (controllare) gli eventi di input del sistema.' },
-        // GoF Creational
-        { pattern: 'Singleton', category: 'GoF Creational', type: 'Problema-Soluzione', question: 'Quale problema risolve il pattern Singleton?', options: ['Come creare famiglie di oggetti correlati?', 'Come garantire che una classe abbia una sola istanza?', 'Come separare la costruzione di oggetti complessi?', 'Come clonare oggetti prototipo?'], correct: 1, explanation: 'Singleton garantisce che una classe abbia una sola istanza e fornisce un punto di accesso globale ad essa.' },
-        { pattern: 'Abstract Factory', category: 'GoF Creational', type: 'Problema-Soluzione', question: 'Quale soluzione fornisce il pattern Abstract Factory?', options: ['Crea una singola istanza globale', 'Fornisce un\'interfaccia per creare famiglie di oggetti correlati', 'Separa l\'algoritmo dalla struttura dati', 'Permette di aggiungere nuove operazioni senza modificare le classi'], correct: 1, explanation: 'Abstract Factory fornisce un\'interfaccia per creare famiglie di oggetti correlati o dipendenti senza specificare le loro classi concrete.' },
-        // GoF Structural
-        { pattern: 'Adapter', category: 'GoF Structural', type: 'Problema-Soluzione', question: 'Quale problema risolve il pattern Adapter?', options: ['Come comporre oggetti in strutture ad albero?', 'Come permettere a classi con interfacce incompatibili di lavorare insieme?', 'Come aggiungere responsabilità a oggetti dinamicamente?', 'Come condividere efficientemente oggetti simili?'], correct: 1, explanation: 'Adapter permette a classi con interfacce incompatibili di lavorare insieme, agendo come un ponte tra di esse.' },
-        { pattern: 'Composite', category: 'GoF Structural', type: 'Problema-Soluzione', question: 'Quale struttura crea il pattern Composite?', options: ['Una catena di oggetti collegati', 'Una struttura ad albero di oggetti', 'Una pila di oggetti', 'Una mappa di oggetti chiave-valore'], correct: 1, explanation: 'Composite permette di comporre oggetti in strutture ad albero per rappresentare gerarchie parte-tutto.' },
-        { pattern: 'Decorator', category: 'GoF Structural', type: 'Problema-Soluzione', question: 'Come funziona il pattern Decorator?', options: ['Modifica direttamente la classe originale', 'Avvolge l\'oggetto originale in uno o più wrapper', 'Sostituisce completamente l\'oggetto originale', 'Crea una copia modificata dell\'oggetto'], correct: 1, explanation: 'Decorator permette di aggiungere nuove funzionalità agli oggetti avvolgendoli in wrapper che contengono i nuovi comportamenti.' },
-        // GoF Behavioral
-        { pattern: 'Observer', category: 'GoF Behavioral', type: 'Problema-Soluzione', question: 'Quale problema risolve il pattern Observer?', options: ['Come iterare attraverso una collezione?', 'Come notificare automaticamente più oggetti quando cambia lo stato?', 'Come incapsulare algoritmi intercambiabili?', 'Come gestire richieste in una catena di handler?'], correct: 1, explanation: 'Observer definisce una dipendenza uno-a-molti tra oggetti, così quando uno cambia stato, tutti i dipendenti vengono notificati automaticamente.' },
-        { pattern: 'State', category: 'GoF Behavioral', type: 'Problema-Soluzione', question: 'Quale soluzione propone il pattern State?', options: ['Usa un grande switch/if per gestire gli stati', 'Incapsula ogni stato in una classe separata', 'Memorizza tutti gli stati in un array', 'Ignora completamente il concetto di stato'], correct: 1, explanation: 'State permette a un oggetto di cambiare il suo comportamento quando il suo stato interno cambia, incapsulando ogni stato in una classe separata.' },
-        { pattern: 'Strategy', category: 'GoF Behavioral', type: 'Problema-Soluzione', question: 'Quale problema affronta il pattern Strategy?', options: ['Come gestire le notifiche tra oggetti?', 'Come rendere algoritmi intercambiabili in runtime?', 'Come visitare elementi di una struttura complessa?', 'Come gestire stati complessi di un oggetto?'], correct: 1, explanation: 'Strategy definisce una famiglia di algoritmi, li incapsula e li rende intercambiabili durante l\'esecuzione.' },
-        { pattern: 'Visitor', category: 'GoF Behavioral', type: 'Problema-Soluzione', question: 'Quale vantaggio offre il pattern Visitor?', options: ['Semplifica la struttura degli oggetti visitati', 'Permette di aggiungere nuove operazioni senza modificare le classi esistenti', 'Riduce il numero di classi nel sistema', 'Migliora le prestazioni dell\'accesso ai dati'], correct: 1, explanation: 'Visitor permette di definire nuove operazioni senza cambiare le classi degli elementi su cui opera, separando algoritmi dalla struttura.' },
-        // UML
-        { pattern: 'Creator', category: 'GRASP', type: 'UML', question: 'Nel diagramma UML del pattern Creator, quale relazione è tipicamente mostrata?', options: ['Ereditarietà tra creator e prodotto', 'Composizione o aggregazione tra creator e prodotto', 'Associazione bidirezionale', 'Dipendenza circolare'], correct: 1, explanation: 'Il Creator tipicamente ha una relazione di composizione o aggregazione con gli oggetti che crea, mostrata con diamante pieno o vuoto.' },
-        { pattern: 'Singleton', category: 'GoF Creational', type: 'UML', question: 'Come è rappresentato il costruttore nel diagramma UML di Singleton?', options: ['Pubblico (+)', 'Privato (-)', 'Protetto (#)', 'Statico (sottolineato)'], correct: 1, explanation: 'Nel Singleton, il costruttore è privato (-) per impedire l\'istanziazione diretta dall\'esterno della classe.' },
-        { pattern: 'Observer', category: 'GoF Behavioral', type: 'UML', question: 'Nel pattern Observer, quale interfaccia implementano tipicamente gli observer?', options: ['Subject', 'Observer o Listener', 'ConcreteSubject', 'Publisher'], correct: 1, explanation: 'Gli observer implementano un\'interfaccia Observer (o Listener) che definisce il metodo update() per ricevere notifiche.' },
-        { pattern: 'Strategy', category: 'GoF Behavioral', type: 'UML', question: 'Nel diagramma UML di Strategy, il Context ha quale tipo di relazione con Strategy?', options: ['Ereditarietà', 'Composizione', 'Realizzazione', 'Dipendenza semplice'], correct: 3, explanation: 'Il Context utilizza l\'interfaccia Strategy per delegare l\'esecuzione dell\'algoritmo, il che stabilisce una dipendenza semplice. Questo permette al Context di variare l\'algoritmo concreto in modo flessibile.' },
-        { pattern: 'Composite', category: 'GoF Structural', type: 'UML', question: 'Nel pattern Composite, come è mostrata la relazione tra Composite e Component?', options: ['Aggregazione semplice', 'Composizione ricorsiva (Composite contiene Component)', 'Ereditarietà multipla', 'Associazione bidirezionale'], correct: 1, explanation: 'Composite eredita da Component e contiene anche una collezione di Component, creando una struttura ricorsiva.' },
-        { pattern: 'Decorator', category: 'GoF Structural', type: 'UML', question: 'Nel pattern Decorator, quale caratteristica ha la classe Decorator?', options: ['È finale e non può essere estesa', 'Implementa la stessa interfaccia del componente decorato', 'È statica e contiene solo metodi di utilità', 'È astratta e non può essere istanziata'], correct: 1, explanation: 'Decorator implementa la stessa interfaccia del componente che decora, permettendo di sostituirlo trasparentemente.' },
-    ];
-
-    function getCategoryClass(category) {
-        const classMap = { 'GRASP': 'grasp', 'GoF Creational': 'gof-creational', 'GoF Structural': 'gof-structural', 'GoF Behavioral': 'gof-behavioral' };
-        return classMap[category] || '';
-    }
-
-    function shuffleOptionsAndCorrectIndex(question) {
+    let quizInstance = null;
+    const shuffleOptionsAndCorrectIndex = (question) => {
         const optionsWithOriginalIndex = question.options.map((text, index) => ({ text, originalIndex: index }));
         const shuffledOptions = shuffleArray(optionsWithOriginalIndex);
         const newOptions = shuffledOptions.map(opt => opt.text);
         const newCorrectIndex = shuffledOptions.findIndex(opt => opt.originalIndex === question.correct);
         return { ...question, options: newOptions, correct: newCorrectIndex };
+    };
+
+    function startQuiz() {
+        const originalQuestions = i18n.getString('questions.pattern');
+        function getCategoryClass(category) {
+            const classMap = { 'GRASP': 'grasp', 'GoF Creational': 'gof-creational', 'GoF Structural': 'gof-structural', 'GoF Behavioral': 'gof-behavioral' };
+            return classMap[category] || '';
+        }
+
+        function renderPatternQuestion(question, state) {
+            const optionsHtml = question.options.map((option, index) => `<div class="option" data-answer="${index}">${option}</div>`).join('');
+            return `<div class="question-card" data-question-id="${question.pattern}"><div class="question-header"><span class="pattern-category ${getCategoryClass(question.category)}">${question.category} - ${question.pattern}</span><span class="question-type">${question.type}</span></div><div class="question-text">${question.question}</div><div class="options">${optionsHtml}</div><div class="explanation hidden"><h4>${i18n.getString('global.explanation')}</h4><p>${question.explanation}</p></div></div>`;
+        }
+        
+        const questionsToLoad = shuffleArray(originalQuestions).map(q => shuffleOptionsAndCorrectIndex(q));
+        quizInstance = initializeQuiz(questionsToLoad, renderPatternQuestion);
     }
 
-    function renderPatternQuestion(question, state) {
-        const optionsHtml = question.options.map((option, index) => `<div class="option" data-answer="${index}">${option}</div>`).join('');
-        return `
-            <div class="question-card" data-question-id="${question.pattern}">
-                <div class="question-header">
-                    <span class="pattern-category ${getCategoryClass(question.category)}">${question.category} - ${question.pattern}</span>
-                    <span class="question-type">${question.type}</span>
-                </div>
-                <div class="question-text">${question.question}</div>
-                <div class="options">${optionsHtml}</div>
-                <div class="explanation hidden">
-                    <h4>Spiegazione:</h4>
-                    <p>${question.explanation}</p>
-                </div>
-            </div>
-        `;
-    }
+    document.addEventListener('languageChanged', () => {
+        if (quizInstance) {
+            const allNewQuestions = i18n.getString('questions.pattern');
+            // We pass the option shuffler so `updateLanguage` can re-shuffle the options
+            quizInstance.updateLanguage(allNewQuestions, shuffleOptionsAndCorrectIndex);
+        }
+    });
 
-    const questionsToLoad = shuffleArray(originalQuestions).map(q => shuffleOptionsAndCorrectIndex(q));
-    
-    initializeQuiz(questionsToLoad, renderPatternQuestion);
+    if (i18n && i18n.strings && i18n.strings.global) {
+        startQuiz();
+    } else {
+        document.addEventListener('languageChanged', startQuiz, { once: true });
+    }
 });
 </script>
 </body>
