@@ -4,7 +4,8 @@
 ![GitHub repo size](https://img.shields.io/github/repo-size/dimuzzo/quiz-app?style=flat-square&logo=github&label=Repo%20Size)
 ![GitHub stars](https://img.shields.io/github/stars/dimuzzo/quiz-app?style=flat-square&logo=github&label=Stars)
 
-Welcome to the SAS Quiz application! This is a web app designed to test your knowledge of Sviluppo Applicazioni Software (the app is currently only in Italian).
+Welcome to the SAS Quiz application! This is a web app designed to test your knowledge of Sviluppo Applicazioni Software 
+The app is currently only in Italian, but the English version will be updated soon!
 
 ---
 
