@@ -43,6 +43,8 @@ function initializeQuiz(quizQuestions, questionRenderer) {
         currentIncorrectCount: document.getElementById('currentIncorrectCount'),
     };
 
+    let currentSourceQuestions = quizQuestions;
+
     let state = {
         currentQuestionIndex: 0,
         userAnswers: [],
@@ -186,16 +188,24 @@ function initializeQuiz(quizQuestions, questionRenderer) {
 
     function updateLanguage(allNewQuestions, optionShuffler) {
         const newQuestionsMap = new Map(allNewQuestions.map(q => [q.id || q.pattern, q]));
-        questions = questionOrder.map(id => {
+        
+        const translatedQuestions = questionOrder.map(id => {
             const newQuestionData = newQuestionsMap.get(id);
             return optionShuffler ? optionShuffler(newQuestionData) : newQuestionData;
         });
+
+        currentSourceQuestions = translatedQuestions;
+        
+        questions = currentSourceQuestions;
+        
         fullRender();
     }
     
     function initQuiz() {
-        questions = quizQuestions;
+        questions = shuffleArray([...currentSourceQuestions]);
+        
         questionOrder = questions.map(q => q.id || q.pattern);
+        
         state.currentQuestionIndex = 0;
         state.userAnswers = new Array(questions.length).fill(null).map(() => ({ userAnswer: null, correct: null }));
 
@@ -229,15 +239,16 @@ function initializeQuiz(quizQuestions, questionRenderer) {
             questionMapContainer.appendChild(marker);
         });
         
-        dom.showAnswerBtn.addEventListener('click', showAnswer);
-        dom.stopBtn.addEventListener('click', showResults);
-        dom.nextBtn.addEventListener('click', () => navigate(1));
-        dom.prevBtn.addEventListener('click', () => navigate(-1));
-        dom.restartBtn.addEventListener('click', initQuiz);
-        questionJumpSelect.addEventListener('change', (e) => {
+        dom.showAnswerBtn.onclick = showAnswer; 
+        dom.stopBtn.onclick = showResults;
+        dom.nextBtn.onclick = () => navigate(1);
+        dom.prevBtn.onclick = () => navigate(-1);
+        dom.restartBtn.onclick = initQuiz; // Il tasto ricomincia richiama questa funzione, che ora fa lo shuffle
+        
+        questionJumpSelect.onchange = (e) => {
             state.currentQuestionIndex = parseInt(e.target.value, 10);
             fullRender();
-        });
+        };
 
         fullRender();
     }
