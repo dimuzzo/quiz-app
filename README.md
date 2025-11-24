@@ -1,37 +1,39 @@
-# SAS Quiz App 🎓
+# Exam Quizzes App 🎓
 
 ![GitHub last commit](https://img.shields.io/github/last-commit/dimuzzo/quiz-app?style=flat-square&logo=github&label=Last%20Commit)
 ![GitHub repo size](https://img.shields.io/github/repo-size/dimuzzo/quiz-app?style=flat-square&logo=github&label=Repo%20Size)
 ![GitHub stars](https://img.shields.io/github/stars/dimuzzo/quiz-app?style=flat-square&logo=github&label=Stars)
 
-Welcome to the SAS Quiz application! 
+Welcome to the Exam Quizzes application!
 
-This is a web app designed to test your knowledge of **Software Application Development (Sviluppo Applicazioni Software)**.
+This is a web app designed to test your knowledge of **Software Architecture, Design Patterns, and Computer Network Technologies**.
 
-The entire application is now available in both **Italian** and **English**, with a convenient switcher to change languages at any time without losing any progress!
+The entire application is available in both **Italian** and **English**, with a convenient switcher to change languages at any time without losing any progress!
 
 ---
 
 ## 🌟 Overview
 
-This application offers two main quiz modes:
+This application offers three main quiz modes:
 
-1.  **Theory Quiz:** True/false questions to verify understanding of fundamental software application development concepts and the Unified Process.
-2.  **Design Patterns Quiz:** Multiple-choice questions focused on GRASP and GoF design patterns (creational, structural, behavioral), with problem-solution scenarios and UML diagram interpretation.
+1.  **Software Application Development Theory Quiz:** True/false questions to verify understanding of fundamental software application development concepts and the Unified Process.
+2.  **Software Application Development Design Patterns Quiz:** Multiple-choice questions focused on GRASP and GoF design patterns (creational, structural, behavioral), with problem-solution scenarios and UML diagram interpretation.
+3.  **Computer Network Technologies and Services Quiz:** Multiple-choice questions covering advanced networking topics, including Protocols, IP Addressing (IPv4/IPv6), Routing Algorithms (OSPF, BGP, RIP), MPLS, VPNs, and Mobile Networks (GSM, LTE, 5G).
 
-Both quizzes provide immediate feedback with detailed explanations for each answer and a final screen summarizing the session's statistics.
+All quizzes provide immediate feedback with detailed technical explanations for each answer and a final screen summarizing the session's statistics.
 
 ---
 
 ## ✨ Key Features
 
-* **Two Quiz Modes:**
-    * Theory, where you can select the number of questions.
-    * Design Patterns, with multiple-choice and UML-based questions.
+* **Three Quiz Modes:**
+    * **Theory:** Test your knowledge on software engineering concepts (SAS).
+    * **Design Patterns:** Master GRASP and GoF patterns (SAS).
+    * **Networks:** Deep dive into Computer Network Technologies and Services (CNTS).
 * **Bilingual Support:** Easily switch between Italian and English at any point. The quiz state is preserved, allowing you to change languages mid-quiz without losing progress.
 * **Random Questions:** Questions and options are shuffled each session for a new experience every time.
-* **Immediate Feedback:** Instantly see if your answer is correct or incorrect.
-* **Detailed Explanations:** Understand the reasoning behind each answer.
+* **Immediate Feedback:** Instantly see if your answer is correct or incorrect (Green for correct, Red for incorrect).
+* **Detailed Explanations:** Understand the reasoning behind each answer with in-depth technical descriptions.
 * **Flexible Navigation:**
     * Jump directly to any question using a convenient dropdown menu and a visual question map.
     * Move step-by-step with "Previous" and "Next" buttons.
@@ -42,7 +44,7 @@ Both quizzes provide immediate feedback with detailed explanations for each answ
 * **Results Summary:**
     * A final percentage score.
     * A detailed breakdown of correct and incorrect answers.
-* **Modern and Responsive Design:** A clean, pleasant user interface that adapts to different devices.
+* **Modern and Responsive Design:** A clean, pleasant user interface that adapts to different devices, with specific color themes for each quiz section.
 * **PWA (Progressive Web App) Ready:** Includes a `manifest.json` for an experience similar to a native app.
 
 ---
@@ -91,6 +93,7 @@ The project is organized to separate content, styling, and logic for better main
 * `index.html`: The main page where the user chooses the quiz type.
 * `theory.html`: The HTML structure for the theory quiz.
 * `pattern.html`: The HTML structure for the design patterns quiz.
+* `network.html`: The HTML structure for the computer network technologies quiz.
 * `style.css`: Contains the common CSS styles shared across all pages.
 * `quiz-style.css`: Contains specific styles for the quiz interface.
 * `quiz-logic.js`: The main JavaScript engine for the quizzes (rendering, scoring, navigation).
