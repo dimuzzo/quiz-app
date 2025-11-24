@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quiz CNTS - Computer Network Technologies and Services</title>
+    <link rel="manifest" href="manifest.json" />
+    <link rel="icon" type="image/png" href="assets/favicon.png">
+    <meta name="theme-color" content="#ffffff">
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="quiz-style.css">
+    <style>
+        .language-switcher { position: absolute; top: 15px; right: 15px; display: flex; gap: 8px; z-index: 10; }
+        .language-switcher button { background: rgba(255, 255, 255, 0.2); border: none; color: white; padding: 8px 12px; border-radius: 8px; cursor: pointer; font-weight: 600; transition: background-color 0.2s; }
+        .language-switcher button:hover { background: rgba(255, 255, 255, 0.3); }
+    </style>
+</head>
+<body>
+<script src="i18n.js"></script>
+
+<div class="container">
+    <header class="header cnt-header">
+        <div class="language-switcher">
+            <button onclick="i18n.setLanguage('it')">Italian</button>
+            <button onclick="i18n.setLanguage('en')">English</button>
+        </div>
+        <h1 data-i18n-key="network_page.title"></h1>
+        <a href="index.html" class="back-link" data-i18n-key="global.back_to_home"></a>
+    </header>
+    <section class="progress-section" aria-live="polite">
+        <div class="progress-bar"><div class="progress-fill cnt-fill" id="progressFill"></div></div>
+        <div class="progress-text-container">
+            <span class="progress-text" id="progressText"></span>
+            <div class="question-jump-section">
+                <label for="questionJump" data-i18n-key="global.go_to"></label>
+                <select id="questionJump"></select>
+            </div>
+        </div>
+        <div id="questionMap" class="question-map"></div>
+    </section>
+    <main class="quiz-content" id="quizContent"></main>
+    <footer class="controls">
+        <button class="btn btn-secondary" id="prevBtn" data-i18n-key="global.previous"></button>
+        <button class="btn btn-danger" id="stopBtn" data-i18n-key="global.stop_quiz"></button>
+        <div class="current-stats">
+            <span class="correct-count"><span data-i18n-key="global.correct"></span>: <span id="currentCorrectCount">0</span></span>
+            <span class="incorrect-count"><span data-i18n-key="global.incorrect"></span>: <span id="currentIncorrectCount">0</span></span>
+        </div>
+        <div>
+            <button class="btn btn-primary cnt-btn" id="showAnswerBtn" data-i18n-key="global.show_answer"></button>
+            <button class="btn btn-primary cnt-btn hidden" id="nextBtn"></button>
+        </div>
+    </footer>
+
+    <section class="results hidden" id="results" aria-live="assertive">
+        <div class="score-circle" id="scoreCircle">
+            <div class="score-inner">
+                <div class="score-percentage cnt-text-color" id="scorePercentage">0%</div>
+                <div class="score-label" data-i18n-key="global.total_score"></div>
+            </div>
+        </div>
+        <h2 data-i18n-key="global.quiz_finished"></h2>
+        <p data-i18n-key="global.score_summary"></p>
+        <div class="stats">
+            <div class="stat" id="correctStat"><div class="stat-value" style="color: #10b981;">0</div><div class="stat-label" data-i18n-key="global.correct_total"></div></div>
+            <div class="stat" id="incorrectStat"><div class="stat-value" style="color: #ef4444;">0</div><div class="stat-label" data-i18n-key="global.incorrect_total"></div></div>
+            <div class="stat" id="answeredCorrectStat"><div class="stat-value">0 / 0</div><div class="stat-label" data-i18n-key="global.correct_answered"></div></div>
+            <div class="stat" id="answeredIncorrectStat"><div class="stat-value">0 / 0</div><div class="stat-label" data-i18n-key="global.incorrect_answered"></div></div>
+        </div>
+        <button class="btn btn-primary cnt-btn" id="restartBtn" data-i18n-key="global.restart_quiz"></button>
+    </section>
+</div>
+
+<script src="quiz-logic.js"></script>
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+    let quizInstance = null;
+
+    const shuffleOptionsAndCorrectIndex = (question) => {
+        if (!question.options) return question;
+        const optionsWithOriginalIndex = question.options.map((text, index) => ({ text, originalIndex: index }));
+        const shuffledOptions = shuffleArray(optionsWithOriginalIndex);
+        const newOptions = shuffledOptions.map(opt => opt.text);
+        const newCorrectIndex = shuffledOptions.findIndex(opt => opt.originalIndex === question.correct);
+        return { ...question, options: newOptions, correct: newCorrectIndex };
+    };
+
+    function startQuiz() {
+        const originalQuestions = i18n.getString('questions.network');
+
+        function renderNetworkQuestion(question, state) {
+            const questionTitle = i18n.getString('network_page.question_title', { number: state.currentQuestionIndex + 1 });
+            
+            const optionsHtml = question.options.map((option, index) => 
+                `<div class="option" data-answer="${index}">${option}</div>`
+            ).join('');
+
+            return `<div class="question-card" data-question-id="${question.id}">
+                        <div class="question-number cnt-number">${questionTitle}</div>
+                        <div class="question-text">${question.text}</div>
+                        <div class="options cnt-options">
+                            ${optionsHtml}
+                        </div>
+                        <div class="explanation hidden">
+                            <h4>${i18n.getString('global.explanation')}</h4>
+                            <p>${question.explanation || ''}</p>
+                        </div>
+                    </div>`;
+        }
+        
+        const questionsToLoad = shuffleArray(originalQuestions).map(q => shuffleOptionsAndCorrectIndex(q));
+        quizInstance = initializeQuiz(questionsToLoad, renderNetworkQuestion);
+    }
+
+    document.addEventListener('languageChanged', () => {
+        if (quizInstance) {
+            const allNewQuestions = i18n.getString('questions.network');
+            quizInstance.updateLanguage(allNewQuestions, shuffleOptionsAndCorrectIndex);
+        }
+    });
+
+    if (i18n && i18n.strings && i18n.strings.global) {
+        startQuiz();
+    } else {
+        document.addEventListener('languageChanged', startQuiz, { once: true });
+    }
+});
+</script>
+</body>
+</html>
