@@ -55,7 +55,6 @@
 .question-marker.correct { background-color: #10b981; color: white; border-color: #059669; }
 .question-marker.incorrect { background-color: #ef4444; color: white; border-color: #dc2626; }
 
-/* Contenuto del quiz (domande) */
 .quiz-content { padding: 40px; flex-grow: 1; transition: opacity 0.3s ease-in-out; }
 .question-card {
     background: white; border-radius: 16px; padding: 35px;
@@ -72,7 +71,6 @@
     margin-bottom: 25px; font-weight: 500;
 }
 
-/* Stili specifici per le card delle domande */
 .question-header {
     display: flex; justify-content: space-between; align-items: center;
     margin-bottom: 25px; flex-wrap: wrap; gap: 15px;
@@ -92,7 +90,6 @@
 .gof-structural { background: linear-gradient(135deg, #3b82f6, #2563eb); }
 .gof-behavioral { background: linear-gradient(135deg, #8b5cf6, #7c3aed); }
 
-/* Opzioni di risposta */
 .options { display: grid; gap: 15px; margin-bottom: 25px; }
 .options.true-false { grid-template-columns: 1fr 1fr; }
 .option {
@@ -117,7 +114,6 @@
 }
 .option.disabled { cursor: not-allowed; opacity: 0.7; }
 
-/* Spiegazione della risposta */
 .explanation {
     margin-top: 25px; padding: 20px; background: #f1f5f9;
     border-radius: 10px; border-left: 4px solid #4f46e5;
@@ -126,7 +122,6 @@
 .explanation h4 { color: #4f46e5; margin-bottom: 10px; }
 .explanation p { color: #475569; line-height: 1.6; }
 
-/* Controlli di navigazione */
 .controls {
     padding: 30px 40px; background: #f8fafc; border-top: 1px solid #e2e8f0;
     display: flex; justify-content: space-between; align-items: center;
@@ -148,7 +143,6 @@
 .current-stats .correct-count { color: #10b981; }
 .current-stats .incorrect-count { color: #ef4444; }
 
-/* Sezione dei risultati */
 .results { text-align: center; padding: 60px 40px; }
 .score-circle {
     width: 150px; height: 150px; border-radius: 50%; display: flex;
@@ -171,10 +165,9 @@
 
 .hidden { display: none !important; }
 
-/* Media Queries specifiche per i quiz */
 @media (max-width: 768px) {
     .quiz-content, .controls, .progress-section { padding: 20px; }
-    .options.true-false { grid-template-columns: 1fr; } /* Vero/Falso in colonna su schermi piccoli */
+    .options.true-false { grid-template-columns: 1fr; }
     .controls { flex-direction: column; gap: 15px; }
     .current-stats { width: 100%; justify-content: space-around; }
     .progress-text-container { flex-direction: column; align-items: flex-start; gap: 12px; }
