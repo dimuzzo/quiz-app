@@ -1,4 +1,3 @@
-/* Sezione della barra di progresso */
 .progress-section {
     padding: 30px 40px;
     background: #f8fafc;
@@ -34,7 +33,6 @@
     outline: none; border-color: #4f46e5; box-shadow: 0 0 0 2px rgba(79, 70, 229, 0.2);
 }
 
-/* Stili per la Mappa delle Domande */
 .question-map {
     display: flex; flex-wrap: wrap; gap: 6px;
     padding-top: 10px; border-top: 1px solid #e2e8f0; margin-top: 15px;
@@ -83,7 +81,7 @@
 .question-number {
     display: inline-block;
     background: linear-gradient(135deg, #4f46e5, #06b6d4);
-    margin-bottom: 20px;   /
+    margin-bottom: 20px;
 }
 .grasp { background: linear-gradient(135deg, #10b981, #059669); }
 .gof-creational { background: linear-gradient(135deg, #f59e0b, #d97706); }
@@ -174,4 +172,31 @@
     .question-jump-section { width: 100%; }
     #questionJump { flex-grow: 1; }
     .question-map { justify-content: center; }
+}
+
+.cnt-header { background: linear-gradient(135deg, #2563eb, #1e40af); }
+.cnt-fill { background: linear-gradient(90deg, #2563eb, #60a5fa); }
+.cnt-number { background: linear-gradient(135deg, #2563eb, #1e40af); }
+.cnt-btn { background: linear-gradient(135deg, #2563eb, #1e40af); color: white; }
+.cnt-text-color { color: #2563eb; }
+
+.options.cnt-options .option:not(.selected):not(.correct):not(.incorrect):hover {
+    border-color: #2563eb; 
+    box-shadow: 0 4px 15px rgba(37, 99, 235, 0.1);
+}
+.options.cnt-options .option.selected {
+    border-color: #2563eb;
+    background: linear-gradient(135deg, #2563eb, #1e40af);
+    color: white;
+    box-shadow: 0 6px 20px rgba(37, 99, 235, 0.2);
+}
+.options.cnt-options .option.correct {
+    border-color: #10b981 !important; 
+    background: linear-gradient(135deg, #10b981, #059669) !important; 
+    color: white !important;
+}
+.options.cnt-options .option.incorrect {
+    border-color: #ef4444 !important; 
+    background: linear-gradient(135deg, #ef4444, #dc2626) !important; 
+    color: white !important;
 }
