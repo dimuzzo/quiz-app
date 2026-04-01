@@ -12,7 +12,7 @@ The entire application is available in both **Italian** and **English**, with a 
 
 ---
 
-## 🌟 Overview
+## Overview
 
 This application offers three main quiz modes:
 
@@ -24,7 +24,7 @@ All quizzes provide immediate feedback with detailed technical explanations for 
 
 ---
 
-## ✨ Key Features
+## Key Features
 
 * **Three Quiz Modes:**
     * **Theory:** Test your knowledge on software engineering concepts (SAS).
@@ -49,7 +49,7 @@ All quizzes provide immediate feedback with detailed technical explanations for 
 
 ---
 
-## 🛠️ Technologies Used
+## Technologies Used
 
 * HTML5
 * CSS3 (with Flexbox, Grid and animations)
@@ -57,7 +57,7 @@ All quizzes provide immediate feedback with detailed technical explanations for 
 
 ---
 
-## 🚀 How to Run the Application
+## How to Run the Application
 
 ### Online (Recommended)
 
@@ -86,7 +86,7 @@ Here are two simple ways to do this:
 
 ---
 
-## 📁 File Structure
+## File Structure
 
 The project is organized to separate content, styling, and logic for better maintainability.
 
@@ -106,7 +106,7 @@ The project is organized to separate content, styling, and logic for better main
 
 ---
 
-## 🙏 Contributions
+## Contributions
 
 If you want to contribute to the project, feel free to fork the repository and submit a pull request!
 
